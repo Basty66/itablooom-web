@@ -1,4 +1,4 @@
-import { Instagram, Mail, Phone } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -23,7 +23,7 @@ export default function Footer() {
                 <span>hola@itablooom.cl</span>
               </a>
               <a href="https://instagram.com/itablooom.studio" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:text-purple-400">
-                <Instagram size={16} />
+                <span>📷</span>
                 <span>@itablooom.studio</span>
               </a>
             </div>

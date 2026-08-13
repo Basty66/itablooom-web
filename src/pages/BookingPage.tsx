@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Calendar, Clock, User, Mail, Phone, CreditCard, ChevronLeft, ChevronRight, Check, Loader2 } from 'lucide-react';
 import { format, addDays, startOfDay, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -8,7 +8,6 @@ import { getServices, getAvailableTimeSlots, createPreference } from '../lib/api
 
 export default function BookingPage() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   
   const [step, setStep] = useState(1);
   const [services, setServices] = useState<Service[]>([]);

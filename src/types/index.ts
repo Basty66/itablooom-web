@@ -13,12 +13,16 @@ export interface Service {
 export interface Booking {
   id: string;
   service_id: string;
+  service_name?: string;
+  service_description?: string;
   client_name: string;
   client_email: string;
   client_phone: string;
   client_rut?: string;
-  date: string;
-  time: string;
+  booking_date: string;
+  booking_time: string;
+  date?: string;
+  time?: string;
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   deposit_paid: boolean;
   deposit_amount: number;

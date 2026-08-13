@@ -1,20 +1,18 @@
 import { neon } from '@neondatabase/serverless';
 
-const databaseUrl = process.env.DATABASE_URL || process.env.VITE_NEON_DATABASE_URL;
+const databaseUrl = import.meta.env.VITE_NEON_DATABASE_URL;
 
 if (!databaseUrl) {
-  console.error('Error: DATABASE_URL not found');
-  process.exit(1);
+  console.error('Error: VITE_NEON_DATABASE_URL not found');
 }
 
-const sql = neon(databaseUrl);
+const sql = neon(databaseUrl!);
 
 async function setupDatabase() {
   console.log('Connecting to Neon DB...');
   
   try {
-    // Test connection
-    const testResult = await sql`SELECT 1 as test`;
+    await sql`SELECT 1 as test`;
     console.log('✓ Connection successful');
 
     console.log('Creating tables...');
@@ -69,9 +67,8 @@ async function setupDatabase() {
     `;
     console.log('✓ Blocked times table created');
 
-    // Insert default services
     const existingServices = await sql`SELECT COUNT(*) as count FROM services`;
-    if (existingServices[0].count === 0) {
+    if ((existingServices[0] as any).count === 0) {
       await sql`
         INSERT INTO services (name, description, duration_minutes, price, deposit_amount, category)
         VALUES 
@@ -88,7 +85,6 @@ async function setupDatabase() {
     console.log('\n✅ Database setup completed successfully!');
   } catch (error) {
     console.error('❌ Error setting up database:', error);
-    process.exit(1);
   }
 }
 
