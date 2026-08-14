@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
-import { createCalendarEvent } from '../../api/calendar/_lib.js';
+import { createCalendarEvent } from '../../calendar/_lib.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 
