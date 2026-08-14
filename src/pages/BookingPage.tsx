@@ -24,6 +24,7 @@ export default function BookingPage() {
     phone: '',
     rut: '',
     notes: '',
+    paymentType: 'deposit' as 'deposit' | 'full',
   });
 
   const loadServices = useCallback(async () => {
@@ -107,6 +108,7 @@ export default function BookingPage() {
         date: dateStr,
         time: selectedTime,
         notes: formData.notes,
+        paymentType: formData.paymentType,
       });
       
       window.location.href = result.init_point;
@@ -366,10 +368,51 @@ export default function BookingPage() {
                     <p><strong>Servicio:</strong> {selectedService.name}</p>
                     <p><strong>Fecha:</strong> {format(selectedDate, "EEEE d 'de' MMMM", { locale: es })}</p>
                     <p><strong>Hora:</strong> {selectedTime}</p>
-                    <p><strong>Seña a pagar:</strong> {formatPrice(selectedService.deposit_amount)}</p>
+                    <p><strong>Pago:</strong> {formData.paymentType === 'full' ? 'Total completo' : 'Seña (después pagas el saldo en el local)'}</p>
+                    <p className="text-lg font-bold text-purple-700">
+                      <strong>Monto a pagar:</strong> {formatPrice(formData.paymentType === 'full' ? selectedService.price : selectedService.deposit_amount)}
+                    </p>
                   </div>
                 </div>
               )}
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  ¿Cómo quieres pagar?
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, paymentType: 'deposit' })}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                      formData.paymentType === 'deposit'
+                        ? 'border-purple-700 bg-purple-50'
+                        : 'border-gray-200 hover:border-purple-300'
+                    }`}
+                  >
+                    <p className="font-semibold text-gray-900">Seña</p>
+                    <p className="text-sm text-gray-600">Paga solo el depósito ahora</p>
+                    <p className="text-lg font-bold text-purple-700 mt-1">
+                      {selectedService ? formatPrice(selectedService.deposit_amount) : ''}
+                    </p>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, paymentType: 'full' })}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                      formData.paymentType === 'full'
+                        ? 'border-purple-700 bg-purple-50'
+                        : 'border-gray-200 hover:border-purple-300'
+                    }`}
+                  >
+                    <p className="font-semibold text-gray-900">Total completo</p>
+                    <p className="text-sm text-gray-600">Paga todo ahora</p>
+                    <p className="text-lg font-bold text-purple-700 mt-1">
+                      {selectedService ? formatPrice(selectedService.price) : ''}
+                    </p>
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
