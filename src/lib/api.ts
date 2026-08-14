@@ -166,3 +166,56 @@ export async function createPreferenceWithOfflineSupport(
 if (IS_BROWSER) {
   window.addEventListener('online', () => syncPendingBookings());
 }
+
+// ============================================
+// SESIÓN DE ADMINISTRACIÓN
+// ============================================
+
+/**
+ * Estas usan fetch directo y no apiFetch: un 401 es una respuesta legítima
+ * ("contraseña incorrecta"), no un fallo de red que convenga reintentar.
+ *
+ * `credentials: 'same-origin'` va explícito para dejar claro que el token
+ * viaja en la cookie HttpOnly, no en el cuerpo ni en localStorage.
+ */
+export async function adminSesionActiva(): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/session`, {
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    return data.activa === true;
+  } catch {
+    return false;
+  }
+}
+
+export async function adminIngresar(password: string): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/session`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+      signal: AbortSignal.timeout(15000),
+    });
+    const data = await res.json().catch(() => ({}));
+    return res.ok ? { ok: true } : { ok: false, error: data.error || 'No se pudo iniciar sesión' };
+  } catch {
+    return { ok: false, error: 'Sin conexión con el servidor' };
+  }
+}
+
+export async function adminSalir(): Promise<void> {
+  try {
+    await fetch(`${API_BASE}/api/admin/session`, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(10000),
+    });
+  } catch {
+    // Si falla, la cookie expira sola por Max-Age.
+  }
+}

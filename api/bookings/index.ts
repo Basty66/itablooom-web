@@ -1,27 +1,32 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
+import { exigirSesion } from '../_shared/auth.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 
+/**
+ * GET ?id=   → una reserva. Público: lo consulta la clienta al volver del pago.
+ *              Devuelve solo los campos de la confirmación; el resto (RUT,
+ *              teléfono, correo, payment_id) no sale de acá.
+ * GET ?date= → agenda del día. Solo con sesión: son datos de terceros.
+ * PUT        → cambiar estado. Solo con sesión.
+ */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
   try {
-    // GET /api/bookings?id=xxx  → booking por ID
-    // GET /api/bookings?date=xxx → bookings por fecha
-    // PUT /api/bookings → actualizar estado
     if (req.method === 'GET') {
       const { id, date } = req.query;
 
       if (id) {
+        // Sin SELECT *: evita filtrar datos personales por una ruta abierta.
         const result = await sql`
-          SELECT b.*, s.name as service_name, s.description as service_description
+          SELECT b.id, b.booking_date, b.booking_time, b.status, b.deposit_paid,
+                 b.deposit_amount, b.total_amount, b.client_name,
+                 s.name as service_name, s.description as service_description,
+                 s.duration_minutes
           FROM bookings b
           JOIN services s ON b.service_id = s.id
           WHERE b.id = ${id as string}
@@ -33,6 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       if (date) {
+        if (await exigirSesion(req, res)) return;
         const result = await sql`
           SELECT b.*, s.name as service_name
           FROM bookings b
@@ -47,12 +53,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === 'PUT') {
+      if (await exigirSesion(req, res)) return;
+
       const { id, status } = req.body;
       if (!id || !status) {
         return res.status(400).json({ error: 'Missing id or status' });
       }
-      const validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
-      if (!validStatuses.includes(status)) {
+      const validos = ['pending', 'confirmed', 'cancelled', 'completed'];
+      if (!validos.includes(status)) {
         return res.status(400).json({ error: 'Invalid status' });
       }
       await sql`UPDATE bookings SET status = ${status} WHERE id = ${id}`;

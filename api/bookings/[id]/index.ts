@@ -3,11 +3,8 @@ import { neon } from '@neondatabase/serverless';
 
 const sql = neon(process.env.DATABASE_URL!);
 
+/** Ruta pública de consulta: mismos campos acotados que `/api/bookings?id=`. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -23,8 +20,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing booking id' });
     }
 
+    // Sin SELECT *: esta ruta es accesible con solo conocer el id.
     const result = await sql`
-      SELECT b.*, s.name as service_name, s.description as service_description
+      SELECT b.id, b.booking_date, b.booking_time, b.status, b.deposit_paid,
+             b.deposit_amount, b.total_amount, b.client_name,
+             s.name as service_name, s.description as service_description,
+             s.duration_minutes
       FROM bookings b
       JOIN services s ON b.service_id = s.id
       WHERE b.id = ${id as string}

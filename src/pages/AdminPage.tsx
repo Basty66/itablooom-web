@@ -1,249 +1,211 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Calendar, Clock, User, Phone, Mail, CheckCircle, XCircle, Search } from 'lucide-react';
+import { CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Booking } from '../types';
-import { getBookingsByDate, updateBookingStatus } from '../lib/api';
+import {
+  getBookingsByDate,
+  updateBookingStatus,
+  adminSesionActiva,
+  adminSalir,
+} from '../lib/api';
+import { formatPrice } from '../lib/format';
+import { Container } from '../components/ui/Section';
+import { Skeleton } from '../components/ui/Skeleton';
+import LoginGate from '../components/admin/LoginGate';
+import BookingRow from '../components/admin/BookingRow';
 
 export default function AdminPage() {
-  const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [autenticado, setAutenticado] = useState<boolean | null>(null);
+  const [fecha, setFecha] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const loadBookings = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await getBookingsByDate(selectedDate);
-      setBookings(data);
-    } catch (error) {
-      console.error('Error loading bookings:', error);
-      setBookings([
-        {
-          id: '1',
-          service_id: '1',
-          client_name: 'María García',
-          client_email: 'maria@ejemplo.cl',
-          client_phone: '+56 9 1234 5678',
-          client_rut: '12.345.678-9',
-          booking_date: selectedDate,
-          booking_time: '10:00',
-          status: 'confirmed',
-          deposit_paid: true,
-          deposit_amount: 10000,
-          total_amount: 27500,
-          created_at: new Date().toISOString(),
-        },
-        {
-          id: '2',
-          service_id: '2',
-          client_name: 'Ana López',
-          client_email: 'ana@ejemplo.cl',
-          client_phone: '+56 9 8765 4321',
-          booking_date: selectedDate,
-          booking_time: '14:00',
-          status: 'pending',
-          deposit_paid: false,
-          deposit_amount: 15000,
-          total_amount: 45000,
-          created_at: new Date().toISOString(),
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  }, [selectedDate]);
+  const [cargando, setCargando] = useState(true);
+  const [busqueda, setBusqueda] = useState('');
+  const [error, setError] = useState('');
+  const [actualizando, setActualizando] = useState<string | null>(null);
 
   useEffect(() => {
-    loadBookings();
-  }, [loadBookings]);
+    adminSesionActiva().then(setAutenticado);
+  }, []);
 
-  async function handleStatusChange(id: string, status: 'confirmed' | 'cancelled' | 'completed') {
+  const cargar = useCallback(async () => {
+    setCargando(true);
+    setError('');
     try {
-      await updateBookingStatus(id, status);
-      loadBookings();
-    } catch (error) {
-      console.error('Error updating status:', error);
+      setBookings(await getBookingsByDate(fecha));
+    } catch (e: any) {
+      // Antes se rellenaba con citas de ejemplo: en un panel de gestión eso es
+      // peor que un error, porque parecen reservas reales.
+      setBookings([]);
+      if (String(e?.message).includes('401')) setAutenticado(false);
+      else setError('No pudimos cargar la agenda. Reintenta en unos segundos.');
+    } finally {
+      setCargando(false);
+    }
+  }, [fecha]);
+
+  useEffect(() => {
+    if (autenticado) cargar();
+  }, [autenticado, cargar]);
+
+  async function cambiarEstado(id: string, estado: Booking['status']) {
+    setActualizando(id);
+    try {
+      await updateBookingStatus(id, estado);
+      await cargar();
+    } catch {
+      setError('No se pudo actualizar la cita.');
+    } finally {
+      setActualizando(null);
     }
   }
 
-  const filteredBookings = bookings.filter(
-    (b) =>
-      b.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      b.client_email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  function formatPrice(price: number) {
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-    }).format(price);
+  async function salir() {
+    await adminSalir();
+    setAutenticado(false);
+    setBookings([]);
   }
 
-  const statusColors: Record<string, string> = {
-    pending: 'bg-yellow-100 text-yellow-800',
-    confirmed: 'bg-green-100 text-green-800',
-    cancelled: 'bg-red-100 text-red-800',
-    completed: 'bg-blue-100 text-blue-800',
-  };
+  if (autenticado === null) {
+    return (
+      <div className="flex min-h-[70vh] items-center justify-center bg-crema-100">
+        <Loader2 size={30} strokeWidth={1.3} className="animate-spin text-rosa-400" aria-hidden="true" />
+        <span className="sr-only">Verificando sesión…</span>
+      </div>
+    );
+  }
 
-  const statusLabels: Record<string, string> = {
-    pending: 'Pendiente',
-    confirmed: 'Confirmada',
-    cancelled: 'Cancelada',
-    completed: 'Completada',
-  };
+  if (!autenticado) return <LoginGate onEntrar={() => setAutenticado(true)} />;
+
+  const visibles = bookings.filter((b) => {
+    const q = busqueda.toLowerCase();
+    return (
+      b.client_name?.toLowerCase().includes(q) || b.client_email?.toLowerCase().includes(q)
+    );
+  });
+
+  const metricas = [
+    { label: 'Citas del día', valor: String(bookings.length) },
+    { label: 'Confirmadas', valor: String(bookings.filter((b) => b.status === 'confirmed').length) },
+    { label: 'Pendientes', valor: String(bookings.filter((b) => b.status === 'pending').length) },
+    {
+      label: 'Señas cobradas',
+      valor: formatPrice(
+        bookings.filter((b) => b.deposit_paid).reduce((t, b) => t + Number(b.deposit_amount || 0), 0)
+      ),
+    },
+  ];
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-          <p className="text-gray-600">Gestiona las citas de Itablooom Studio</p>
+    <div className="min-h-screen bg-crema-100 py-10 md:py-14">
+      <Container>
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="texto-3 text-tinta-900">Panel de administración</h1>
+            <p className="mt-1 texto--1 text-tinta-600">Gestiona la agenda de Itablooom Studio</p>
+          </div>
+          <button
+            onClick={salir}
+            className="inline-flex items-center gap-2 rounded-full border border-tinta-900/20 px-4 py-2 texto--1 font-medium text-tinta-700 transition-all duration-200 hover:border-tinta-900 hover:text-tinta-900 active:scale-95"
+          >
+            <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
+            Cerrar sesión
+          </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-4 mb-6 flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
-            <div className="relative">
-              <Calendar size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <div className="mb-6 grid gap-3 rounded-2xl border border-tinta-900/8 bg-crema-50 p-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-1.5 block texto--1 font-medium text-tinta-700">Fecha</span>
+            <span className="relative block">
+              <CalendarDays
+                size={16}
+                strokeWidth={1.5}
+                aria-hidden="true"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-tinta-400"
+              />
               <input
                 type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                value={fecha}
+                onChange={(e) => setFecha(e.target.value)}
+                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 py-2.5 pl-11 pr-4 texto--1 text-tinta-900 transition-colors duration-200 focus:border-rosa-400 focus:outline-none"
               />
-            </div>
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
-            <div className="relative">
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            </span>
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block texto--1 font-medium text-tinta-700">Buscar</span>
+            <span className="relative block">
+              <Search
+                size={16}
+                strokeWidth={1.5}
+                aria-hidden="true"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-tinta-400"
+              />
               <input
-                type="text"
-                placeholder="Nombre o email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                type="search"
+                placeholder="Nombre o correo…"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 py-2.5 pl-11 pr-4 texto--1 text-tinta-900 placeholder:text-tinta-400 transition-colors duration-200 focus:border-rosa-400 focus:outline-none"
               />
+            </span>
+          </label>
+        </div>
+
+        <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {metricas.map((m) => (
+            <div key={m.label} className="rounded-2xl border border-tinta-900/8 bg-crema-50 p-4">
+              <p className="texto--1 text-tinta-500">{m.label}</p>
+              {cargando ? (
+                <Skeleton className="mt-1 h-7 w-20" />
+              ) : (
+                <p className="font-display texto-2 leading-tight text-tinta-900">{m.valor}</p>
+              )}
             </div>
-          </div>
+          ))}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <p className="text-sm text-gray-500">Total Citas</p>
-            <p className="text-2xl font-bold text-gray-900">{bookings.length}</p>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <p className="text-sm text-gray-500">Confirmadas</p>
-            <p className="text-2xl font-bold text-green-600">
-              {bookings.filter((b) => b.status === 'confirmed').length}
-            </p>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <p className="text-sm text-gray-500">Pendientes</p>
-            <p className="text-2xl font-bold text-yellow-600">
-              {bookings.filter((b) => b.status === 'pending').length}
-            </p>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <p className="text-sm text-gray-500">Ingresos Señas</p>
-            <p className="text-2xl font-bold text-purple-600">
-              {formatPrice(bookings.filter((b) => b.deposit_paid).reduce((sum, b) => sum + b.deposit_amount, 0))}
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="p-4 border-b">
-            <h2 className="text-lg font-semibold">
-              Citas del {format(new Date(selectedDate + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: es })}
+        <div className="overflow-hidden rounded-2xl border border-tinta-900/8 bg-crema-50">
+          <div className="border-b border-tinta-900/8 px-5 py-4">
+            <h2 className="texto-1 capitalize text-tinta-900">
+              {format(new Date(fecha + 'T12:00:00'), "EEEE d 'de' MMMM, yyyy", { locale: es })}
             </h2>
           </div>
 
-          {loading ? (
-            <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-700 mx-auto"></div>
-            </div>
-          ) : filteredBookings.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No hay citas para esta fecha
-            </div>
-          ) : (
-            <div className="divide-y">
-              {filteredBookings.map((booking) => (
-                <div key={booking.id} className="p-4 hover:bg-gray-50">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                        <User className="text-purple-700" size={24} />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{booking.client_name}</h3>
-                        <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
-                          <span className="flex items-center gap-1">
-                            <Clock size={14} /> {booking.booking_time}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Phone size={14} /> {booking.client_phone}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
-                          <span className="flex items-center gap-1">
-                            <Mail size={14} /> {booking.client_email}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+          {error && (
+            <p role="alert" className="flex items-center gap-2 bg-rosa-100 px-5 py-3 texto--1 text-tinta-800">
+              <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-rosa-600" aria-hidden="true" />
+              {error}
+            </p>
+          )}
 
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${statusColors[booking.status]}`}>
-                          {statusLabels[booking.status]}
-                        </span>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Seña: {formatPrice(booking.deposit_amount)}
-                        </p>
-                      </div>
-
-                      <div className="flex gap-2">
-                        {booking.status === 'pending' && (
-                          <>
-                            <button
-                              onClick={() => handleStatusChange(booking.id, 'confirmed')}
-                              className="p-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200"
-                              title="Confirmar"
-                            >
-                              <CheckCircle size={18} />
-                            </button>
-                            <button
-                              onClick={() => handleStatusChange(booking.id, 'cancelled')}
-                              className="p-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
-                              title="Cancelar"
-                            >
-                              <XCircle size={18} />
-                            </button>
-                          </>
-                        )}
-                        {booking.status === 'confirmed' && (
-                          <button
-                            onClick={() => handleStatusChange(booking.id, 'completed')}
-                            className="p-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
-                            title="Completar"
-                          >
-                            <CheckCircle size={18} />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          {cargando ? (
+            <div className="space-y-3 p-5">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-20 rounded-xl" />
               ))}
             </div>
+          ) : visibles.length === 0 ? (
+            <div className="flex flex-col items-center px-5 py-14 text-center">
+              <Inbox size={26} strokeWidth={1.3} className="mb-3 text-tinta-400" aria-hidden="true" />
+              <p className="texto--1 text-tinta-600">
+                {busqueda ? 'Ninguna cita coincide con la búsqueda.' : 'No hay citas para esta fecha.'}
+              </p>
+            </div>
+          ) : (
+            <ul className="divide-y divide-tinta-900/8">
+              {visibles.map((b) => (
+                <BookingRow
+                  key={b.id}
+                  booking={b}
+                  onEstado={cambiarEstado}
+                  actualizando={actualizando === b.id}
+                />
+              ))}
+            </ul>
           )}
         </div>
-      </div>
+      </Container>
     </div>
   );
 }
