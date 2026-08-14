@@ -87,7 +87,7 @@ export async function checkPaymentStatus(
   bookingId: string
 ): Promise<{ status: string; deposit_paid: boolean }> {
   try {
-    return await apiFetch(`/api/payment-status/${bookingId}`, {}, 1, 1000);
+    return await apiFetch(`/api/payment-status?bookingId=${bookingId}`, {}, 1, 1000);
   } catch {
     return { status: 'pending', deposit_paid: false };
   }
@@ -99,7 +99,7 @@ export async function checkPaymentStatus(
 
 export async function getBookingById(id: string): Promise<Booking | null> {
   try {
-    return await apiFetch(`/api/bookings/${id}`);
+    return await apiFetch(`/api/bookings?id=${id}`);
   } catch {
     return null;
   }

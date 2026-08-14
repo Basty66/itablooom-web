@@ -33,9 +33,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(404).json({ error: 'Booking not found' });
     }
 
-    const booking = result[0] as any;
+    const booking = result[0] as Record<string, unknown>;
 
-    // Si tiene payment_id pero no está pagado, sincronizar con MP
     if (booking.payment_id && !booking.deposit_paid) {
       try {
         const paymentResponse = await fetch(
@@ -48,7 +47,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         );
 
         if (paymentResponse.ok) {
-          const payment = (await paymentResponse.json()) as any;
+          const payment = (await paymentResponse.json()) as Record<string, unknown>;
 
           if (payment.status === 'approved' && !booking.deposit_paid) {
             await sql`
