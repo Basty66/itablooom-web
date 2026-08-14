@@ -1,17 +1,15 @@
 import { google } from 'googleapis';
 
 export function getCalendarClient() {
-  const json = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const key = process.env.GOOGLE_PRIVATE_KEY;
 
-  if (!json) {
+  if (!email || !key) {
     throw new Error('Missing Google Calendar credentials');
   }
 
-  const serviceAccount = JSON.parse(json);
-  const key = serviceAccount.private_key.replace(/\\n/g, '\n');
-
   const auth = new google.auth.JWT({
-    email: serviceAccount.client_email,
+    email,
     key,
     scopes: ['https://www.googleapis.com/auth/calendar'],
   });
