@@ -2,6 +2,7 @@ import { CalendarHeart, ArrowRight, ShieldCheck, Clock3, MessageCircleHeart } fr
 import Button from '../ui/Button';
 import { Container } from '../ui/Section';
 import FloatingHearts from '../ui/FloatingHearts';
+import ScrollIndicator from '../ui/ScrollIndicator';
 
 const SENALES = [
   { icono: ShieldCheck, texto: 'Pago protegido con Mercado Pago' },
@@ -11,7 +12,16 @@ const SENALES = [
 
 export default function Hero() {
   return (
-    <section className="textura-papel relative overflow-hidden bg-gradient-to-b from-rosa-100 via-crema-100 to-crema-100">
+    /*
+     * Pantalla completa solo si hay ancho (lg) Y al menos 720px de alto.
+     * Sin la condición de altura, en un portátil de 620px el contenido no
+     * entra: se desborda y el indicador se solapa con el texto.
+     *
+     * `svh` en vez de `vh` evita el salto que produce la barra del navegador
+     * móvil al aparecer. Restamos los 72px del navbar para que la sección
+     * ocupe justo lo visible.
+     */
+    <section className="textura-papel relative flex items-center overflow-hidden bg-gradient-to-b from-rosa-100 via-crema-100 to-crema-100 lg:[@media(min-height:720px)]:min-h-[calc(100svh-4.5rem)]">
       {/*
         Foto de fondo: la profesional atendiendo. Va muy tenue y filtrada
         (sepia + saturación baja) porque la original tiene verdes fríos que
@@ -39,7 +49,10 @@ export default function Hero() {
       <FloatingHearts cantidad={14} />
 
       <Container className="relative">
-        <div className="grid items-center gap-12 py-20 md:grid-cols-12 md:py-28">
+        {/* En lg lo centra el flex de la sección, así que basta poco padding.
+            El pb extra reserva la franja del indicador: sin él, el contenido
+            se le montaba encima por unos 43px. */}
+        <div className="grid w-full items-center gap-12 py-20 md:grid-cols-12 md:py-28 lg:py-16 lg:[@media(min-height:720px)]:pb-36">
           <div className="md:col-span-7">
             <p
               className="anim-entrada texto--1 mb-5 font-medium uppercase tracking-[0.22em] text-rosa-600"
@@ -127,6 +140,8 @@ export default function Hero() {
           </div>
         </div>
       </Container>
+
+      <ScrollIndicator destino="#como-funciona" />
     </section>
   );
 }
