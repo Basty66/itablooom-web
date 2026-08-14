@@ -39,11 +39,11 @@ export async function createCalendarEvent(data: {
     description: description || `Cita de ${clientName} - ${summary}`,
     start: {
       dateTime: startDate.toISOString(),
-      AmericaSantiago: 'America/Santiago',
+      timeZone: 'America/Santiago',
     },
     end: {
       dateTime: endDate.toISOString(),
-      AmericaSantiago: 'America/Santiago',
+      timeZone: 'America/Santiago',
     },
     attendees: [
       { email: clientEmail },
@@ -63,8 +63,8 @@ export async function createCalendarEvent(data: {
       requestBody: event,
     });
     return response.data.id || null;
-  } catch (error) {
-    console.error('Error creating calendar event:', error);
+  } catch (error: any) {
+    console.error('Error creating calendar event:', error?.message || error);
     return null;
   }
 }
