@@ -9,6 +9,7 @@ import StepIndicator from '../components/booking/StepIndicator';
 import ServiceStep from '../components/booking/ServiceStep';
 import DateTimeStep from '../components/booking/DateTimeStep';
 import DetailsStep, { type DatosCliente } from '../components/booking/DetailsStep';
+import ResumenReserva from '../components/booking/ResumenReserva';
 
 const TITULOS = ['Elige tu tratamiento', 'Fecha y hora', 'Tus datos'];
 
@@ -113,12 +114,21 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-screen bg-crema-100 py-10 md:py-16">
-      <Container className="max-w-3xl">
+      <Container className="max-w-5xl">
+        <header className="mb-9 text-center">
+          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-rosa-600">
+            Reserva tu hora
+          </p>
+          <h1 className="texto-3 text-tinta-900">{TITULOS[paso - 1]}</h1>
+        </header>
+
         <StepIndicator actual={paso} />
 
-        <form onSubmit={onSubmit} className="mt-10">
-          <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-6 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-8">
-            <h1 className="texto-2 mb-6 text-tinta-900">{TITULOS[paso - 1]}</h1>
+        {/* Dos columnas en escritorio: los pasos a la izquierda y el resumen
+            siempre a la vista. En móvil el resumen baja al final del flujo. */}
+        <form onSubmit={onSubmit} className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-start">
+          <div className="lg:col-span-7 xl:col-span-8">
+            <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
 
             {paso === 1 && (
               <ServiceStep
@@ -200,6 +210,17 @@ export default function BookingPage() {
                 </>
               )}
             </button>
+            </div>
+          </div>
+
+          {/* sticky: el resumen acompaña el scroll de los pasos largos. */}
+          <div className="lg:col-span-5 lg:sticky lg:top-24 xl:col-span-4">
+            <ResumenReserva
+              service={service}
+              fecha={fecha}
+              hora={hora}
+              tipoPago={datos.paymentType}
+            />
           </div>
         </form>
       </Container>

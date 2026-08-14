@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 import { User, Mail, Phone, Timer, Check } from 'lucide-react';
 import type { Service } from '../../types';
 import { formatPrice } from '../../lib/format';
@@ -53,12 +51,6 @@ function Campo({
 
 export default function DetailsStep({ datos, onCambio, service, fecha, hora }: Props) {
   const set = (parcial: Partial<DatosCliente>) => onCambio({ ...datos, ...parcial });
-  const monto = service
-    ? datos.paymentType === 'full'
-      ? service.price
-      : service.deposit_amount
-    : 0;
-
   return (
     <div className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-2">
@@ -159,32 +151,13 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
         </div>
       </fieldset>
 
+      {/* El detalle de la cita vive en ResumenReserva, visible durante todo el
+          flujo. Acá solo queda la expectativa sobre el plazo de pago. */}
       {service && fecha && hora && (
-        <div className="rounded-2xl border border-tinta-900/10 bg-crema-200/50 p-6">
-          <h3 className="mb-4 texto-1 text-tinta-900">Resumen de tu cita</h3>
-          <dl className="space-y-2.5 texto--1">
-            {[
-              ['Tratamiento', service.name],
-              ['Fecha', format(fecha, "EEEE d 'de' MMMM", { locale: es })],
-              ['Hora', hora],
-            ].map(([k, v]) => (
-              <div key={k} className="flex justify-between gap-4">
-                <dt className="text-tinta-500">{k}</dt>
-                <dd className="text-right font-medium capitalize text-tinta-900">{v}</dd>
-              </div>
-            ))}
-            <div className="flex items-baseline justify-between gap-4 border-t border-tinta-900/10 pt-3">
-              <dt className="text-tinta-600">Pagas ahora</dt>
-              <dd className="font-display texto-2 text-tinta-900">{formatPrice(monto)}</dd>
-            </div>
-          </dl>
-
-          {/* Expectativa explícita: el cupo se libera a los 10 min sin pago. */}
-          <p className="mt-4 flex items-start gap-2 texto--1 text-tinta-500">
-            <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-rosa-500" aria-hidden="true" />
-            Tienes 10 minutos para completar el pago. Después el horario vuelve a quedar disponible.
-          </p>
-        </div>
+        <p className="flex items-start gap-2 rounded-2xl bg-crema-200/50 p-4 texto--1 text-tinta-600">
+          <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-rosa-600" aria-hidden="true" />
+          Tienes 10 minutos para completar el pago. Después el horario vuelve a quedar disponible.
+        </p>
       )}
     </div>
   );
