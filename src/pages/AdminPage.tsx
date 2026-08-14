@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, XCircle, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -11,18 +11,13 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    loadBookings();
-  }, [selectedDate]);
-
-  async function loadBookings() {
+  const loadBookings = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getBookingsByDate(selectedDate);
       setBookings(data);
     } catch (error) {
       console.error('Error loading bookings:', error);
-      // Fallback data
       setBookings([
         {
           id: '1',
@@ -57,7 +52,11 @@ export default function AdminPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [selectedDate]);
+
+  useEffect(() => {
+    loadBookings();
+  }, [loadBookings]);
 
   async function handleStatusChange(id: string, status: 'confirmed' | 'cancelled' | 'completed') {
     try {
@@ -103,7 +102,6 @@ export default function AdminPage() {
           <p className="text-gray-600">Gestiona las citas de Itablooom Studio</p>
         </div>
 
-        {/* Filters */}
         <div className="bg-white rounded-2xl shadow-sm p-4 mb-6 flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
@@ -132,7 +130,6 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-xl p-4 shadow-sm">
             <p className="text-sm text-gray-500">Total Citas</p>
@@ -158,7 +155,6 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Bookings List */}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="p-4 border-b">
             <h2 className="text-lg font-semibold">
@@ -187,7 +183,7 @@ export default function AdminPage() {
                         <h3 className="font-semibold text-gray-900">{booking.client_name}</h3>
                         <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
                           <span className="flex items-center gap-1">
-                            <Clock size={14} /> {booking.time}
+                            <Clock size={14} /> {booking.booking_time}
                           </span>
                           <span className="flex items-center gap-1">
                             <Phone size={14} /> {booking.client_phone}

@@ -2,7 +2,7 @@ import { useLocation, Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle, Calendar, Clock, CreditCard, MessageCircle, ArrowLeft, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Booking } from '../types';
 import { getBookingById } from '../lib/api';
 
@@ -17,13 +17,7 @@ export default function ConfirmationPage() {
   const status = searchParams.get('status');
   const bookingId = searchParams.get('booking');
 
-  useEffect(() => {
-    if (bookingId && !booking) {
-      loadBooking(bookingId);
-    }
-  }, [bookingId]);
-
-  async function loadBooking(id: string) {
+  const loadBooking = useCallback(async (id: string) => {
     try {
       const data = await getBookingById(id);
       setBooking(data);
@@ -32,7 +26,13 @@ export default function ConfirmationPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    if (bookingId && !booking) {
+      loadBooking(bookingId);
+    }
+  }, [bookingId, booking, loadBooking]);
 
   function formatPrice(price: number) {
     return new Intl.NumberFormat('es-CL', {
@@ -111,7 +111,6 @@ export default function ConfirmationPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-2xl mx-auto px-4">
-        {/* Success Message */}
         <div className="text-center mb-8">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="text-green-600" size={48} />
@@ -122,7 +121,6 @@ export default function ConfirmationPage() {
           </p>
         </div>
 
-        {/* Booking Details */}
         <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6">Detalles de tu Reserva</h2>
           
@@ -160,7 +158,6 @@ export default function ConfirmationPage() {
             </div>
           </div>
 
-          {/* Payment Summary */}
           <div className="mt-6 pt-6 border-t">
             <h3 className="font-semibold text-gray-900 mb-3">Resumen de Pago</h3>
             <div className="space-y-2 text-sm">
@@ -176,7 +173,6 @@ export default function ConfirmationPage() {
           </div>
         </div>
 
-        {/* Next Steps */}
         <div className="bg-purple-50 rounded-2xl p-6 mb-6">
           <h3 className="font-bold text-gray-900 mb-4">Próximos Pasos</h3>
           <div className="space-y-3 text-sm text-gray-700">
@@ -186,7 +182,6 @@ export default function ConfirmationPage() {
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
             to="/"

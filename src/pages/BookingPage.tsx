@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Calendar, Clock, User, Mail, Phone, CreditCard, ChevronLeft, ChevronRight, Check, Loader2 } from 'lucide-react';
 import { format, addDays, startOfDay, isSameDay } from 'date-fns';
@@ -26,30 +26,16 @@ export default function BookingPage() {
     notes: '',
   });
 
-  useEffect(() => {
-    loadServices();
-    const serviceId = searchParams.get('service');
-    if (serviceId) {
-      setSelectedService(services.find(s => s.id === serviceId) || null);
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (selectedDate && selectedService) {
-      loadTimeSlots();
-    }
-  }, [selectedDate, selectedService]);
-
-  async function loadServices() {
+  const loadServices = useCallback(async () => {
     try {
       const data = await getServices();
       setServices(data);
     } catch (error) {
       console.error('Error loading services:', error);
     }
-  }
+  }, []);
 
-  async function loadTimeSlots() {
+  const loadTimeSlots = useCallback(async () => {
     if (!selectedDate || !selectedService) return;
     setLoadingSlots(true);
     try {
@@ -61,7 +47,25 @@ export default function BookingPage() {
     } finally {
       setLoadingSlots(false);
     }
-  }
+  }, [selectedDate, selectedService]);
+
+  useEffect(() => {
+    loadServices();
+  }, [loadServices]);
+
+  useEffect(() => {
+    const serviceId = searchParams.get('service');
+    if (serviceId && services.length > 0) {
+      const found = services.find(s => s.id === serviceId);
+      if (found) setSelectedService(found);
+    }
+  }, [searchParams, services]);
+
+  useEffect(() => {
+    if (selectedDate && selectedService) {
+      loadTimeSlots();
+    }
+  }, [selectedDate, selectedService, loadTimeSlots]);
 
   function formatPrice(price: number) {
     return new Intl.NumberFormat('es-CL', {
@@ -105,7 +109,6 @@ export default function BookingPage() {
         notes: formData.notes,
       });
       
-      // Redirect to Mercado Pago
       window.location.href = result.init_point;
     } catch (error) {
       console.error('Error creating preference:', error);
@@ -207,7 +210,6 @@ export default function BookingPage() {
             <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Elige Fecha y Hora</h2>
               
-              {/* Calendar */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Calendar size={20} /> Selecciona un día
@@ -241,7 +243,6 @@ export default function BookingPage() {
                 </div>
               </div>
 
-              {/* Time Slots */}
               {selectedDate && (
                 <div>
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -358,7 +359,6 @@ export default function BookingPage() {
                 />
               </div>
 
-              {/* Summary */}
               {selectedService && selectedDate && selectedTime && (
                 <div className="bg-purple-50 rounded-xl p-4 mb-6">
                   <h4 className="font-semibold text-gray-900 mb-2">Resumen de tu Cita</h4>
@@ -373,7 +373,6 @@ export default function BookingPage() {
             </div>
           )}
 
-          {/* Navigation Buttons */}
           <div className="flex justify-between mt-6">
             {step > 1 && (
               <button
