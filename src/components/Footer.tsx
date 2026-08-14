@@ -134,7 +134,7 @@ export default function Footer() {
 
         <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-crema-100/10 pt-8 texto--1 text-crema-100/45 sm:flex-row">
           <p>© {new Date().getFullYear()} Itablooom Studio</p>
-          <p>Diseñado y desarrollado por opencode</p>
+          <p>Diseñado y desarrollado por BS Digital Tech</p>
         </div>
       </Container>
     </footer>
