@@ -14,8 +14,6 @@ export default function Navbar() {
   const [conScroll, setConScroll] = useState(false);
   const location = useLocation();
 
-  // Arriba del todo la barra es transparente y se funde con el hero; al bajar
-  // aparece el fondo para que el texto no compita con el contenido.
   useEffect(() => {
     const alScrollear = () => setConScroll(window.scrollY > 16);
     alScrollear();
@@ -23,8 +21,13 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', alScrollear);
   }, []);
 
-  // Cerramos el menú al navegar, si no queda abierto sobre la página nueva.
   useEffect(() => setAbierto(false), [location.pathname]);
+
+  // Bloquear scroll del body cuando el menú está abierto
+  useEffect(() => {
+    document.body.style.overflow = abierto ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [abierto]);
 
   return (
     <header
@@ -54,7 +57,6 @@ export default function Navbar() {
                   className="group relative inline-block py-1 texto--1 font-medium tracking-wide text-tinta-700 transition-colors duration-200 hover:text-tinta-900"
                 >
                   {link.label}
-                  {/* Subrayado que crece desde el centro; queda fijo si es la página actual. */}
                   <span
                     className={`absolute bottom-0 left-0 h-px bg-rosa-400 transition-all duration-300 ease-out ${
                       activo ? 'w-full' : 'w-0 group-hover:w-full'
@@ -81,28 +83,54 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {abierto && (
+      {/* Backdrop + menú overlay — siempre renderizado, controlado por CSS */}
+      <div
+        id="menu-movil"
+        className={`fixed inset-0 top-18 z-40 md:hidden ${
+          abierto ? 'pointer-events-auto' : 'pointer-events-none'
+        }`}
+      >
+        {/* Backdrop */}
         <div
-          id="menu-movil"
-          className="border-t border-tinta-900/8 bg-crema-100/95 backdrop-blur-md md:hidden"
+          className={`absolute inset-0 bg-tinta-900/40 backdrop-blur-sm transition-opacity duration-300 ease-out ${
+            abierto ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={() => setAbierto(false)}
+          aria-hidden="true"
+        />
+
+        {/* Panel del menú */}
+        <div
+          className={`relative mx-auto mt-2 w-[calc(100%-2.5rem)] max-w-sm rounded-2xl border border-tinta-900/8 bg-crema-50 p-3 shadow-2xl transition-all duration-300 ease-out ${
+            abierto
+              ? 'translate-y-0 opacity-100 scale-100'
+              : '-translate-y-3 opacity-0 scale-95'
+          }`}
         >
-          <div className="space-y-1 px-5 py-4">
-            {LINKS.map((link, i) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className="anim-entrada block rounded-xl px-4 py-3 font-medium text-tinta-800 transition-colors duration-200 hover:bg-rosa-100"
-                style={{ animationDelay: `${i * 60}ms` }}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="space-y-1">
+            {LINKS.map((link, i) => {
+              const activo = location.pathname === link.path;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`block rounded-xl px-4 py-3 font-medium transition-colors duration-200 ${
+                    activo
+                      ? 'bg-rosa-100 text-rosa-700'
+                      : 'text-tinta-800 hover:bg-rosa-100'
+                  }`}
+                  style={{ transitionDelay: abierto ? `${i * 50}ms` : '0ms' }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <Button to="/agendar" size="md" className="mt-2 w-full">
               Reservar hora
             </Button>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
