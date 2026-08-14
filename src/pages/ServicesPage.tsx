@@ -1,182 +1,106 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Clock, DollarSign, ArrowRight } from 'lucide-react';
+import { SearchX } from 'lucide-react';
 import type { Service } from '../types';
 import { getServices } from '../lib/api';
+import ServiceCard from '../components/ServiceCard';
+import { Section, SectionHeading } from '../components/ui/Section';
+import { ServiceCardSkeleton } from '../components/ui/Skeleton';
+
+const CATEGORIAS = [
+  { id: 'all', label: 'Todos' },
+  { id: 'facial', label: 'Facial' },
+  { id: 'laser', label: 'Láser' },
+  { id: 'course', label: 'Cursos' },
+] as const;
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(false);
+  const [categoria, setCategoria] = useState<string>('all');
 
   useEffect(() => {
-    loadServices();
+    cargar();
   }, []);
 
-  async function loadServices() {
+  async function cargar() {
+    setCargando(true);
+    setError(false);
     try {
-      const data = await getServices();
-      setServices(data);
-    } catch (error) {
-      console.error('Error loading services:', error);
-      // Fallback data
-      setServices([
-        {
-          id: '1',
-          name: 'Limpieza Profunda',
-          description: 'Limpieza facial profunda con extracción de impurezas, mascarilla hidratante y masaje relajante.',
-          duration_minutes: 60,
-          price: 27500,
-          deposit_amount: 10000,
-          category: 'facial',
-          active: true,
-        },
-        {
-          id: '2',
-          name: 'Microneedling',
-          description: 'Tratamiento de microneedling para renovación celular, cicatrices de acné y rejuvenecimiento.',
-          duration_minutes: 90,
-          price: 45000,
-          deposit_amount: 15000,
-          category: 'facial',
-          active: true,
-        },
-        {
-          id: '3',
-          name: 'Depilación Láser',
-          description: 'Depilación láser definitiva. Zonas: axilas, bigote, cejas, piernas, brazos.',
-          duration_minutes: 30,
-          price: 15000,
-          deposit_amount: 5000,
-          category: 'laser',
-          active: true,
-        },
-        {
-          id: '4',
-          name: 'Curso Esmaltado Permanente',
-          description: 'Curso presencial de esmaltado permanente. Incluye materiales y certificado.',
-          duration_minutes: 240,
-          price: 85000,
-          deposit_amount: 30000,
-          category: 'course',
-          active: true,
-        },
-      ]);
+      setServices(await getServices());
+    } catch {
+      setError(true);
     } finally {
-      setLoading(false);
+      setCargando(false);
     }
   }
 
-  const categories = [
-    { id: 'all', label: 'Todos' },
-    { id: 'facial', label: 'Facial' },
-    { id: 'laser', label: 'Láser' },
-    { id: 'course', label: 'Cursos' },
-  ];
-
-  const filteredServices = activeCategory === 'all' 
-    ? services 
-    : services.filter(s => s.category === activeCategory);
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-    }).format(price);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-700"></div>
-      </div>
-    );
-  }
+  const visibles =
+    categoria === 'all' ? services : services.filter((s) => s.category === categoria);
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Nuestros Servicios</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Tratamientos faciales, depilación láser y cursos de esmaltado permanente
-          </p>
-        </div>
+    <Section className="bg-crema-100">
+      <SectionHeading
+        as="h1"
+        eyebrow="Catálogo"
+        title="Nuestros tratamientos"
+        subtitle="Estética facial, depilación láser y formación profesional."
+      />
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {categories.map((cat) => (
+      <div
+        role="tablist"
+        aria-label="Filtrar por categoría"
+        className="mt-12 flex flex-wrap justify-center gap-2"
+      >
+        {CATEGORIAS.map((cat) => {
+          const activa = categoria === cat.id;
+          return (
             <button
               key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-                activeCategory === cat.id
-                  ? 'bg-purple-700 text-white'
-                  : 'bg-white text-gray-600 hover:bg-purple-100'
+              role="tab"
+              aria-selected={activa}
+              onClick={() => setCategoria(cat.id)}
+              className={`rounded-full px-6 py-2.5 texto--1 font-medium transition-all duration-200 ease-out active:scale-95 ${
+                activa
+                  ? 'bg-tinta-900 text-crema-100 shadow-sm'
+                  : 'border border-tinta-900/15 text-tinta-600 hover:border-rosa-300 hover:text-tinta-900'
               }`}
             >
               {cat.label}
             </button>
-          ))}
-        </div>
-
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredServices.map((service) => (
-            <div
-              key={service.id}
-              className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all overflow-hidden"
-            >
-              <div className="h-48 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-                <span className="text-6xl">
-                  {service.category === 'facial' ? '✨' : service.category === 'laser' ? '💫' : '💅'}
-                </span>
-              </div>
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="text-xl font-bold text-gray-900">{service.name}</h3>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full capitalize">
-                    {service.category === 'facial' ? 'Facial' : service.category === 'laser' ? 'Láser' : 'Curso'}
-                  </span>
-                </div>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{service.description}</p>
-                
-                <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <Clock size={16} />
-                    <span>{service.duration_minutes} min</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <DollarSign size={16} />
-                    <span>Seña: {formatPrice(service.deposit_amount)}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between pt-4 border-t">
-                  <div>
-                    <p className="text-sm text-gray-500">Precio</p>
-                    <p className="text-2xl font-bold text-purple-700">{formatPrice(service.price)}</p>
-                  </div>
-                  <Link
-                    to={`/agendar?service=${service.id}`}
-                    className="bg-purple-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-800 transition-colors inline-flex items-center gap-2"
-                  >
-                    Agendar
-                    <ArrowRight size={18} />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredServices.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            No hay servicios disponibles en esta categoría.
-          </div>
-        )}
+          );
+        })}
       </div>
-    </div>
+
+      <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {cargando &&
+          Array.from({ length: 6 }).map((_, i) => <ServiceCardSkeleton key={i} />)}
+
+        {!cargando &&
+          visibles.map((service, i) => (
+            <ServiceCard key={service.id} service={service} delay={i * 80} />
+          ))}
+      </div>
+
+      {!cargando && error && (
+        <div className="mx-auto mt-8 max-w-md rounded-2xl border border-tinta-900/10 bg-crema-50 p-10 text-center">
+          <p className="texto-1 mb-2 text-tinta-900">No pudimos cargar los tratamientos</p>
+          <p className="mb-6 texto--1 text-tinta-600">Revisa tu conexión e intentá de nuevo.</p>
+          <button
+            onClick={cargar}
+            className="rounded-full bg-tinta-900 px-6 py-2.5 texto--1 font-medium text-crema-100 transition-all duration-200 hover:bg-tinta-800 active:scale-95"
+          >
+            Reintentar
+          </button>
+        </div>
+      )}
+
+      {!cargando && !error && visibles.length === 0 && (
+        <div className="mt-8 flex flex-col items-center py-16 text-center">
+          <SearchX size={30} strokeWidth={1.3} className="mb-4 text-tinta-400" aria-hidden="true" />
+          <p className="text-tinta-600">No hay tratamientos en esta categoría.</p>
+        </div>
+      )}
+    </Section>
   );
 }

@@ -1,38 +1,181 @@
 @import "tailwindcss";
 
-:root {
-  --primary: #1a1a2e;
-  --accent: #6b46c1;
-  --accent-light: #8b5cf6;
-  --success: #28a745;
-  --warning: #ffc107;
+/*
+ * Design tokens. Toda la estética sale de acá: cambiando estos valores cambia
+ * la piel completa del sitio sin tocar un solo componente.
+ */
+@theme {
+  /* Crema: fondos y superficies. */
+  --color-crema-50: #fdfbf7;
+  --color-crema-100: #faf6ef;
+  --color-crema-200: #f4ede1;
+  --color-crema-300: #ebe0ce;
+  --color-crema-400: #ddcdb4;
+
+  /* Tinta: negro cálido, nunca #000 puro (vibra sobre crema). */
+  --color-tinta-400: #9a8d84;
+  --color-tinta-500: #7d7068;
+  --color-tinta-600: #5a4f47;
+  --color-tinta-700: #3a322c;
+  --color-tinta-800: #241e1a;
+  --color-tinta-900: #14100e;
+
+  /* Rosado pastel: acento. */
+  --color-rosa-50: #fdf4f4;
+  --color-rosa-100: #fae8e9;
+  --color-rosa-200: #f4d2d5;
+  --color-rosa-300: #e9b4b9;
+  --color-rosa-400: #db949b;
+  --color-rosa-500: #c87880;
+
+  --font-display: "Cormorant Garamond", "Georgia", serif;
+  --font-sans: "Jost", system-ui, -apple-system, sans-serif;
+
+  /* Curva orgánica: arranca rápido y asienta suave. */
+  --ease-suave: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-body {
-  margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/*
+ * Tipografía fluida en escala 1.25x. clamp() evita saltos entre breakpoints:
+ * el texto escala con el viewport en vez de cambiar de golpe.
+ */
+@layer base {
+  :root {
+    --paso--1: clamp(0.8rem, 0.17vw + 0.76rem, 0.89rem);
+    --paso-0: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
+    --paso-1: clamp(1.25rem, 0.61vw + 1.1rem, 1.58rem);
+    --paso-2: clamp(1.56rem, 1vw + 1.31rem, 2.11rem);
+    --paso-3: clamp(1.85rem, 1.2vw + 1.55rem, 2.5rem);
+    /* Tope deliberadamente contenido: en pantallas grandes un display de 5rem
+       se come la sección y obliga a scrollear para leer el subtítulo. */
+    --paso-4: clamp(2.25rem, 1.7vw + 1.83rem, 3.1rem);
+    --paso-5: clamp(2.6rem, 2.4vw + 2rem, 3.9rem);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-crema-100);
+    color: var(--color-tinta-900);
+    font-family: var(--font-sans);
+    font-size: var(--paso-0);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  /* Un solo anillo de foco para todo el sitio, visible sobre crema y sobre tinta. */
+  :focus-visible {
+    outline: 2px solid var(--color-rosa-400);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-rosa-200);
+    color: var(--color-tinta-900);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-crema-200);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-rosa-300);
+    border-radius: 999px;
+    border: 2px solid var(--color-crema-200);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-rosa-400);
+  }
 }
 
-#root {
-  min-height: 100vh;
+@layer utilities {
+  .texto--1 { font-size: var(--paso--1); }
+  .texto-0 { font-size: var(--paso-0); }
+  .texto-1 { font-size: var(--paso-1); }
+  .texto-2 { font-size: var(--paso-2); }
+  .texto-3 { font-size: var(--paso-3); }
+  .texto-4 { font-size: var(--paso-4); }
+  .texto-5 { font-size: var(--paso-5); }
+
+  /* Entrada base. El stagger se aplica con animation-delay inline. */
+  .anim-entrada {
+    animation: entrada 0.7s var(--ease-suave) both;
+  }
+
+  .anim-velo {
+    animation: velo 1.2s var(--ease-suave) both;
+  }
+
+  /* Grano sutil: rompe el plano del crema y da textura de papel. */
+  .textura-papel {
+    position: relative;
+  }
+  .textura-papel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+@keyframes velo {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-light);
+/* Respetamos a quien pidió menos movimiento: nada de animaciones de entrada. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
