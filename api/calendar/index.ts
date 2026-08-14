@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createCalendarEvent } from './_lib.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,6 +20,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    const { createCalendarEvent } = await import('./_lib.js');
+
     const eventId = await createCalendarEvent({
       summary,
       description,
@@ -37,7 +38,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(500).json({ error: 'Failed to create calendar event' });
     }
   } catch (error: any) {
-    console.error('Calendar API error:', error?.message || error);
-    return res.status(500).json({ error: error?.message || 'Internal server error' });
+    return res.status(500).json({ error: error?.message || String(error) });
   }
 }
