@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
+import { RESERVA_TTL_MINUTOS, expirarReservasVencidas } from '../_shared/bookings.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -65,10 +66,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(404).json({ error: 'Servicio no encontrado' });
     }
 
+    // Libera los cupos de quienes abandonaron el checkout antes de evaluar
+    // si el horario sigue tomado.
+    await expirarReservasVencidas(sql);
+
     const existingBooking = await sql`
       SELECT id FROM bookings
       WHERE booking_date = ${date} AND booking_time = ${time}
-        AND status IN ('pending', 'confirmed')
+        AND (
+          status = 'confirmed'
+          OR (status = 'pending' AND created_at > NOW() - (${RESERVA_TTL_MINUTOS} * INTERVAL '1 minute'))
+        )
     `;
 
     if (existingBooking.length > 0) {
@@ -115,9 +123,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         },
         auto_return: 'approved',
         notification_url: `${appUrl}/api/webhooks/mercadopago`,
+        // La preferencia caduca junto con el cupo: si dejáramos 30 min, la
+        // clienta podría pagar un horario que ya se liberó a los 10.
         expires: true,
         expiration_date_from: new Date().toISOString(),
-        expiration_date_to: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+        expiration_date_to: new Date(Date.now() + RESERVA_TTL_MINUTOS * 60 * 1000).toISOString(),
         payer: {
           name: clientName,
           email: clientEmail,

@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
+import { RESERVA_TTL_MINUTOS } from '../_shared/bookings.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -34,17 +35,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const blocked = await sql`SELECT time_start, time_end FROM blocked_times WHERE date = ${date as string}`;
 
+    // Traemos la duración real de cada reserva: sin ella, un servicio de 240 min
+    // solo bloquearía la primera hora y se podrían reservar las otras tres encima.
+    // Una `pending` solo retiene el cupo durante la ventana de pago; pasada esa
+    // ventana el horario vuelve a estar disponible aunque siga marcada así.
     const existingBookings = await sql`
-      SELECT booking_time FROM bookings
-      WHERE booking_date = ${date as string} AND status IN ('pending', 'confirmed')
+      SELECT b.booking_time, s.duration_minutes
+      FROM bookings b JOIN services s ON b.service_id = s.id
+      WHERE b.booking_date = ${date as string}
+        AND (
+          b.status = 'confirmed'
+          OR (b.status = 'pending' AND b.created_at > NOW() - (${RESERVA_TTL_MINUTOS} * INTERVAL '1 minute'))
+        )
     `;
 
-    const bookedTimes = new Set(
-      existingBookings.map((b: Record<string, unknown>) => {
+    const bookedRanges = existingBookings
+      .map((b: Record<string, unknown>) => {
         const t = b.booking_time as string;
-        return t ? t.slice(0, 5) : null;
-      }).filter(Boolean)
-    );
+        if (!t) return null;
+        const [bh, bm] = t.slice(0, 5).split(':').map(Number);
+        const start = bh * 60 + bm;
+        return { start, end: start + ((b.duration_minutes as number) || 60) };
+      })
+      .filter(Boolean) as { start: number; end: number }[];
 
     const slots = [];
     const startHour = 9;
@@ -72,16 +85,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return slotStartMin < blockEnd && slotEndMin > blockStart;
         });
 
-        let isBooked = false;
-        for (const bTime of bookedTimes) {
-          const [bh, bm] = (bTime as string).split(':').map(Number);
-          const bookStart = bh * 60 + bm;
-          const bookEnd = bookStart + 60;
-          if (slotStartMin < bookEnd && slotEndMin > bookStart) {
-            isBooked = true;
-            break;
-          }
-        }
+        const isBooked = bookedRanges.some(
+          (b) => slotStartMin < b.end && slotEndMin > b.start
+        );
 
         slots.push({
           time,

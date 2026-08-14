@@ -1,30 +1,158 @@
-import { google } from 'googleapis';
+/**
+ * Cliente de Google Calendar sin la librería `googleapis`.
+ *
+ * `googleapis` pesa ~208 MB en node_modules y revienta el límite de 250 MB
+ * de una función serverless en Vercel: la función muere al cargar el módulo
+ * y devuelve 500 con body vacío (FUNCTION_INVOCATION_FAILED).
+ *
+ * Acá firmamos el JWT RS256 a mano con WebCrypto (`globalThis.crypto.subtle`,
+ * disponible en Node 20+ y en Edge) y pegamos a la REST API con `fetch`.
+ * Cero imports: ni `crypto`, ni `googleapis`, ni nada de Node.
+ */
 
-const SERVICE_ACCOUNT = {
-  type: "service_account",
-  project_id: "i-woodland-498215-v8",
-  private_key_id: "98ae07a84fbb5c1e413887a26f675ee9b810b290",
-  private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCt4oHJWI0CKLLW\ne5DGAZjX+4uaGoqzIoe+fMa43amCyAw0zl+QDfFgaJbYeVfYa8V4JLirqty9P3FA\nflPCRt72Se3NuAfDzrh9vg9q2einyd7D1kv9NZm/RUGGlAVKXfT2JeUNrBVzTgQC\nyrQz/MGDirttB7H63loXCAIniC0By76oC9A18TvnocSSGp5tMdCuR4Qj+U/sOBod\nzyki4yrnekvAAt1TmCIvsbgJGpvUQKPoNgS71TSyuZ3pYOOWgJTX/eR2f1jyZihj\nc+ZVAtvtOxP/UO1NqqJ6+H6ZFSiMFzlELJ4WXs9dc6UR9E04CuY5XeYblXMNHKht\n9KlsZ/HfAgMBAAECggEATRSQ+uu9ijz3VfutiBCyK+AOmM/2NwVyDh9qyg08tMQw\nIQJwuz9rBhUm9SwJJF9VyHXixPp3Yo7qia/WOlNHR/8qotxW2NZc0yS62d9h8msa\nzE5FHigyEOdG7jzUgYxX5/uRZ3emhJgLUB+CNV9wevq3LdRQ8ce6QOZkahjD9ryb\nHdhHFpvqh4FbRMxXeRn0oo1TijBijkKb3pyp0F1IaVqdH/D9G8CbLRH3vjM2CALp\nzHkqoAeVphBKmQ/HyUs2mM9XDLJyOmPE5pHbz1KEDaMPB3MYdUOgwBaWM9NhXzL0\no4fVJe4ci6rG/5nOStglMJ+JYwoiaQLP7EHOZ4MUqQKBgQDXXZGzCG/f5Wh5RPI+\nAKAzNsm/2mC0yoc4SEqnHeH9mWwDZENsBKq0hRWe3NG3v/8WLERqCweZn3F3hoZG\n+oWYRbXlcSds4//N8k7jxvOhsYTg8v5oMm2SR0rNTCkNFga/QjRS7p1wcJ2DzHC3\ngFMVMavyktqvJWn4JlHp0fUgpwKBgQDOsV26FqkK8adqHYl7WFZUqZeF8oImqJZI\nPXMggsSJAnC5s5Is3SZ1ulH3E//bBdy86g1y+TfB15X9ICPM9tKbW6AxEoWQbmEk\nk3XbLVvbb/8ReX4J3AZ8hm2s+p9agojm5r3DW0tJYcScQaST4ilJnDkFRZh6e5P2\nQlwaCrVUCQKBgElSKdByBuSLDc57kp1ZSTEmbflLN7FVYkPfGMtceRwFp6hf8jRM\nQnHC/WFgfGW6j/XUjFYt+yBqEA9JVV3E3MbCtPKwW2PPG7/ZxtH1Yeyiq0KKd+Kx\niGxMqULLsw4peZKTz4yMgD1PmdDNQXK31ZFZn9it9pW6fyFkqm6YdIPxAoGBAIjV\n3UIEHHdVUksrMMhKzCSSffC8grOLKqq6m8wrJme6CNy36A7xfbO03Oyg/eKHOAKN\nRMgX+3TF/9MrAuh/gyA9AYlbRLdAi+lGAmFO3yAgPhHYh7uJQXYRHOzGotat0mpi\n2cBKYUY8hogX4RfSQxkrZoh58Z8szuDaP9Uxv6fZAoGBAKA10Vzv+KYCPHcLGy35\norTLlVIbqmOkP9x8L41k2HQXouPD9G0XOK5GES2sLDScU5zoD9y24BlGqvp59324\nH+hMOgSaoO5qBDoZpdOeYUQUN7NWQZnb1ved0a8xM/+IVJ7myJ9JuZpd7QYappDA\nrVarQc8Vq+00Ci7NsFHdyDnn\n-----END PRIVATE KEY-----\n",
-  client_email: "calendar-bot@i-woodland-498215-v8.iam.gserviceaccount.com",
-  client_id: "103334786180065517565",
-  auth_uri: "https://accounts.google.com/o/oauth2/auth",
-  token_uri: "https://oauth2.googleapis.com/token",
-  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/calendar-bot%40i-woodland-498215-v8.iam.gserviceaccount.com",
-  universe_domain: "googleapis.com"
+const SCOPE = 'https://www.googleapis.com/auth/calendar';
+const TOKEN_URI = 'https://oauth2.googleapis.com/token';
+const CALENDAR_API = 'https://www.googleapis.com/calendar/v3';
+
+export type ServiceAccount = {
+  client_email: string;
+  private_key: string;
 };
 
-export function getCalendarClient() {
-  const auth = new google.auth.JWT({
-    email: SERVICE_ACCOUNT.client_email,
-    key: SERVICE_ACCOUNT.private_key,
-    scopes: ['https://www.googleapis.com/auth/calendar'],
-  });
-
-  return google.calendar({ version: 'v3', auth });
+/** Vercel a veces guarda los valores con comillas envolventes y \n escapados. */
+function normalizeKey(key: string): string {
+  return key.trim().replace(/^["']|["']$/g, '').replace(/\\n/g, '\n');
 }
 
-export async function createCalendarEvent(data: {
+/**
+ * Acepta varios formatos porque el PEM crudo en una env var se rompe fácil
+ * (los saltos de línea no sobreviven al dashboard). El base64 del JSON completo
+ * es el único que no da problemas: es una sola línea sin caracteres especiales.
+ */
+export function loadServiceAccount(): ServiceAccount {
+  const b64 = process.env.GOOGLE_SA_JSON_B64;
+  if (b64) {
+    const parsed = JSON.parse(atob(b64.trim()));
+    return { client_email: parsed.client_email, private_key: normalizeKey(parsed.private_key) };
+  }
+
+  const raw = process.env.GOOGLE_SA_JSON;
+  if (raw) {
+    const parsed = JSON.parse(raw);
+    return { client_email: parsed.client_email, private_key: normalizeKey(parsed.private_key) };
+  }
+
+  const email = process.env.GOOGLE_SA_EMAIL;
+  const key = process.env.GOOGLE_PRIVATE_KEY;
+  if (email && key) {
+    return { client_email: email.trim(), private_key: normalizeKey(key) };
+  }
+
+  throw new Error(
+    'Faltan las credenciales de Google. Definí GOOGLE_SA_JSON_B64 (base64 del JSON de la service account).'
+  );
+}
+
+/**
+ * Devolvemos ArrayBuffer y no Uint8Array a propósito: desde TS 5.7 `Uint8Array`
+ * es genérico y `Uint8Array<ArrayBufferLike>` no es asignable a `BufferSource`,
+ * así que WebCrypto lo rechaza en tiempo de compilación.
+ */
+function pemToPkcs8(pem: string): ArrayBuffer {
+  const body = pem
+    .replace(/-----BEGIN [^-]+-----/, '')
+    .replace(/-----END [^-]+-----/, '')
+    .replace(/\s+/g, '');
+  const bin = atob(body);
+  const buf = new Uint8Array(new ArrayBuffer(bin.length));
+  for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  return buf.buffer;
+}
+
+/** Igual que arriba: WebCrypto necesita un ArrayBuffer concreto. */
+function utf8(text: string): ArrayBuffer {
+  const u8 = new TextEncoder().encode(text);
+  const out = new Uint8Array(new ArrayBuffer(u8.length));
+  out.set(u8);
+  return out.buffer;
+}
+
+function b64url(bytes: Uint8Array): string {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function b64urlText(text: string): string {
+  return b64url(new TextEncoder().encode(text));
+}
+
+// El token vive 1h; lo cacheamos para no pedir uno nuevo en cada invocación warm.
+let cachedToken: { value: string; expiresAt: number } | null = null;
+
+export async function getAccessToken(sa: ServiceAccount = loadServiceAccount()): Promise<string> {
+  if (cachedToken && Date.now() < cachedToken.expiresAt) return cachedToken.value;
+
+  const now = Math.floor(Date.now() / 1000);
+  const header = b64urlText(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
+  const claims = b64urlText(
+    JSON.stringify({
+      iss: sa.client_email,
+      scope: SCOPE,
+      aud: TOKEN_URI,
+      iat: now,
+      exp: now + 3600,
+    })
+  );
+  const signingInput = `${header}.${claims}`;
+
+  const key = await crypto.subtle.importKey(
+    'pkcs8',
+    pemToPkcs8(sa.private_key),
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const signature = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, utf8(signingInput));
+  const jwt = `${signingInput}.${b64url(new Uint8Array(signature))}`;
+
+  const res = await fetch(TOKEN_URI, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt,
+    }),
+  });
+
+  const data = (await res.json()) as { access_token?: string; expires_in?: number; error_description?: string; error?: string };
+  if (!res.ok || !data.access_token) {
+    throw new Error(`OAuth falló (${res.status}): ${data.error_description || data.error || 'sin detalle'}`);
+  }
+
+  cachedToken = {
+    value: data.access_token,
+    expiresAt: Date.now() + (data.expires_in ?? 3600) * 1000 - 60_000,
+  };
+  return cachedToken.value;
+}
+
+/**
+ * Devuelve "2026-08-20T10:00:00" (wall clock, sin offset). Google lo interpreta
+ * con el `timeZone` que le mandamos al lado.
+ *
+ * Ojo: NO usar `new Date(...).toISOString()` acá. El server corre en UTC, así
+ * que interpretaría "10:00" como UTC y la cita quedaría corrida 3-4 horas
+ * respecto a Chile. Forzamos UTC con la `Z` y formateamos sin ella, así la
+ * aritmética de minutos es exacta y el wall clock se mantiene.
+ */
+function wallClock(date: string, time: string, offsetMinutes = 0): string {
+  const base = new Date(`${date}T${time}:00Z`);
+  if (Number.isNaN(base.getTime())) throw new Error(`Fecha/hora inválida: ${date} ${time}`);
+  return new Date(base.getTime() + offsetMinutes * 60_000).toISOString().slice(0, 19);
+}
+
+export type CalendarEventInput = {
   summary: string;
   description?: string;
   date: string;
@@ -32,29 +160,20 @@ export async function createCalendarEvent(data: {
   durationMinutes: number;
   clientEmail: string;
   clientName: string;
-}) {
-  const calendar = getCalendarClient();
-  const calendarId = process.env.GOOGLE_CALENDAR_ID || 'primary';
+};
 
+export async function createCalendarEvent(data: CalendarEventInput): Promise<string | null> {
   const { summary, description, date, time, durationMinutes, clientEmail, clientName } = data;
-
-  const startDate = new Date(`${date}T${time}:00`);
-  const endDate = new Date(startDate.getTime() + durationMinutes * 60 * 1000);
+  const calendarId = process.env.GOOGLE_CALENDAR_ID || 'cristianbastian.dev@gmail.com';
+  const timeZone = process.env.GOOGLE_CALENDAR_TZ || 'America/Santiago';
 
   const event = {
     summary,
-    description: description || `Cita de ${clientName} - ${summary}`,
-    start: {
-      dateTime: startDate.toISOString(),
-      timeZone: 'America/Santiago',
-    },
-    end: {
-      dateTime: endDate.toISOString(),
-      timeZone: 'America/Santiago',
-    },
-    attendees: [
-      { email: clientEmail },
-    ],
+    // Una service account sin Domain-Wide Delegation no puede invitar attendees
+    // (Google devuelve 403), así que el mail del cliente va en la descripción.
+    description: description || `Cita de ${clientName} (${clientEmail}) - ${summary}`,
+    start: { dateTime: wallClock(date, time), timeZone },
+    end: { dateTime: wallClock(date, time, durationMinutes), timeZone },
     reminders: {
       useDefault: false,
       overrides: [
@@ -65,13 +184,24 @@ export async function createCalendarEvent(data: {
   };
 
   try {
-    const response = await calendar.events.insert({
-      calendarId,
-      requestBody: event,
+    const token = await getAccessToken();
+    const res = await fetch(`${CALENDAR_API}/calendars/${encodeURIComponent(calendarId)}/events`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(event),
     });
-    return response.data.id || null;
+
+    const body = (await res.json()) as { id?: string; error?: { message?: string } };
+    if (!res.ok) {
+      console.error('Google Calendar API error:', res.status, body?.error?.message || body);
+      return null;
+    }
+    return body.id || null;
   } catch (error: any) {
-    console.error('Google Calendar API error:', error?.message, error?.response?.data);
+    console.error('Google Calendar error:', error?.message);
     return null;
   }
 }

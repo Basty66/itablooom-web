@@ -59,6 +59,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (payment.status === 'approved') {
+      // El pago puede llegar después de que el cupo expiró y se reasignó.
+      // No rechazamos (la plata entró), pero dejamos el conflicto visible.
+      const conflicto = await sql`
+        SELECT b2.id FROM bookings b1
+        JOIN bookings b2
+          ON b2.booking_date = b1.booking_date
+         AND b2.booking_time = b1.booking_time
+         AND b2.id <> b1.id
+        WHERE b1.id = ${bookingId} AND b2.status = 'confirmed'
+      `;
+
       await sql`
         UPDATE bookings
         SET status = 'confirmed',
@@ -66,6 +77,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             payment_id = ${paymentId}
         WHERE id = ${bookingId}
       `;
+
+      if (conflicto.length > 0) {
+        console.error(
+          `⚠️ CONFLICTO: la reserva ${bookingId} se pagó pero el horario ya estaba tomado por ${(conflicto[0] as any).id}. Requiere reagendar manualmente.`
+        );
+      }
 
       // Crear evento en Google Calendar
       try {
