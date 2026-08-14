@@ -36,8 +36,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } else {
       return res.status(500).json({ error: 'Failed to create calendar event' });
     }
-  } catch (error) {
-    console.error('Calendar API error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+  } catch (error: any) {
+    console.error('Calendar API error:', error?.message || error);
+    return res.status(500).json({ error: error?.message || 'Internal server error' });
   }
 }

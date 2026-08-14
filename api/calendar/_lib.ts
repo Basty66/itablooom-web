@@ -5,10 +5,11 @@ export function getCalendarClient() {
   const keyB64 = process.env.GOOGLE_PRIVATE_KEY_B64;
 
   if (!email || !keyB64) {
-    throw new Error('Missing Google Calendar credentials');
+    throw new Error(`Missing Google Calendar credentials: email=${!!email} keyB64=${!!keyB64}`);
   }
 
   const key = Buffer.from(keyB64, 'base64').toString('utf-8');
+  console.log('Calendar auth - email:', email, 'key starts:', key.substring(0, 30));
 
   const auth = new google.auth.JWT({
     email,
