@@ -78,7 +78,7 @@ export default function ServicesPage() {
 
         {!cargando &&
           visibles.map((service, i) => (
-            <ServiceCard key={service.id} service={service} delay={i * 80} />
+            <ServiceCard key={service.id} service={service} delay={i * 80} prioritaria={i < 3} />
           ))}
       </div>
 

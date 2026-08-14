@@ -38,7 +38,7 @@ export default function Navbar() {
             <span className="font-display texto-2 font-medium tracking-tight text-tinta-900">
               Itablooom
             </span>
-            <span className="texto--1 uppercase tracking-[0.25em] text-rosa-500 transition-colors duration-200 group-hover:text-rosa-400">
+            <span className="texto--1 uppercase tracking-[0.25em] text-rosa-600 transition-colors duration-200 group-hover:text-rosa-400">
               Studio
             </span>
           </Link>

@@ -42,7 +42,12 @@ export default function HomePage() {
           {cargando
             ? Array.from({ length: 3 }).map((_, i) => <ServiceCardSkeleton key={i} />)
             : services.map((service, i) => (
-                <ServiceCard key={service.id} service={service} delay={i * 90} />
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  delay={i * 90}
+                  prioritaria={i === 0}
+                />
               ))}
         </div>
 

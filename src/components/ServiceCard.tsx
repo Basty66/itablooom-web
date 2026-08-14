@@ -4,19 +4,31 @@ import type { Service } from '../types';
 import { formatPrice, formatDuration } from '../lib/format';
 import ServiceVisual, { etiquetaCategoria } from './ui/ServiceVisual';
 
+interface Props {
+  service: Service;
+  delay?: number;
+  /** La primera tarjeta está sobre el pliegue: se carga sin diferir. */
+  prioritaria?: boolean;
+}
+
 /** Tarjeta de servicio, compartida entre el home y el catálogo. */
-export default function ServiceCard({ service, delay = 0 }: { service: Service; delay?: number }) {
+export default function ServiceCard({ service, delay = 0, prioritaria = false }: Props) {
   return (
     <article
       className="anim-entrada group flex flex-col overflow-hidden rounded-2xl border border-tinta-900/8 bg-crema-50 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-rosa-200 hover:shadow-[0_22px_50px_-28px_rgba(20,16,14,0.45)]"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <ServiceVisual categoria={service.category} />
+      <ServiceVisual
+        categoria={service.category}
+        imagen={service.image_url}
+        nombre={service.name}
+        prioritaria={prioritaria}
+      />
 
       <div className="flex flex-1 flex-col p-6">
         <div className="mb-3 flex items-start justify-between gap-3">
           <h3 className="texto-1 text-tinta-900">{service.name}</h3>
-          <span className="shrink-0 rounded-full bg-rosa-100 px-3 py-1 texto--1 font-medium text-rosa-500">
+          <span className="shrink-0 rounded-full bg-rosa-100 px-3 py-1 texto--1 font-medium text-rosa-600">
             {etiquetaCategoria(service.category)}
           </span>
         </div>

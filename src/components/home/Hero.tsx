@@ -12,7 +12,26 @@ const SENALES = [
 export default function Hero() {
   return (
     <section className="textura-papel relative overflow-hidden bg-gradient-to-b from-rosa-100 via-crema-100 to-crema-100">
-      {/* Halo difuso: da profundidad al degradado sin cargar una imagen. */}
+      {/*
+        Foto de fondo: la profesional atendiendo. Va muy tenue y filtrada
+        (sepia + saturación baja) porque la original tiene verdes fríos que
+        chocarían con la paleta crema/rosa. El degradado encima es más denso
+        a la izquierda para que el titular conserve su contraste.
+        Para cambiarla, basta reemplazar el archivo: no hay que tocar código.
+      */}
+      <div aria-hidden="true" className="absolute inset-0">
+        <img
+          src="/images/hero-profesional.jpg"
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+          className="h-full w-full object-cover object-center opacity-20 [filter:sepia(0.4)_saturate(0.65)]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-crema-100 via-crema-100/90 to-crema-100/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-rosa-100/60 via-transparent to-crema-100" />
+      </div>
+
+      {/* Halo difuso: da profundidad al degradado. */}
       <div
         aria-hidden="true"
         className="absolute -top-32 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-rosa-200/40 blur-3xl"
@@ -23,7 +42,7 @@ export default function Hero() {
         <div className="grid items-center gap-12 py-20 md:grid-cols-12 md:py-28">
           <div className="md:col-span-7">
             <p
-              className="anim-entrada texto--1 mb-5 font-medium uppercase tracking-[0.22em] text-rosa-500"
+              className="anim-entrada texto--1 mb-5 font-medium uppercase tracking-[0.22em] text-rosa-600"
               style={{ animationDelay: '60ms' }}
             >
               Estética facial · Chile

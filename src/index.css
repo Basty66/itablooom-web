@@ -27,6 +27,9 @@
   --color-rosa-300: #e9b4b9;
   --color-rosa-400: #db949b;
   --color-rosa-500: #c87880;
+  /* Para texto pequeño sobre crema: rosa-500 solo alcanza 3.02:1 y AA pide
+     4.5:1. Este llega a ~5.2:1 manteniendo el mismo matiz. */
+  --color-rosa-600: #a34a55;
 
   --font-display: "Cormorant Garamond", "Georgia", serif;
   --font-sans: "Jost", system-ui, -apple-system, sans-serif;
