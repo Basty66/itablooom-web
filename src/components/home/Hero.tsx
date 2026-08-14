@@ -52,7 +52,10 @@ export default function Hero() {
         {/* En lg lo centra el flex de la sección, así que basta poco padding.
             El pb extra reserva la franja del indicador: sin él, el contenido
             se le montaba encima por unos 43px. */}
-        <div className="grid w-full items-center gap-12 py-20 md:grid-cols-12 md:py-28 lg:py-16 lg:[@media(min-height:720px)]:pb-36">
+        {/* pt y pb separados a propósito: un `lg:py-16` volvía a pisar el
+            padding inferior por orden de reglas y el contenido se montaba
+            sobre el indicador. */}
+        <div className="grid w-full items-center gap-12 py-20 md:grid-cols-12 md:py-28 lg:pb-48 lg:pt-16">
           <div className="md:col-span-7">
             <p
               className="anim-entrada texto--1 mb-5 font-medium uppercase tracking-[0.22em] text-rosa-600"
