@@ -17,9 +17,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    await sql`SELECT 1`;
-    return res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
-  } catch {
-    return res.status(500).json({ status: 'error', error: 'Database connection failed' });
+    const result = await sql`SELECT * FROM services WHERE active = true ORDER BY category, name`;
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }

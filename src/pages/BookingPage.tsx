@@ -4,7 +4,7 @@ import { Calendar, Clock, User, Mail, Phone, CreditCard, ChevronLeft, ChevronRig
 import { format, addDays, startOfDay, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Service, TimeSlot } from '../types';
-import { getServices, getAvailableTimeSlots, createPreference } from '../lib/api';
+import { getServices, getAvailableTimeSlots, createPreferenceWithOfflineSupport } from '../lib/api';
 
 export default function BookingPage() {
   const [searchParams] = useSearchParams();
@@ -98,7 +98,7 @@ export default function BookingPage() {
     try {
       const dateStr = format(selectedDate, 'yyyy-MM-dd');
       
-      const result = await createPreference({
+      const result = await createPreferenceWithOfflineSupport({
         serviceId: selectedService.id,
         clientName: formData.name,
         clientEmail: formData.email,
