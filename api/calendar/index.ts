@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import crypto from 'crypto';
 
 async function getAccessToken(): Promise<string> {
   const email = "calendar-bot@i-woodland-498215-v8.iam.gserviceaccount.com";
@@ -20,7 +21,6 @@ async function getAccessToken(): Promise<string> {
   const payloadB64 = enc(payload);
   const signingInput = `${headerB64}.${payloadB64}`;
 
-  const crypto = await import('crypto');
   const sign = crypto.createSign('RSA-SHA256');
   sign.update(signingInput);
   const signature = sign.sign(key, 'base64url');
