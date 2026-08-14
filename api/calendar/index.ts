@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createCalendarEvent } from './_lib.js';
+import { createCalendarEvent, getCalendarClient } from './_lib.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (eventId) {
       return res.status(200).json({ eventId });
     } else {
-      return res.status(500).json({ error: 'Failed to create calendar event', calendarId });
+      return res.status(500).json({ error: 'Failed to create calendar event' });
     }
   } catch (error: any) {
     console.error('Calendar API error:', error?.message || error);
