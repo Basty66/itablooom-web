@@ -67,7 +67,7 @@ export async function createCalendarEvent(data: {
     });
     return response.data.id || null;
   } catch (error: any) {
-    console.error('Error creating calendar event:', error?.message || error);
+    console.error('Google Calendar API error:', error?.message, error?.response?.data);
     return null;
   }
 }
