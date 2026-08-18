@@ -130,27 +130,38 @@ export default function BookingPage() {
 
         {/* Resumen compacto siempre visible arriba del form */}
         {service && (
-          <div className="mt-6 flex items-center justify-center gap-4 rounded-2xl border border-tinta-900/8 bg-crema-50/80 px-5 py-3 text-center">
-            <span className="texto--1 font-medium text-tinta-900">{service.name}</span>
-            {fecha && (
-              <span className="flex items-center gap-1.5 texto--1 text-tinta-500">
-                <CalendarDays size={13} strokeWidth={1.5} />
-                {format(fecha, "EEE d MMM", { locale: es })}
-              </span>
-            )}
-            {hora && (
-              <span className="flex items-center gap-1.5 texto--1 text-tinta-500">
-                <Clock3 size={13} strokeWidth={1.5} />
-                {hora}
-              </span>
-            )}
-            <span className="texto--1 text-tinta-500">{formatDuration(service.duration_minutes)}</span>
-            <span className="font-display texto-1 text-tinta-900">{formatPrice(service.price)}</span>
+          <div className="mt-6 rounded-2xl border border-tinta-900/8 bg-crema-50/80 px-4 py-3 sm:flex sm:items-center sm:justify-center sm:gap-4 sm:text-center">
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+              <span className="texto--1 font-medium text-tinta-900">{service.name}</span>
+              <span className="hidden text-tinta-300 sm:inline">·</span>
+              <span className="texto--1 text-tinta-500">{formatDuration(service.duration_minutes)}</span>
+              {fecha && (
+                <>
+                  <span className="hidden text-tinta-300 sm:inline">·</span>
+                  <span className="flex items-center gap-1 texto--1 text-tinta-500">
+                    <CalendarDays size={12} strokeWidth={1.5} />
+                    {format(fecha, "EEE d MMM", { locale: es })}
+                  </span>
+                </>
+              )}
+              {hora && (
+                <>
+                  <span className="hidden text-tinta-300 sm:inline">·</span>
+                  <span className="flex items-center gap-1 texto--1 text-tinta-500">
+                    <Clock3 size={12} strokeWidth={1.5} />
+                    {hora}
+                  </span>
+                </>
+              )}
+            </div>
+            <span className="mt-2 block text-center font-display texto-1 text-tinta-900 sm:mt-0">
+              {formatPrice(service.price)}
+            </span>
           </div>
         )}
 
         <form ref={formRef} onSubmit={onSubmit} className="mt-6">
-          <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
+          <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-4 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
             {paso === 1 && (
               <ServiceStep
                 services={services}

@@ -111,9 +111,9 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
       </Campo>
 
       {service && (
-        <div className="rounded-2xl border border-tinta-900/10 bg-crema-50 p-5">
+        <div className="rounded-2xl border border-tinta-900/10 bg-crema-50 p-4 sm:p-5">
           <span className="texto--1 font-medium text-tinta-700">Monto a pagar</span>
-          <span className="mt-1 block font-display texto-3 text-tinta-900">
+          <span className="mt-1 block font-display texto-2 sm:texto-3 text-tinta-900">
             {formatPrice(service.price)}
           </span>
         </div>

@@ -69,7 +69,7 @@ export default function DateTimeStep({
             {libres > 0 ? `${libres} disponible${libres > 1 ? 's' : ''}` : 'sin cupos'}
           </span>
         </div>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 md:grid-cols-4 lg:grid-cols-5">
           {lista.map((slot) => {
             const activo = hora === slot.time;
             return (
@@ -80,7 +80,7 @@ export default function DateTimeStep({
                 aria-checked={activo}
                 disabled={!slot.available}
                 onClick={() => onHora(slot.time)}
-                className={`rounded-xl py-3 texto--1 font-medium tabular-nums transition-all duration-200 ease-out ${
+                className={`rounded-xl py-2.5 sm:py-3 texto--1 font-medium tabular-nums transition-all duration-200 ease-out ${
                   !slot.available
                     ? 'cursor-not-allowed bg-tinta-900/4 text-tinta-400/50 line-through'
                     : activo
@@ -110,7 +110,7 @@ export default function DateTimeStep({
 
         <div className="rounded-2xl border border-tinta-900/8 bg-crema-50 p-3 sm:p-4">
           {/* Cabecera fija de días: ancla la lectura de ambas semanas. */}
-          <div className="mb-2 grid grid-cols-7 gap-1.5 sm:gap-2">
+          <div className="mb-1.5 grid grid-cols-7 gap-1 sm:mb-2 sm:gap-1.5">
             {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((d, i) => (
               <span
                 key={i}
@@ -122,9 +122,9 @@ export default function DateTimeStep({
             ))}
           </div>
 
-          <div className="space-y-1.5 sm:space-y-2">
+          <div className="space-y-1 sm:space-y-1.5">
             {semanas.map((semana, si) => (
-              <div key={si} className="grid grid-cols-7 gap-1.5 sm:gap-2">
+              <div key={si} className="grid grid-cols-7 gap-1 sm:gap-1.5">
                 {semana.map((dia) => {
                   const domingo = dia.getDay() === 0;
                   const activo = fecha && isSameDay(dia, fecha);
@@ -138,7 +138,7 @@ export default function DateTimeStep({
                       onClick={() => onFecha(dia)}
                       aria-pressed={!!activo}
                       aria-label={format(dia, "EEEE d 'de' MMMM", { locale: es })}
-                      className={`relative flex flex-col items-center rounded-xl py-2 transition-all duration-200 ease-out ${
+                      className={`relative flex flex-col items-center rounded-xl py-2 sm:py-2.5 transition-all duration-200 ease-out ${
                         domingo
                           ? 'cursor-not-allowed text-tinta-400/50'
                           : activo
@@ -146,15 +146,15 @@ export default function DateTimeStep({
                             : 'text-tinta-800 hover:bg-rosa-100 active:scale-95'
                       }`}
                     >
-                      <span className="texto--1 capitalize opacity-60">
+                      <span className="texto--2 sm:texto--1 capitalize opacity-60">
                         {format(dia, 'EEE', { locale: es }).slice(0, 3)}
                       </span>
-                      <span className="text-base font-medium tabular-nums leading-tight">
+                      <span className="text-sm sm:text-base font-medium tabular-nums leading-tight">
                         {format(dia, 'd')}
                       </span>
                       {relativa && (
                         <span
-                          className={`texto--1 leading-none ${
+                          className={`texto--2 sm:texto--1 leading-none ${
                             activo ? 'text-rosa-200' : 'text-rosa-600'
                           }`}
                         >
