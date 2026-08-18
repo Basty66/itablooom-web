@@ -1,8 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
 import { createCalendarEvent } from '../../calendar/_lib.js';
+import { Resend } from 'resend';
 
 const sql = neon(process.env.DATABASE_URL!);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 async function isPaymentProcessed(paymentId: string): Promise<boolean> {
   const result = await sql`SELECT id FROM bookings WHERE payment_id = ${paymentId} AND status = 'confirmed'`;
@@ -122,6 +124,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           if (eventId) {
             await sql`UPDATE bookings SET calendar_event_id = ${eventId} WHERE id = ${bookingId}`;
             console.log(`📅 Calendar event created: ${eventId}`);
+          }
+
+          // Enviar email de notificación al dueño
+          if (resend) {
+            try {
+              const ownerEmail = process.env.OWNER_EMAIL || 'cristianbastian.dev@gmail.com';
+              await resend.emails.send({
+                from: 'Itablooom <onboarding@resend.dev>',
+                to: ownerEmail,
+                subject: `🆕 Nueva reserva: ${booking.service_name} - ${booking.client_name}`,
+                html: `
+                  <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
+                    <h2 style="color: #14100e;">Nueva cita agendada</h2>
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr><td style="padding: 8px 0; color: #7d7068;">Tratamiento</td><td style="padding: 8px 0; font-weight: 600;">${booking.service_name}</td></tr>
+                      <tr><td style="padding: 8px 0; color: #7d7068;">Cliente</td><td style="padding: 8px 0; font-weight: 600;">${booking.client_name}</td></tr>
+                      <tr><td style="padding: 8px 0; color: #7d7068;">Fecha</td><td style="padding: 8px 0; font-weight: 600;">${dateStr}</td></tr>
+                      <tr><td style="padding: 8px 0; color: #7d7068;">Hora</td><td style="padding: 8px 0; font-weight: 600;">${timeStr}</td></tr>
+                      <tr><td style="padding: 8px 0; color: #7d7068;">Teléfono</td><td style="padding: 8px 0; font-weight: 600;">${booking.client_phone}</td></tr>
+                      <tr><td style="padding: 8px 0; color: #7d7068;">Email</td><td style="padding: 8px 0; font-weight: 600;">${booking.client_email}</td></tr>
+                      <tr><td style="padding: 8px 0; color: #7d7068;">Pagado</td><td style="padding: 8px 0; font-weight: 600;">$${Number(booking.total_amount).toLocaleString('es-CL')}</td></tr>
+                    </table>
+                    <a href="https://itablooom-web.vercel.app/admin" style="display: inline-block; margin-top: 16px; padding: 12px 24px; background: #14100e; color: #faf6ef; text-decoration: none; border-radius: 999px; font-weight: 500;">Ver en el panel</a>
+                  </div>
+                `,
+              });
+              console.log(`📧 Notification email sent to ${ownerEmail}`);
+            } catch (emailError) {
+              console.error('Error sending notification email:', emailError);
+            }
           }
         }
       } catch (calError) {
