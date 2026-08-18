@@ -1,19 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
-import { CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle } from 'lucide-react';
+import { CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle, TrendingUp, Users, Star, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Booking } from '../types';
-import {
-  getBookingsByDate,
-  updateBookingStatus,
-  adminSesionActiva,
-  adminSalir,
-} from '../lib/api';
+import { getBookingsByDate, adminSesionActiva, adminSalir, getAdminStats, type AdminStats } from '../lib/api';
 import { formatPrice } from '../lib/format';
 import { Container } from '../components/ui/Section';
 import { Skeleton } from '../components/ui/Skeleton';
 import LoginGate from '../components/admin/LoginGate';
-import BookingRow from '../components/admin/BookingRow';
+
+function StatCard({ icono: Icono, label, valor, loading }: { icono: typeof TrendingUp; label: string; valor: string; loading?: boolean }) {
+  return (
+    <div className="rounded-2xl border border-tinta-900/8 bg-crema-50 p-4">
+      <div className="flex items-center gap-2">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-rosa-100">
+          <Icono size={15} strokeWidth={1.5} className="text-rosa-600" aria-hidden="true" />
+        </span>
+        <p className="texto--1 text-tinta-500">{label}</p>
+      </div>
+      {loading ? (
+        <Skeleton className="mt-2 h-7 w-20" />
+      ) : (
+        <p className="mt-2 font-display texto-2 leading-tight text-tinta-900">{valor}</p>
+      )}
+    </div>
+  );
+}
 
 export default function AdminPage() {
   const [autenticado, setAutenticado] = useState<boolean | null>(null);
@@ -22,7 +34,8 @@ export default function AdminPage() {
   const [cargando, setCargando] = useState(true);
   const [busqueda, setBusqueda] = useState('');
   const [error, setError] = useState('');
-  const [actualizando, setActualizando] = useState<string | null>(null);
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [cargandoStats, setCargandoStats] = useState(true);
 
   useEffect(() => {
     adminSesionActiva().then(setAutenticado);
@@ -34,8 +47,6 @@ export default function AdminPage() {
     try {
       setBookings(await getBookingsByDate(fecha));
     } catch (e: any) {
-      // Antes se rellenaba con citas de ejemplo: en un panel de gestión eso es
-      // peor que un error, porque parecen reservas reales.
       setBookings([]);
       if (String(e?.message).includes('401')) setAutenticado(false);
       else setError('No pudimos cargar la agenda. Reintenta en unos segundos.');
@@ -44,21 +55,19 @@ export default function AdminPage() {
     }
   }, [fecha]);
 
-  useEffect(() => {
-    if (autenticado) cargar();
-  }, [autenticado, cargar]);
+  const cargarStats = useCallback(async () => {
+    setCargandoStats(true);
+    const data = await getAdminStats();
+    if (data) setStats(data);
+    setCargandoStats(false);
+  }, []);
 
-  async function cambiarEstado(id: string, estado: Booking['status']) {
-    setActualizando(id);
-    try {
-      await updateBookingStatus(id, estado);
-      await cargar();
-    } catch {
-      setError('No se pudo actualizar la cita.');
-    } finally {
-      setActualizando(null);
+  useEffect(() => {
+    if (autenticado) {
+      cargar();
+      cargarStats();
     }
-  }
+  }, [autenticado, cargar, cargarStats]);
 
   async function salir() {
     try {
@@ -66,6 +75,7 @@ export default function AdminPage() {
     } finally {
       setAutenticado(false);
       setBookings([]);
+      setStats(null);
     }
   }
 
@@ -87,35 +97,102 @@ export default function AdminPage() {
     );
   });
 
-  const metricas = [
-    { label: 'Citas del día', valor: String(bookings.length) },
-    { label: 'Confirmadas', valor: String(bookings.filter((b) => b.status === 'confirmed').length) },
-    { label: 'Pendientes', valor: String(bookings.filter((b) => b.status === 'pending').length) },
-    {
-      label: 'Ingresos del día',
-      valor: formatPrice(
-        bookings.filter((b) => b.deposit_paid).reduce((t, b) => t + Number(b.total_amount || 0), 0)
-      ),
-    },
-  ];
+  const ingresosHoy = bookings
+    .filter((b) => b.deposit_paid)
+    .reduce((t, b) => t + Number(b.total_amount || 0), 0);
 
   return (
     <div className="min-h-screen bg-crema-100 py-10 md:py-14">
       <Container>
+        {/* Header */}
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="texto-3 text-tinta-900">Panel de administración</h1>
-            <p className="mt-1 texto--1 text-tinta-600">Gestiona la agenda de Itablooom Studio</p>
+            <h1 className="texto-3 text-tinta-900">Panel</h1>
+            <p className="mt-1 texto--1 text-tinta-600">Itablooom Studio</p>
           </div>
           <button
             onClick={salir}
             className="inline-flex items-center gap-2 rounded-full border border-tinta-900/20 px-4 py-2 texto--1 font-medium text-tinta-700 transition-all duration-200 hover:border-tinta-900 hover:text-tinta-900 active:scale-95"
           >
             <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
-            Cerrar sesión
+            Salir
           </button>
         </div>
 
+        {/* Dashboard */}
+        <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <StatCard
+            icono={DollarSign}
+            label="Hoy"
+            valor={formatPrice(ingresosHoy)}
+            loading={cargando}
+          />
+          <StatCard
+            icono={TrendingUp}
+            label="Este mes"
+            valor={stats ? `${stats.ingresosMes.count} citas · ${formatPrice(stats.ingresosMes.total)}` : '—'}
+            loading={cargandoStats}
+          />
+          <StatCard
+            icono={Users}
+            label="Clientes"
+            valor={stats ? String(stats.clientesTotales) : '—'}
+            loading={cargandoStats}
+          />
+          <StatCard
+            icono={Star}
+            label="Top servicio"
+            valor={stats?.serviciosTop?.[0]?.name || '—'}
+            loading={cargandoStats}
+          />
+        </div>
+
+        {/* Gráfico semanal simple */}
+        {stats && stats.ingresosSemana.length > 0 && (
+          <div className="mb-8 rounded-2xl border border-tinta-900/8 bg-crema-50 p-5">
+            <h2 className="mb-4 texto-1 text-tinta-900">Últimos 7 días</h2>
+            <div className="flex items-end gap-2" style={{ height: 120 }}>
+              {stats.ingresosSemana.map((dia) => {
+                const maxRevenue = Math.max(...stats.ingresosSemana.map((d) => Number(d.total)));
+                const height = maxRevenue > 0 ? (Number(dia.total) / maxRevenue) * 100 : 0;
+                return (
+                  <div key={dia.date} className="flex flex-1 flex-col items-center gap-1">
+                    <span className="texto--2 text-tinta-500">{formatPrice(Number(dia.total))}</span>
+                    <div
+                      className="w-full rounded-t-lg bg-rosa-300 transition-all duration-500"
+                      style={{ height: `${Math.max(height, 4)}%` }}
+                    />
+                    <span className="texto--2 text-tinta-400">
+                      {format(new Date(dia.date + 'T12:00:00'), 'EEE', { locale: es })}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Servicios más pedidos */}
+        {stats && stats.serviciosTop.length > 0 && (
+          <div className="mb-8 rounded-2xl border border-tinta-900/8 bg-crema-50 p-5">
+            <h2 className="mb-4 texto-1 text-tinta-900">Servicios más pedidos</h2>
+            <div className="space-y-3">
+              {stats.serviciosTop.map((s, i) => (
+                <div key={s.name} className="flex items-center gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rosa-100 texto--1 font-medium text-rosa-600">
+                    {i + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="texto-0 font-medium text-tinta-900 truncate">{s.name}</p>
+                    <p className="texto--1 text-tinta-500">{s.count} citas · {formatPrice(Number(s.revenue))}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Filtros */}
         <div className="mb-6 grid gap-3 rounded-2xl border border-tinta-900/8 bg-crema-50 p-4 sm:grid-cols-2">
           <label className="block">
             <span className="mb-1.5 block texto--1 font-medium text-tinta-700">Fecha</span>
@@ -155,19 +232,7 @@ export default function AdminPage() {
           </label>
         </div>
 
-        <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {metricas.map((m) => (
-            <div key={m.label} className="rounded-2xl border border-tinta-900/8 bg-crema-50 p-4">
-              <p className="texto--1 text-tinta-500">{m.label}</p>
-              {cargando ? (
-                <Skeleton className="mt-1 h-7 w-20" />
-              ) : (
-                <p className="font-display texto-2 leading-tight text-tinta-900">{m.valor}</p>
-              )}
-            </div>
-          ))}
-        </div>
-
+        {/* Lista de citas del día */}
         <div className="overflow-hidden rounded-2xl border border-tinta-900/8 bg-crema-50">
           <div className="border-b border-tinta-900/8 px-5 py-4">
             <h2 className="texto-1 capitalize text-tinta-900">
@@ -198,12 +263,32 @@ export default function AdminPage() {
           ) : (
             <ul className="divide-y divide-tinta-900/8">
               {visibles.map((b) => (
-                <BookingRow
-                  key={b.id}
-                  booking={b}
-                  onEstado={cambiarEstado}
-                  actualizando={actualizando === b.id}
-                />
+                <li key={b.id} className="flex items-center gap-4 px-5 py-4">
+                  <span className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-rosa-100">
+                    <span className="texto--2 font-medium tabular-nums text-tinta-900">
+                      {b.booking_time ? String(b.booking_time).slice(0, 5) : '—'}
+                    </span>
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="texto-0 font-medium text-tinta-900">{b.client_name}</p>
+                    <p className="texto--1 text-tinta-600">{b.service_name || 'Servicio'}</p>
+                    <p className="texto--1 text-tinta-500">{b.client_phone}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className={`inline-block rounded-full px-3 py-1 texto--1 font-medium ${
+                      b.status === 'confirmed' ? 'bg-emerald-100 text-emerald-900'
+                      : b.status === 'pending' ? 'bg-amber-100 text-amber-900'
+                      : b.status === 'cancelled' ? 'bg-tinta-900/8 text-tinta-600'
+                      : 'bg-rosa-200 text-tinta-900'
+                    }`}>
+                      {b.status === 'confirmed' ? 'Confirmada'
+                        : b.status === 'pending' ? 'Pendiente'
+                        : b.status === 'cancelled' ? 'Cancelada'
+                        : 'Completada'}
+                    </span>
+                    <p className="mt-1 texto--1 text-tinta-500">{formatPrice(Number(b.total_amount || 0))}</p>
+                  </div>
+                </li>
               ))}
             </ul>
           )}

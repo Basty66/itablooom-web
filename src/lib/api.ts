@@ -225,3 +225,28 @@ export async function adminSalir(): Promise<void> {
     // Si falla, la cookie expira sola por Max-Age.
   }
 }
+
+// ============================================
+// ESTADÍSTICAS DE ADMIN
+// ============================================
+
+export interface AdminStats {
+  ingresosSemana: { date: string; total: number; count: number }[];
+  ingresosMes: { total: number; count: number };
+  serviciosTop: { name: string; count: number; revenue: number }[];
+  citasHoy: { total: number; confirmed: number; pending: number };
+  clientesTotales: number;
+}
+
+export async function getAdminStats(): Promise<AdminStats | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/stats`, {
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
