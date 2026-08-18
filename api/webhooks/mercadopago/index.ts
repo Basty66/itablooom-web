@@ -131,6 +131,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             try {
               const ownerEmail = process.env.OWNER_EMAIL || 'cristianbastian.dev@gmail.com';
 
+              // URL directa al evento en Google Calendar
+              const calEventUrl = eventId
+                ? `https://calendar.google.com/calendar/event?eid=${Buffer.from(eventId).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')}`
+                : 'https://calendar.google.com/calendar/r/week';
+
               await resend.emails.send({
                 from: 'Itablooom <onboarding@resend.dev>',
                 to: ownerEmail,
@@ -201,11 +206,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           </div>
         </td></tr>
 
+        <!-- Botón Calendar -->
+        <tr><td style="padding:24px 32px 8px;text-align:center;">
+          <a href="${calEventUrl}" style="display:inline-block;padding:14px 32px;background-color:#14100e;color:#faf6ef;text-decoration:none;border-radius:999px;font-size:14px;font-weight:500;letter-spacing:0.01em;">Ver en Google Calendar</a>
+        </td></tr>
+
         <!-- Confirmación -->
-        <tr><td style="padding:24px 32px 32px;text-align:center;">
-          <div style="display:inline-block;background-color:#d1fae5;border-radius:999px;padding:8px 20px;">
-            <span style="font-size:13px;font-weight:600;color:#065f46;">✓ Evento agregado automáticamente a tu calendario</span>
-          </div>
+        <tr><td style="padding:8px 32px 32px;text-align:center;">
+          <p style="margin:0;font-size:12px;color:#9a8d84;">Evento agregado automáticamente a tu calendario</p>
         </td></tr>
 
       </table>
