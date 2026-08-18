@@ -37,7 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let bookings: any[];
     try {
       bookings = await sql`
-        SELECT b.id, b.client_name, b.client_email, b.booking_date, b.booking_time,
+        SELECT b.id, b.client_name, b.client_email, b.client_phone, b.booking_date, b.booking_time,
                s.name as service_name
         FROM bookings b
         JOIN services s ON b.service_id = s.id
@@ -50,7 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } catch {
       // Si la columna reminder_sent no existe, buscar sin ella
       bookings = await sql`
-        SELECT b.id, b.client_name, b.client_email, b.booking_date, b.booking_time,
+        SELECT b.id, b.client_name, b.client_email, b.client_phone, b.booking_date, b.booking_time,
                s.name as service_name
         FROM bookings b
         JOIN services s ON b.service_id = s.id
