@@ -92,10 +92,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const fechaLinda = `${nombresDias[fecha.getDay()]} ${fecha.getDate()} de ${nombresMeses[fecha.getMonth()]}`;
 
       try {
+        const ownerEmail = process.env.OWNER_EMAIL || 'cristianbastian.dev@gmail.com';
+
+        // Resend gratis solo permite enviar al email de la cuenta.
+        // El dueño recibe el recordatorio y lo reenvía por WhatsApp si quiere.
         await resend.emails.send({
           from: 'Itablooom <onboarding@resend.dev>',
-          to: booking.client_email,
-          subject: `Recordatorio: tu cita es mañana a las ${hora}`,
+          to: ownerEmail,
+          subject: `Recordatorio: ${booking.client_name} tiene cita mañana a las ${hora}`,
           html: `
 <!DOCTYPE html>
 <html lang="es">
@@ -107,34 +111,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         <tr><td style="background-color:#14100e;padding:32px 32px 28px;text-align:center;">
           <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e9b4b9;font-weight:500;">Itablooom Studio</p>
-          <h1 style="margin:0;font-size:20px;font-weight:600;color:#faf6ef;">Tu cita es mañana 💅</h1>
+          <h1 style="margin:0;font-size:20px;font-weight:600;color:#faf6ef;">Cita mañana 📅</h1>
         </td></tr>
 
         <tr><td style="padding:28px 32px;text-align:center;">
-          <p style="margin:0 0 8px;font-size:14px;color:#7d7068;">Hola <strong style="color:#14100e;">${booking.client_name}</strong>,</p>
-          <p style="margin:0 0 20px;font-size:14px;color:#7d7068;">Te recordamos tu cita:</p>
-
-          <div style="background-color:#fae8e9;border-radius:16px;padding:20px;margin-bottom:20px;">
-            <p style="margin:0 0 4px;font-size:12px;color:#a34a55;text-transform:uppercase;letter-spacing:0.08em;">Tratamiento</p>
-            <p style="margin:0;font-size:16px;font-weight:600;color:#14100e;">${booking.service_name}</p>
+          <div style="background-color:#fae8e9;border-radius:16px;padding:20px;margin-bottom:16px;">
+            <p style="margin:0 0 4px;font-size:11px;color:#a34a55;text-transform:uppercase;letter-spacing:0.08em;">Cliente</p>
+            <p style="margin:0;font-size:16px;font-weight:600;color:#14100e;">${booking.client_name}</p>
           </div>
 
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
-              <td style="padding:12px 0;text-align:center;border-bottom:1px solid rgba(20,16,14,0.06);">
-                <p style="margin:0 0 2px;font-size:11px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Fecha</p>
-                <p style="margin:0;font-size:15px;font-weight:600;color:#14100e;text-transform:capitalize;">${fechaLinda}</p>
+              <td style="padding:10px 0;text-align:center;border-bottom:1px solid rgba(20,16,14,0.06);">
+                <p style="margin:0 0 2px;font-size:11px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Tratamiento</p>
+                <p style="margin:0;font-size:14px;font-weight:600;color:#14100e;">${booking.service_name}</p>
               </td>
             </tr>
             <tr>
-              <td style="padding:12px 0;text-align:center;">
+              <td style="padding:10px 0;text-align:center;border-bottom:1px solid rgba(20,16,14,0.06);">
+                <p style="margin:0 0 2px;font-size:11px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Fecha</p>
+                <p style="margin:0;font-size:14px;font-weight:600;color:#14100e;text-transform:capitalize;">${fechaLinda}</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;text-align:center;">
                 <p style="margin:0 0 2px;font-size:11px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Hora</p>
-                <p style="margin:0;font-size:15px;font-weight:600;color:#14100e;">${hora}</p>
+                <p style="margin:0;font-size:14px;font-weight:600;color:#14100e;">${hora}</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:10px 0;text-align:center;">
+                <p style="margin:0 0 2px;font-size:11px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Teléfono</p>
+                <p style="margin:0;font-size:14px;font-weight:600;color:#14100e;">${booking.client_phone || 'No registrado'}</p>
               </td>
             </tr>
           </table>
 
-          <p style="margin:24px 0 0;font-size:13px;color:#7d7068;">Llegá 5 minutos antes. ¡Te esperamos!</p>
+          <p style="margin:20px 0 0;font-size:13px;color:#7d7068;">Podés enviarle un recordatorio por WhatsApp desde el panel de administración.</p>
         </td></tr>
 
       </table>
