@@ -61,9 +61,12 @@ export default function AdminPage() {
   }
 
   async function salir() {
-    await adminSalir();
-    setAutenticado(false);
-    setBookings([]);
+    try {
+      await adminSalir();
+    } finally {
+      setAutenticado(false);
+      setBookings([]);
+    }
   }
 
   if (autenticado === null) {

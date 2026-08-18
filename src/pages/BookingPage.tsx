@@ -166,7 +166,12 @@ export default function BookingPage() {
               <ServiceStep
                 services={services}
                 seleccionado={service}
-                onSeleccionar={setService}
+                onSeleccionar={(s) => {
+                  setService(s);
+                  setFecha(null);
+                  setHora('');
+                  setSlots([]);
+                }}
                 cargando={cargandoServices}
               />
             )}

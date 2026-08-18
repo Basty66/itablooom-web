@@ -27,7 +27,15 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
       {services.map((service, i) => {
         const activo = seleccionado?.id === service.id;
 
-        return (
+  if (!cargando && services.length === 0) {
+    return (
+      <p className="py-8 text-center texto--1 text-tinta-500">
+        No hay tratamientos disponibles en este momento.
+      </p>
+    );
+  }
+
+  return (
           <button
             key={service.id}
             type="button"

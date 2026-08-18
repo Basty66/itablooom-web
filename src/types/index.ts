@@ -21,8 +21,6 @@ export interface Booking {
   client_rut?: string;
   booking_date: string | Date;
   booking_time: string;
-  date?: string;
-  time?: string;
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   deposit_paid: boolean;
   deposit_amount: number;
@@ -36,7 +34,6 @@ export interface Booking {
 export interface TimeSlot {
   time: string;
   available: boolean;
-  booking_id?: string;
 }
 
 export interface CalendarEvent {

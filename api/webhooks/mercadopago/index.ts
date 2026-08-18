@@ -6,6 +6,10 @@ import { Resend } from 'resend';
 const sql = neon(process.env.DATABASE_URL!);
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
+function esc(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 async function isPaymentProcessed(paymentId: string): Promise<boolean> {
   const result = await sql`SELECT id FROM bookings WHERE payment_id = ${paymentId} AND status = 'confirmed'`;
   return result.length > 0;
@@ -138,7 +142,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               await resend.emails.send({
                 from: 'Itablooom <onboarding@resend.dev>',
                 to: ownerEmail,
-                subject: `Nueva reserva: ${booking.service_name} — ${booking.client_name}`,
+                subject: `Nueva reserva: ${esc(booking.service_name)} — ${esc(booking.client_name)}`,
                 html: `
 <!DOCTYPE html>
 <html lang="es">
@@ -157,7 +161,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         <!-- Badge -->
         <tr><td style="padding:28px 32px 0;text-align:center;">
           <div style="display:inline-block;background-color:#fae8e9;border-radius:999px;padding:8px 20px;">
-            <span style="font-size:13px;font-weight:600;color:#a34a55;">${booking.service_name}</span>
+            <span style="font-size:13px;font-weight:600;color:#a34a55;">${esc(booking.service_name)}</span>
           </div>
         </td></tr>
 
@@ -167,31 +171,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             <tr>
               <td style="padding:14px 20px;background-color:#fdfbf7;border-bottom:1px solid rgba(20,16,14,0.06);">
                 <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Cliente</span><br>
-                <span style="font-size:15px;font-weight:600;color:#14100e;">${booking.client_name}</span>
+                <span style="font-size:15px;font-weight:600;color:#14100e;">${esc(booking.client_name)}</span>
               </td>
             </tr>
             <tr>
               <td style="padding:14px 20px;background-color:#fdfbf7;border-bottom:1px solid rgba(20,16,14,0.06);">
                 <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Fecha</span><br>
-                <span style="font-size:15px;font-weight:600;color:#14100e;">${dateStr}</span>
+                <span style="font-size:15px;font-weight:600;color:#14100e;">${esc(dateStr)}</span>
               </td>
             </tr>
             <tr>
               <td style="padding:14px 20px;background-color:#fdfbf7;border-bottom:1px solid rgba(20,16,14,0.06);">
                 <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Hora</span><br>
-                <span style="font-size:15px;font-weight:600;color:#14100e;">${timeStr}</span>
+                <span style="font-size:15px;font-weight:600;color:#14100e;">${esc(timeStr)}</span>
               </td>
             </tr>
             <tr>
               <td style="padding:14px 20px;background-color:#fdfbf7;border-bottom:1px solid rgba(20,16,14,0.06);">
                 <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Teléfono</span><br>
-                <a href="tel:${booking.client_phone}" style="font-size:15px;font-weight:600;color:#14100e;text-decoration:none;">${booking.client_phone}</a>
+                <a href="tel:${esc(booking.client_phone)}" style="font-size:15px;font-weight:600;color:#14100e;text-decoration:none;">${esc(booking.client_phone)}</a>
               </td>
             </tr>
             <tr>
               <td style="padding:14px 20px;background-color:#fdfbf7;">
                 <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Email</span><br>
-                <a href="mailto:${booking.client_email}" style="font-size:15px;font-weight:600;color:#a34a55;text-decoration:none;">${booking.client_email}</a>
+                <a href="mailto:${esc(booking.client_email)}" style="font-size:15px;font-weight:600;color:#a34a55;text-decoration:none;">${esc(booking.client_email)}</a>
               </td>
             </tr>
           </table>

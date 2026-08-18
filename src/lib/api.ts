@@ -123,14 +123,21 @@ export async function updateBookingStatus(id: string, status: Booking['status'])
 
 function savePendingBooking(data: Record<string, unknown>): void {
   if (!IS_BROWSER) return;
-  const pending = JSON.parse(localStorage.getItem('pendingBookings') || '[]');
-  pending.push({ ...data, timestamp: Date.now() });
-  localStorage.setItem('pendingBookings', JSON.stringify(pending));
+  try {
+    const pending = getPendingBookings();
+    pending.push({ ...data, timestamp: Date.now() });
+    localStorage.setItem('pendingBookings', JSON.stringify(pending));
+  } catch { /* quota exceeded or private browsing */ }
 }
 
 function getPendingBookings(): Record<string, unknown>[] {
   if (!IS_BROWSER) return [];
-  return JSON.parse(localStorage.getItem('pendingBookings') || '[]');
+  try {
+    return JSON.parse(localStorage.getItem('pendingBookings') || '[]');
+  } catch {
+    localStorage.removeItem('pendingBookings');
+    return [];
+  }
 }
 
 function removePendingBooking(timestamp: number): void {

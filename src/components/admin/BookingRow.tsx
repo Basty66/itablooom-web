@@ -67,7 +67,10 @@ export default function BookingRow({ booking, onEstado, actualizando }: Props) {
           {booking.status === 'pending' && (
             <>
               <button
-                onClick={() => onEstado(booking.id, 'confirmed')}
+                onClick={() => {
+                  if (window.confirm(`¿Confirmar cita de ${booking.client_name}?`))
+                    onEstado(booking.id, 'confirmed');
+                }}
                 disabled={actualizando}
                 aria-label={`Confirmar cita de ${booking.client_name}`}
                 className="rounded-full bg-emerald-100 p-2.5 text-emerald-900 transition-all duration-200 hover:bg-emerald-200 active:scale-95 disabled:opacity-40"
@@ -75,7 +78,10 @@ export default function BookingRow({ booking, onEstado, actualizando }: Props) {
                 <Check size={16} strokeWidth={2} aria-hidden="true" />
               </button>
               <button
-                onClick={() => onEstado(booking.id, 'cancelled')}
+                onClick={() => {
+                  if (window.confirm(`¿Cancelar cita de ${booking.client_name}?`))
+                    onEstado(booking.id, 'cancelled');
+                }}
                 disabled={actualizando}
                 aria-label={`Cancelar cita de ${booking.client_name}`}
                 className="rounded-full bg-tinta-900/8 p-2.5 text-tinta-600 transition-all duration-200 hover:bg-tinta-900/15 active:scale-95 disabled:opacity-40"
@@ -86,7 +92,10 @@ export default function BookingRow({ booking, onEstado, actualizando }: Props) {
           )}
           {booking.status === 'confirmed' && (
             <button
-              onClick={() => onEstado(booking.id, 'completed')}
+              onClick={() => {
+                if (window.confirm(`¿Marcar como completada la cita de ${booking.client_name}?`))
+                  onEstado(booking.id, 'completed');
+              }}
               disabled={actualizando}
               aria-label={`Marcar como completada la cita de ${booking.client_name}`}
               className="flex items-center gap-1.5 rounded-full bg-rosa-200 px-4 py-2 texto--1 font-medium text-tinta-900 transition-all duration-200 hover:bg-rosa-300 active:scale-95 disabled:opacity-40"

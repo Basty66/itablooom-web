@@ -6,8 +6,8 @@ const CLP = new Intl.NumberFormat('es-CL', {
   maximumFractionDigits: 0,
 });
 
-export function formatPrice(valor: number): string {
-  return CLP.format(valor);
+export function formatPrice(valor: number | undefined | null): string {
+  return CLP.format(Number(valor) || 0);
 }
 
 /** 240 -> "4 h", 90 -> "1 h 30 min", 30 -> "30 min". */
