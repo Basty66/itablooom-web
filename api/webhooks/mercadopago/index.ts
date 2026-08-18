@@ -131,10 +131,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             try {
               const ownerEmail = process.env.OWNER_EMAIL || 'cristianbastian.dev@gmail.com';
 
-              // URL directa al evento en Google Calendar
-              const calEventUrl = eventId
-                ? `https://calendar.google.com/calendar/event?eid=${Buffer.from(eventId).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')}`
-                : 'https://calendar.google.com/calendar/r/week';
+              // URL al calendario con la fecha de la cita
+              const [y, m, d] = dateStr.split('-');
+              const calEventUrl = `https://calendar.google.com/calendar/r/day/${y}/${m}/${d}`;
 
               await resend.emails.send({
                 from: 'Itablooom <onboarding@resend.dev>',
