@@ -130,6 +130,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           if (resend) {
             try {
               const ownerEmail = process.env.OWNER_EMAIL || 'cristianbastian.dev@gmail.com';
+
+              // Formatear fechas para Google Calendar (YYYYMMDDTHHMMSS)
+              const [year, month, day] = dateStr.split('-');
+              const [hh, mm] = timeStr.split(':');
+              const startUtc = `${year}${month}${day}T${hh}${mm}00Z`;
+              const endDate = new Date(new Date(`${dateStr}T${timeStr}:00`).getTime() + (booking.duration_minutes || 60) * 60000);
+              const endUtc = `${endDate.getUTCFullYear()}${String(endDate.getUTCMonth() + 1).padStart(2, '0')}${String(endDate.getUTCDate()).padStart(2, '0')}T${String(endDate.getUTCHours()).padStart(2, '0')}${String(endDate.getUTCMinutes()).padStart(2, '0')}00Z`;
+
+              const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+                `&text=${encodeURIComponent(`${booking.service_name} — ${booking.client_name}`)}` +
+                `&dates=${startUtc}/${endUtc}` +
+                `&details=${encodeURIComponent(`Cliente: ${booking.client_name}\nTel: ${booking.client_phone}\nEmail: ${booking.client_email}\nServicio: ${booking.service_name}`)}` +
+                `&location=${encodeURIComponent('Santiago, Chile')}` +
+                `&sf=true`;
+
               await resend.emails.send({
                 from: 'Itablooom <onboarding@resend.dev>',
                 to: ownerEmail,
@@ -202,7 +217,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         <!-- Botón -->
         <tr><td style="padding:24px 32px 32px;text-align:center;">
-          <a href="https://itablooom-web.vercel.app/admin" style="display:inline-block;padding:14px 32px;background-color:#14100e;color:#faf6ef;text-decoration:none;border-radius:999px;font-size:14px;font-weight:500;letter-spacing:0.01em;">Ver en el panel</a>
+          <a href="${calUrl}" style="display:inline-block;padding:14px 32px;background-color:#14100e;color:#faf6ef;text-decoration:none;border-radius:999px;font-size:14px;font-weight:500;letter-spacing:0.01em;">Agregar al calendario</a>
         </td></tr>
 
       </table>
