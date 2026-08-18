@@ -15,9 +15,13 @@ import { linkWhatsApp } from '../lib/contacto';
 
 const WHATSAPP = linkWhatsApp('Hola! Acabo de agendar una cita');
 
-/** Parsea "2026-08-19" sin shift de timezone (UTC midnight → día anterior en Chile). */
-function parseDateLocal(dateStr: string): Date {
-  const [y, m, d] = dateStr.split('-').map(Number);
+/** Parsea "2026-08-19" o Date sin shift de timezone. */
+function parseDateLocal(raw: string | Date): Date {
+  if (raw instanceof Date) {
+    return new Date(raw.getFullYear(), raw.getMonth(), raw.getDate());
+  }
+  const s = String(raw).split('T')[0];
+  const [y, m, d] = s.split('-').map(Number);
   return new Date(y, m - 1, d);
 }
 

@@ -19,7 +19,7 @@ export interface Booking {
   client_email: string;
   client_phone: string;
   client_rut?: string;
-  booking_date: string;
+  booking_date: string | Date;
   booking_time: string;
   date?: string;
   time?: string;
