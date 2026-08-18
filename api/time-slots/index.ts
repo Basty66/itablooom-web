@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
 import { RESERVA_TTL_MINUTOS } from '../_shared/bookings.js';
+import { getCalendarEvents } from '../calendar/_lib.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -59,6 +60,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
       .filter(Boolean) as { start: number; end: number }[];
 
+    // Bloquear slots que tienen eventos en el Google Calendar del dueño
+    const calendarEvents = await getCalendarEvents(date as string);
+    const calendarRanges = calendarEvents.map((ev) => {
+      const startDate = new Date(ev.start);
+      const endDate = new Date(ev.end);
+      const startMin = startDate.getHours() * 60 + startDate.getMinutes();
+      const endMin = endDate.getHours() * 60 + endDate.getMinutes();
+      return { start: startMin, end: endMin };
+    });
+
     const slots = [];
     const startHour = 9;
     const endHour = 19;
@@ -89,9 +100,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           (b) => slotStartMin < b.end && slotEndMin > b.start
         );
 
+        const isBusyOnCalendar = calendarRanges.some(
+          (c) => slotStartMin < c.end && slotEndMin > c.start
+        );
+
         slots.push({
           time,
-          available: !isBlocked && !isBooked,
+          available: !isBlocked && !isBooked && !isBusyOnCalendar,
         });
       }
     }

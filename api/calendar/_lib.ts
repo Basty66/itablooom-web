@@ -206,3 +206,39 @@ export async function createCalendarEvent(data: CalendarEventInput): Promise<str
     return null;
   }
 }
+
+/**
+ * Devuelve todos los eventos del calendario para un día específico.
+ * Se usa para bloquear slots que ya están ocupados en el calendario del dueño.
+ */
+export async function getCalendarEvents(date: string): Promise<{ start: string; end: string }[]> {
+  const calendarId = process.env.GOOGLE_CALENDAR_ID || 'cristianbastian.dev@gmail.com';
+
+  // timeMin/timeMax en formato ISO con la fecha del día completo en Chile
+  const timeMin = `${date}T00:00:00-04:00`;
+  const timeMax = `${date}T23:59:59-03:00`;
+
+  try {
+    const token = await getAccessToken();
+    const url = `${CALENDAR_API}/calendars/${encodeURIComponent(calendarId)}/events?` +
+      `timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&singleEvents=true&orderBy=startTime`;
+
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) return [];
+
+    const body = (await res.json()) as { items?: { start?: { dateTime?: string }; end?: { dateTime?: string } }[] };
+    if (!body.items) return [];
+
+    return body.items
+      .filter((ev) => ev.start?.dateTime && ev.end?.dateTime)
+      .map((ev) => ({
+        start: ev.start!.dateTime!,
+        end: ev.end!.dateTime!,
+      }));
+  } catch {
+    return [];
+  }
+}
