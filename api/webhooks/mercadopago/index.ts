@@ -95,9 +95,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const booking = bookings[0] as any;
 
         if (booking) {
-          const dateStr = typeof booking.booking_date === 'string'
-            ? booking.booking_date.split('T')[0]
-            : new Date(booking.booking_date).toISOString().split('T')[0];
+          const raw = booking.booking_date;
+          let dateStr: string;
+          if (typeof raw === 'string') {
+            dateStr = raw.split('T')[0];
+          } else if (raw instanceof Date) {
+            const y = raw.getFullYear();
+            const m = String(raw.getMonth() + 1).padStart(2, '0');
+            const d = String(raw.getDate()).padStart(2, '0');
+            dateStr = `${y}-${m}-${d}`;
+          } else {
+            dateStr = String(raw).split('T')[0];
+          }
           const timeStr = booking.booking_time ? booking.booking_time.slice(0, 5) : '10:00';
 
           const eventId = await createCalendarEvent({

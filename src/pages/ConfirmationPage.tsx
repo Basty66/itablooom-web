@@ -15,6 +15,12 @@ import { linkWhatsApp } from '../lib/contacto';
 
 const WHATSAPP = linkWhatsApp('Hola! Acabo de agendar una cita');
 
+/** Parsea "2026-08-19" sin shift de timezone (UTC midnight → día anterior en Chile). */
+function parseDateLocal(dateStr: string): Date {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
 function Estado({
   icono,
   titulo,
@@ -162,7 +168,7 @@ export default function ConfirmationPage() {
                 icono: CalendarDays,
                 label: 'Fecha',
                 valor: booking.booking_date
-                  ? format(new Date(booking.booking_date), "EEEE d 'de' MMMM, yyyy", { locale: es })
+                  ? format(parseDateLocal(booking.booking_date), "EEEE d 'de' MMMM, yyyy", { locale: es })
                   : 'Por confirmar',
               },
               {

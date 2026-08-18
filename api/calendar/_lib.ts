@@ -178,6 +178,7 @@ export async function createCalendarEvent(data: CalendarEventInput): Promise<str
       useDefault: false,
       overrides: [
         { method: 'email', minutes: 24 * 60 },
+        { method: 'popup', minutes: 60 },
         { method: 'popup', minutes: 30 },
       ],
     },
