@@ -44,6 +44,7 @@
  */
 @layer base {
   :root {
+    --paso--2: clamp(0.7rem, 0.12vw + 0.67rem, 0.76rem);
     --paso--1: clamp(0.8rem, 0.17vw + 0.76rem, 0.89rem);
     --paso-0: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
     --paso-1: clamp(1.25rem, 0.61vw + 1.1rem, 1.58rem);
@@ -116,6 +117,7 @@
 }
 
 @layer utilities {
+  .texto--2 { font-size: var(--paso--2); }
   .texto--1 { font-size: var(--paso--1); }
   .texto-0 { font-size: var(--paso-0); }
   .texto-1 { font-size: var(--paso-1); }
