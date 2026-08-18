@@ -8,18 +8,9 @@ interface Props {
   service: Service | null;
   fecha: Date | null;
   hora: string;
-  tipoPago: 'deposit' | 'full';
 }
 
-/**
- * Resumen que acompaña los tres pasos, en vez de aparecer recién al final.
- * Las filas vacías se muestran atenuadas para que se vea qué falta completar:
- * el hueco comunica progreso mejor que ocultarlo.
- */
-export default function ResumenReserva({ service, fecha, hora, tipoPago }: Props) {
-  const monto = service ? (tipoPago === 'full' ? service.price : service.deposit_amount) : 0;
-  const saldo = service && tipoPago === 'deposit' ? service.price - service.deposit_amount : 0;
-
+export default function ResumenReserva({ service, fecha, hora }: Props) {
   return (
     <aside
       aria-label="Resumen de tu reserva"
@@ -82,19 +73,11 @@ export default function ResumenReserva({ service, fecha, hora, tipoPago }: Props
 
         <div className="mt-5 border-t border-tinta-900/10 pt-5">
           <div className="flex items-baseline justify-between gap-3">
-            <span className="texto--1 text-tinta-600">
-              {tipoPago === 'full' ? 'Pagas ahora' : 'Seña ahora'}
-            </span>
+            <span className="texto--1 text-tinta-600">Total a pagar</span>
             <span className="font-display texto-3 leading-none text-tinta-900">
-              {service ? formatPrice(monto) : '—'}
+              {service ? formatPrice(service.price) : '—'}
             </span>
           </div>
-
-          {saldo > 0 && (
-            <p className="mt-2 texto--1 text-tinta-500">
-              Saldo en el local: {formatPrice(saldo)}
-            </p>
-          )}
         </div>
 
         <ul className="mt-5 space-y-2 border-t border-tinta-900/10 pt-5">

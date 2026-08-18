@@ -41,7 +41,7 @@ export default function ServiceCard({ service, delay = 0, prioritaria = false }:
           <span aria-hidden="true" className="text-tinta-400">
             ·
           </span>
-          <span>Seña {formatPrice(service.deposit_amount)}</span>
+          <span>Desde {formatPrice(service.price)}</span>
         </div>
 
         {/* mt-auto alinea el pie de todas las tarjetas aunque el texto varíe. */}

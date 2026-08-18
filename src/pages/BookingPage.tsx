@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, CreditCard, Loader2, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
@@ -9,12 +9,15 @@ import StepIndicator from '../components/booking/StepIndicator';
 import ServiceStep from '../components/booking/ServiceStep';
 import DateTimeStep from '../components/booking/DateTimeStep';
 import DetailsStep, { type DatosCliente } from '../components/booking/DetailsStep';
-import ResumenReserva from '../components/booking/ResumenReserva';
+import { formatPrice, formatDuration } from '../lib/format';
+import { CalendarDays, Clock3 } from 'lucide-react';
+import { es } from 'date-fns/locale';
 
 const TITULOS = ['Elige tu tratamiento', 'Fecha y hora', 'Tus datos'];
 
 export default function BookingPage() {
   const [searchParams] = useSearchParams();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [paso, setPaso] = useState(1);
   const [services, setServices] = useState<Service[]>([]);
@@ -33,7 +36,6 @@ export default function BookingPage() {
     phone: '',
     rut: '',
     notes: '',
-    paymentType: 'deposit',
   });
 
   useEffect(() => {
@@ -43,7 +45,6 @@ export default function BookingPage() {
       .finally(() => setCargandoServices(false));
   }, []);
 
-  // Permite entrar desde el catálogo con el tratamiento ya elegido.
   useEffect(() => {
     const id = searchParams.get('service');
     if (id && services.length > 0) {
@@ -73,13 +74,18 @@ export default function BookingPage() {
     : paso === 2 ? fecha !== null && hora !== ''
     : Boolean(datos.name && datos.email && datos.phone);
 
+  function avanzar() {
+    setPaso(paso + 1);
+    setError('');
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
 
     if (paso < 3) {
-      setPaso(paso + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      avanzar();
       return;
     }
 
@@ -96,11 +102,9 @@ export default function BookingPage() {
         date: format(fecha, 'yyyy-MM-dd'),
         time: hora,
         notes: datos.notes,
-        paymentType: datos.paymentType,
       });
       window.location.href = init_point;
     } catch {
-      // Antes esto era un alert() del navegador: cortaba el flujo y se veía ajeno al sitio.
       setError('No pudimos iniciar el pago. Revisa tu conexión e intentá nuevamente.');
       setProcesando(false);
     }
@@ -109,13 +113,13 @@ export default function BookingPage() {
   function volver() {
     setPaso(paso - 1);
     setError('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   return (
     <div className="min-h-screen bg-crema-100 py-10 md:py-16">
-      <Container className="max-w-5xl">
-        <header className="mb-9 text-center">
+      <Container className="max-w-2xl">
+        <header className="mb-8 text-center">
           <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-rosa-600">
             Reserva tu hora
           </p>
@@ -124,12 +128,29 @@ export default function BookingPage() {
 
         <StepIndicator actual={paso} />
 
-        {/* Dos columnas en escritorio: los pasos a la izquierda y el resumen
-            siempre a la vista. En móvil el resumen baja al final del flujo. */}
-        <form onSubmit={onSubmit} className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-start">
-          <div className="lg:col-span-7 xl:col-span-8">
-            <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
+        {/* Resumen compacto siempre visible arriba del form */}
+        {service && (
+          <div className="mt-6 flex items-center justify-center gap-4 rounded-2xl border border-tinta-900/8 bg-crema-50/80 px-5 py-3 text-center">
+            <span className="texto--1 font-medium text-tinta-900">{service.name}</span>
+            {fecha && (
+              <span className="flex items-center gap-1.5 texto--1 text-tinta-500">
+                <CalendarDays size={13} strokeWidth={1.5} />
+                {format(fecha, "EEE d MMM", { locale: es })}
+              </span>
+            )}
+            {hora && (
+              <span className="flex items-center gap-1.5 texto--1 text-tinta-500">
+                <Clock3 size={13} strokeWidth={1.5} />
+                {hora}
+              </span>
+            )}
+            <span className="texto--1 text-tinta-500">{formatDuration(service.duration_minutes)}</span>
+            <span className="font-display texto-1 text-tinta-900">{formatPrice(service.price)}</span>
+          </div>
+        )}
 
+        <form ref={formRef} onSubmit={onSubmit} className="mt-6">
+          <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
             {paso === 1 && (
               <ServiceStep
                 services={services}
@@ -174,7 +195,7 @@ export default function BookingPage() {
             </p>
           )}
 
-          <div className="mt-6 flex items-center justify-between gap-3">
+          <div className="mt-5 flex items-center justify-between gap-3">
             {paso > 1 ? (
               <button
                 type="button"
@@ -201,7 +222,7 @@ export default function BookingPage() {
               ) : paso === 3 ? (
                 <>
                   <CreditCard size={17} strokeWidth={1.5} aria-hidden="true" />
-                  Pagar con Mercado Pago
+                  Pagar
                 </>
               ) : (
                 <>
@@ -210,17 +231,6 @@ export default function BookingPage() {
                 </>
               )}
             </button>
-            </div>
-          </div>
-
-          {/* sticky: el resumen acompaña el scroll de los pasos largos. */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24 xl:col-span-4">
-            <ResumenReserva
-              service={service}
-              fecha={fecha}
-              hora={hora}
-              tipoPago={datos.paymentType}
-            />
           </div>
         </form>
       </Container>

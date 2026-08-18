@@ -5,14 +5,9 @@ import { Section, SectionHeading } from '../ui/Section';
 /** Las respuestas reflejan cómo funciona el sistema de reservas de verdad. */
 const PREGUNTAS = [
   {
-    pregunta: '¿Cuánto tiempo tengo para pagar la seña?',
+    pregunta: '¿Cuánto tiempo tengo para pagar?',
     respuesta:
       'Diez minutos. Mientras tanto el horario queda reservado a tu nombre. Si no alcanzas a pagar, el cupo se libera solo y puedes volver a reservarlo sin problema.',
-  },
-  {
-    pregunta: '¿La seña se descuenta del valor total?',
-    respuesta:
-      'Sí. Es un adelanto: el día de la cita pagas únicamente la diferencia en el local. También puedes pagar el total online al reservar, si prefieres llegar sin pendientes.',
   },
   {
     pregunta: '¿Qué medios de pago aceptan?',
@@ -27,7 +22,7 @@ const PREGUNTAS = [
   {
     pregunta: '¿Puedo reagendar o cancelar?',
     respuesta:
-      'Sí. Escríbenos por WhatsApp con al menos 24 horas de anticipación y reprogramamos tu hora manteniendo la seña.',
+      'Sí. Escríbenos por WhatsApp con al menos 24 horas de anticipación y reprogramamos tu hora.',
   },
   {
     pregunta: '¿Necesito alguna preparación previa?',

@@ -77,7 +77,7 @@ export default function Hero() {
               style={{ animationDelay: '220ms' }}
             >
               Limpiezas profundas, microneedling y depilación láser. Reserva tu hora en menos de
-              un minuto: eliges el tratamiento, el día y confirmas con la seña.
+              un minuto: eliges el tratamiento, el día y pagas con Mercado Pago.
             </p>
 
             <div

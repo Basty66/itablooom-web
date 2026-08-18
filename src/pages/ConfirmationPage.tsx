@@ -139,8 +139,6 @@ export default function ConfirmationPage() {
     );
   }
 
-  const saldo = booking.total_amount - booking.deposit_amount;
-
   return (
     <div className="min-h-screen bg-crema-100 py-14 md:py-20">
       <Container className="max-w-2xl">
@@ -192,14 +190,8 @@ export default function ConfirmationPage() {
             </h3>
             <dl className="space-y-2.5 texto--1">
               <div className="flex justify-between gap-4">
-                <dt className="text-tinta-600">Abonado ahora</dt>
-                <dd className="font-medium text-tinta-900">{formatPrice(booking.deposit_amount)}</dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-tinta-600">Saldo a pagar en el local</dt>
-                <dd className="font-medium text-tinta-900">
-                  {saldo > 0 ? formatPrice(saldo) : 'Sin saldo pendiente'}
-                </dd>
+                <dt className="text-tinta-600">Pagado</dt>
+                <dd className="font-medium text-tinta-900">{formatPrice(booking.total_amount)}</dd>
               </div>
             </dl>
           </div>

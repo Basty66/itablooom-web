@@ -37,7 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(429).json({ error: 'Demasiadas solicitudes. Intenta más tarde.' });
     }
 
-    const { serviceId, clientName, clientEmail, clientPhone, clientRut, date, time, notes, paymentType } = req.body;
+    const { serviceId, clientName, clientEmail, clientPhone, clientRut, date, time, notes } = req.body;
 
     if (!serviceId || !clientName || !clientEmail || !clientPhone || !date || !time) {
       return res.status(400).json({ error: 'Faltan campos obligatorios' });
@@ -94,9 +94,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
     const appUrl = process.env.APP_URL || 'https://itablooom-web.vercel.app';
 
-    const isFullPayment = paymentType === 'full';
-    const paymentAmount = isFullPayment ? service.price : service.deposit_amount;
-    const paymentLabel = isFullPayment ? `Pago total - ${service.name}` : `Seña - ${service.name}`;
+    const paymentAmount = service.price;
+    const paymentLabel = service.name;
 
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',

@@ -59,7 +59,7 @@ export default function BookingRow({ booking, onEstado, actualizando }: Props) {
             {estado.label}
           </span>
           <p className="mt-1 texto--1 text-tinta-500">
-            {booking.deposit_paid ? 'Seña pagada' : 'Sin pago'} · {formatPrice(booking.deposit_amount)}
+            {booking.deposit_paid ? 'Pagado' : 'Sin pago'} · {formatPrice(booking.total_amount)}
           </p>
         </div>
 

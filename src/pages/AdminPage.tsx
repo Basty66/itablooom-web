@@ -89,9 +89,9 @@ export default function AdminPage() {
     { label: 'Confirmadas', valor: String(bookings.filter((b) => b.status === 'confirmed').length) },
     { label: 'Pendientes', valor: String(bookings.filter((b) => b.status === 'pending').length) },
     {
-      label: 'Señas cobradas',
+      label: 'Ingresos del día',
       valor: formatPrice(
-        bookings.filter((b) => b.deposit_paid).reduce((t, b) => t + Number(b.deposit_amount || 0), 0)
+        bookings.filter((b) => b.deposit_paid).reduce((t, b) => t + Number(b.total_amount || 0), 0)
       ),
     },
   ];

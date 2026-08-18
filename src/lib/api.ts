@@ -75,7 +75,6 @@ export async function createPreference(data: {
   date: string;
   time: string;
   notes?: string;
-  paymentType?: 'deposit' | 'full';
 }): Promise<{ id: string; init_point: string; sandbox_init_point: string; bookingId: string }> {
   return apiFetch('/api/create-preference', {
     method: 'POST',

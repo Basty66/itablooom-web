@@ -14,8 +14,8 @@ const PASOS = [
   },
   {
     icono: CreditCard,
-    titulo: 'Confirma con la seña',
-    texto: 'Pagas la seña o el total con Mercado Pago. Débito, crédito o Webpay.',
+    titulo: 'Paga online',
+    texto: 'Pagas el total con Mercado Pago. Débito, crédito o Webpay.',
   },
   {
     icono: BellRing,
