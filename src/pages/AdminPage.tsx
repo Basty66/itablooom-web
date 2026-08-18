@@ -9,6 +9,15 @@ import { Container } from '../components/ui/Section';
 import { Skeleton } from '../components/ui/Skeleton';
 import LoginGate from '../components/admin/LoginGate';
 
+/** Parsea booking_date sin importar si viene como string ISO o Date. */
+function parseBookingDate(raw: string | Date | null | undefined): Date | null {
+  if (!raw) return null;
+  if (raw instanceof Date) return new Date(raw.getFullYear(), raw.getMonth(), raw.getDate());
+  const s = String(raw).split('T')[0];
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
 function StatCard({ icono: Icono, label, valor, loading }: { icono: typeof TrendingUp; label: string; valor: string; loading?: boolean }) {
   return (
     <div className="rounded-2xl border border-tinta-900/8 bg-crema-50 p-4">
@@ -102,8 +111,8 @@ export default function AdminPage() {
     .reduce((t, b) => t + Number(b.total_amount || 0), 0);
 
   function enviarRecordatorio(b: Booking) {
-    const fecha = b.booking_date
-      ? format(typeof b.booking_date === 'string' ? new Date(b.booking_date + 'T12:00:00') : b.booking_date, "EEEE d 'de' MMMM", { locale: es })
+    const fecha = parseBookingDate(b.booking_date)
+      ? format(parseBookingDate(b.booking_date)!, "EEEE d 'de' MMMM", { locale: es })
       : 'próximamente';
     const hora = b.booking_time ? String(b.booking_time).slice(0, 5) : '';
     const msg = `Hola ${b.client_name}, te recordamos tu cita en Itablooom Studio el ${fecha} a las ${hora}. ¡Te esperamos! 💅✨\n\nSi necesitás reagendar, entrá a: https://itablooom-web.vercel.app/reagendar`;
@@ -173,7 +182,7 @@ export default function AdminPage() {
                       style={{ height: `${Math.max(height, 4)}%` }}
                     />
                     <span className="texto--2 text-tinta-400">
-                      {format(new Date(dia.date + 'T12:00:00'), 'EEE', { locale: es })}
+                      {format(parseBookingDate(dia.date) || new Date(), 'EEE', { locale: es })}
                     </span>
                   </div>
                 );
@@ -246,7 +255,7 @@ export default function AdminPage() {
         <div className="overflow-hidden rounded-2xl border border-tinta-900/8 bg-crema-50">
           <div className="border-b border-tinta-900/8 px-5 py-4">
             <h2 className="texto-1 capitalize text-tinta-900">
-              {format(new Date(fecha + 'T12:00:00'), "EEEE d 'de' MMMM, yyyy", { locale: es })}
+              {format(parseBookingDate(fecha) || new Date(), "EEEE d 'de' MMMM, yyyy", { locale: es })}
             </h2>
           </div>
 

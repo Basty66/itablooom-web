@@ -37,7 +37,8 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
             Esta sección contiene datos de tus clientas.
           </p>
 
-          <form onSubmit={onSubmit} className="mt-8">
+          <form onSubmit={onSubmit} className="mt-8" autoComplete="off">
+            <input type="text" name="username" autoComplete="username" className="sr-only" tabIndex={-1} aria-hidden="true" />
             <label className="block">
               <span className="mb-1.5 block texto--1 font-medium text-tinta-700">Contraseña</span>
               <input
