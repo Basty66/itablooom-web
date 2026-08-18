@@ -133,22 +133,91 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               await resend.emails.send({
                 from: 'Itablooom <onboarding@resend.dev>',
                 to: ownerEmail,
-                subject: `🆕 Nueva reserva: ${booking.service_name} - ${booking.client_name}`,
+                subject: `Nueva reserva: ${booking.service_name} — ${booking.client_name}`,
                 html: `
-                  <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-                    <h2 style="color: #14100e;">Nueva cita agendada</h2>
-                    <table style="width: 100%; border-collapse: collapse;">
-                      <tr><td style="padding: 8px 0; color: #7d7068;">Tratamiento</td><td style="padding: 8px 0; font-weight: 600;">${booking.service_name}</td></tr>
-                      <tr><td style="padding: 8px 0; color: #7d7068;">Cliente</td><td style="padding: 8px 0; font-weight: 600;">${booking.client_name}</td></tr>
-                      <tr><td style="padding: 8px 0; color: #7d7068;">Fecha</td><td style="padding: 8px 0; font-weight: 600;">${dateStr}</td></tr>
-                      <tr><td style="padding: 8px 0; color: #7d7068;">Hora</td><td style="padding: 8px 0; font-weight: 600;">${timeStr}</td></tr>
-                      <tr><td style="padding: 8px 0; color: #7d7068;">Teléfono</td><td style="padding: 8px 0; font-weight: 600;">${booking.client_phone}</td></tr>
-                      <tr><td style="padding: 8px 0; color: #7d7068;">Email</td><td style="padding: 8px 0; font-weight: 600;">${booking.client_email}</td></tr>
-                      <tr><td style="padding: 8px 0; color: #7d7068;">Pagado</td><td style="padding: 8px 0; font-weight: 600;">$${Number(booking.total_amount).toLocaleString('es-CL')}</td></tr>
-                    </table>
-                    <a href="https://itablooom-web.vercel.app/admin" style="display: inline-block; margin-top: 16px; padding: 12px 24px; background: #14100e; color: #faf6ef; text-decoration: none; border-radius: 999px; font-weight: 500;">Ver en el panel</a>
-                  </div>
-                `,
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#faf6ef;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#faf6ef;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background-color:#fdfbf7;border-radius:24px;border:1px solid rgba(20,16,14,0.08);overflow:hidden;box-shadow:0 20px 60px -40px rgba(20,16,14,0.5);">
+
+        <!-- Header -->
+        <tr><td style="background-color:#14100e;padding:32px 32px 28px;text-align:center;">
+          <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e9b4b9;font-weight:500;">Itablooom Studio</p>
+          <h1 style="margin:0;font-size:22px;font-weight:600;color:#faf6ef;letter-spacing:-0.01em;">Nueva cita agendada</h1>
+        </td></tr>
+
+        <!-- Badge -->
+        <tr><td style="padding:28px 32px 0;text-align:center;">
+          <div style="display:inline-block;background-color:#fae8e9;border-radius:999px;padding:8px 20px;">
+            <span style="font-size:13px;font-weight:600;color:#a34a55;">${booking.service_name}</span>
+          </div>
+        </td></tr>
+
+        <!-- Detalles -->
+        <tr><td style="padding:24px 32px 0;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid rgba(20,16,14,0.08);border-radius:16px;overflow:hidden;">
+            <tr>
+              <td style="padding:14px 20px;background-color:#fdfbf7;border-bottom:1px solid rgba(20,16,14,0.06);">
+                <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Cliente</span><br>
+                <span style="font-size:15px;font-weight:600;color:#14100e;">${booking.client_name}</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:14px 20px;background-color:#fdfbf7;border-bottom:1px solid rgba(20,16,14,0.06);">
+                <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Fecha</span><br>
+                <span style="font-size:15px;font-weight:600;color:#14100e;">${dateStr}</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:14px 20px;background-color:#fdfbf7;border-bottom:1px solid rgba(20,16,14,0.06);">
+                <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Hora</span><br>
+                <span style="font-size:15px;font-weight:600;color:#14100e;">${timeStr}</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:14px 20px;background-color:#fdfbf7;border-bottom:1px solid rgba(20,16,14,0.06);">
+                <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Teléfono</span><br>
+                <a href="tel:${booking.client_phone}" style="font-size:15px;font-weight:600;color:#14100e;text-decoration:none;">${booking.client_phone}</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:14px 20px;background-color:#fdfbf7;">
+                <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Email</span><br>
+                <a href="mailto:${booking.client_email}" style="font-size:15px;font-weight:600;color:#a34a55;text-decoration:none;">${booking.client_email}</a>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Monto -->
+        <tr><td style="padding:20px 32px 0;text-align:center;">
+          <div style="background-color:#fae8e9;border-radius:16px;padding:20px;">
+            <p style="margin:0 0 4px;font-size:12px;color:#a34a55;text-transform:uppercase;letter-spacing:0.08em;font-weight:500;">Monto pagado</p>
+            <p style="margin:0;font-size:28px;font-weight:700;color:#14100e;letter-spacing:-0.02em;">$${Number(booking.total_amount).toLocaleString('es-CL')}</p>
+          </div>
+        </td></tr>
+
+        <!-- Botón -->
+        <tr><td style="padding:24px 32px 32px;text-align:center;">
+          <a href="https://itablooom-web.vercel.app/admin" style="display:inline-block;padding:14px 32px;background-color:#14100e;color:#faf6ef;text-decoration:none;border-radius:999px;font-size:14px;font-weight:500;letter-spacing:0.01em;">Ver en el panel</a>
+        </td></tr>
+
+      </table>
+
+      <!-- Footer -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
+        <tr><td style="padding:20px 0;text-align:center;">
+          <p style="margin:0;font-size:11px;color:#9a8d84;letter-spacing:0.05em;">Itablooom Studio · Santiago, Chile</p>
+        </td></tr>
+      </table>
+
+    </td></tr>
+  </table>
+</body>
+</html>`,
               });
               console.log(`📧 Notification email sent to ${ownerEmail}`);
             } catch (emailError) {
