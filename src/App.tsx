@@ -7,6 +7,7 @@ import ServicesPage from './pages/ServicesPage';
 import BookingPage from './pages/BookingPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import AdminPage from './pages/AdminPage';
+import ReschedulePage from './pages/ReschedulePage';
 
 /** Sin esto, al navegar entre páginas el scroll se queda donde estaba. */
 function ScrollToTop() {
@@ -80,6 +81,7 @@ export default function App() {
               <Route path="/agendar" element={<BookingPage />} />
               <Route path="/confirmacion" element={<ConfirmationPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/reagendar" element={<ReschedulePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

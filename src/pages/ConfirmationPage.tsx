@@ -52,16 +52,23 @@ function Estado({
   );
 }
 
-function Acciones() {
+function Acciones({ bookingId, email }: { bookingId?: string; email?: string }) {
+  const rescheduleUrl = bookingId && email
+    ? `/reagendar?id=${bookingId}&email=${encodeURIComponent(email)}`
+    : '/reagendar';
+
   return (
     <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
       <Button to="/" variant="outline" size="md">
         <ArrowLeft size={17} strokeWidth={1.5} />
         Volver al inicio
       </Button>
+      <Button to={rescheduleUrl} variant="ghost" size="md">
+        Reagendar cita
+      </Button>
       <Button href={WHATSAPP} variant="secondary" size="md">
         <MessageCircle size={17} strokeWidth={1.5} />
-        Escríbenos por WhatsApp
+        Escribinos por WhatsApp
       </Button>
     </div>
   );
@@ -213,7 +220,7 @@ export default function ConfirmationPage() {
                 'Llega 5 minutos antes para acomodarte con calma.',
                 'Si es depilación láser, ven con la zona rasurada y sin exposición solar reciente.',
                 'Para tratamientos faciales, preferentemente sin maquillaje.',
-                'Si necesitas reagendar, escríbenos por WhatsApp con 24 horas de anticipación.',
+                'Si necesitás reagendar, hacelo con 24h de anticipación desde el link de tu confirmación.',
               ].map((linea) => (
                 <li key={linea} className="flex items-start gap-2.5">
                   <span
@@ -231,7 +238,7 @@ export default function ConfirmationPage() {
           </div>
         </div>
 
-        <Acciones />
+        <Acciones bookingId={booking.id} email={booking.client_email} />
       </Container>
     </div>
   );

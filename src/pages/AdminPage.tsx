@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle, TrendingUp, Users, Star, DollarSign } from 'lucide-react';
+import { CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle, TrendingUp, Users, Star, DollarSign, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Booking } from '../types';
@@ -100,6 +100,16 @@ export default function AdminPage() {
   const ingresosHoy = bookings
     .filter((b) => b.deposit_paid)
     .reduce((t, b) => t + Number(b.total_amount || 0), 0);
+
+  function enviarRecordatorio(b: Booking) {
+    const fecha = b.booking_date
+      ? format(typeof b.booking_date === 'string' ? new Date(b.booking_date + 'T12:00:00') : b.booking_date, "EEEE d 'de' MMMM", { locale: es })
+      : 'próximamente';
+    const hora = b.booking_time ? String(b.booking_time).slice(0, 5) : '';
+    const msg = `Hola ${b.client_name}, te recordamos tu cita en Itablooom Studio el ${fecha} a las ${hora}. ¡Te esperamos! 💅✨\n\nSi necesitás reagendar, entrá a: https://itablooom-web.vercel.app/reagendar`;
+    const phone = (b.client_phone || '').replace(/[^0-9]/g, '');
+    window.open(`https://api.whatsapp.com/send?phone=56${phone.startsWith('9') ? '' : '9'}${phone}&text=${encodeURIComponent(msg)}`, '_blank');
+  }
 
   return (
     <div className="min-h-screen bg-crema-100 py-10 md:py-14">
@@ -275,17 +285,28 @@ export default function AdminPage() {
                     <p className="texto--1 text-tinta-500">{b.client_phone}</p>
                   </div>
                   <div className="text-right">
-                    <span className={`inline-block rounded-full px-3 py-1 texto--1 font-medium ${
-                      b.status === 'confirmed' ? 'bg-emerald-100 text-emerald-900'
-                      : b.status === 'pending' ? 'bg-amber-100 text-amber-900'
-                      : b.status === 'cancelled' ? 'bg-tinta-900/8 text-tinta-600'
-                      : 'bg-rosa-200 text-tinta-900'
-                    }`}>
-                      {b.status === 'confirmed' ? 'Confirmada'
-                        : b.status === 'pending' ? 'Pendiente'
-                        : b.status === 'cancelled' ? 'Cancelada'
-                        : 'Completada'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {b.status === 'confirmed' && (
+                        <button
+                          onClick={() => enviarRecordatorio(b)}
+                          title="Enviar recordatorio por WhatsApp"
+                          className="rounded-full bg-emerald-100 p-2 text-emerald-700 transition-all duration-200 hover:bg-emerald-200 active:scale-95"
+                        >
+                          <MessageCircle size={15} strokeWidth={1.5} aria-hidden="true" />
+                        </button>
+                      )}
+                      <span className={`inline-block rounded-full px-3 py-1 texto--1 font-medium ${
+                        b.status === 'confirmed' ? 'bg-emerald-100 text-emerald-900'
+                        : b.status === 'pending' ? 'bg-amber-100 text-amber-900'
+                        : b.status === 'cancelled' ? 'bg-tinta-900/8 text-tinta-600'
+                        : 'bg-rosa-200 text-tinta-900'
+                      }`}>
+                        {b.status === 'confirmed' ? 'Confirmada'
+                          : b.status === 'pending' ? 'Pendiente'
+                          : b.status === 'cancelled' ? 'Cancelada'
+                          : 'Completada'}
+                      </span>
+                    </div>
                     <p className="mt-1 texto--1 text-tinta-500">{formatPrice(Number(b.total_amount || 0))}</p>
                   </div>
                 </li>
