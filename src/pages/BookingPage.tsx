@@ -3,7 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, CreditCard, Loader2, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Service, TimeSlot } from '../types';
-import { getServices, getAvailableTimeSlots, createPreferenceWithOfflineSupport } from '../lib/api';
+import { getAvailableTimeSlots, createPreferenceWithOfflineSupport } from '../lib/api';
+import { SERVICIOS_PRUEBA } from '../lib/datos-prueba';
 import { Container } from '../components/ui/Section';
 import StepIndicator from '../components/booking/StepIndicator';
 import ServiceStep from '../components/booking/ServiceStep';
@@ -39,10 +40,14 @@ export default function BookingPage() {
   });
 
   useEffect(() => {
-    getServices()
-      .then(setServices)
-      .catch(() => setError('No pudimos cargar los tratamientos. Recargá la página.'))
-      .finally(() => setCargandoServices(false));
+    // MAQUETA: mismos datos de prueba que el home y el catálogo. Mientras esto
+    // leía de la API, el flujo mostraba los servicios viejos de Itablooom y no
+    // los de Goddess. Al conectar la base real, volver a `getServices()`.
+    const t = setTimeout(() => {
+      setServices(SERVICIOS_PRUEBA);
+      setCargandoServices(false);
+    }, 200);
+    return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
@@ -137,17 +142,18 @@ export default function BookingPage() {
     <div className="min-h-screen bg-crema-100 py-10 md:py-16">
       <Container className="max-w-2xl">
         <header className="mb-8 text-center">
-          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-dorado-700">
+          <p className="texto--1 uppercase espaciado-amplio text-dorado-700">
             Reserva tu hora
           </p>
-          <h1 className="texto-3 text-tinta-900">{TITULOS[paso - 1]}</h1>
+          <div aria-hidden="true" className="linea-oro mx-auto my-5 w-12 border-t" />
+          <h1 className="texto-3 leading-tight text-tinta-900">{TITULOS[paso - 1]}</h1>
         </header>
 
         <StepIndicator actual={paso} />
 
         {/* Resumen compacto siempre visible arriba del form */}
         {service && (
-          <div className="mt-6 rounded-2xl border border-tinta-900/8 bg-crema-50/80 px-4 py-3 sm:flex sm:items-center sm:justify-center sm:gap-4 sm:text-center">
+          <div className="linea-oro mt-8 border-y px-1 py-4 sm:flex sm:items-center sm:justify-center sm:gap-4 sm:text-center">
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
               <span className="texto--1 font-medium text-tinta-900">{service.name}</span>
               <span className="hidden text-tinta-300 sm:inline">·</span>
@@ -178,7 +184,7 @@ export default function BookingPage() {
         )}
 
         <form ref={formRef} onSubmit={onSubmit} className="mt-6">
-          <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-4 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
+          <div className="py-2">
             {paso === 1 && (
               <ServiceStep
                 services={services}
