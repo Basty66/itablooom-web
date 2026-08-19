@@ -42,34 +42,32 @@ interface Props {
 
 export default function ServiceVisual({ categoria, imagen, nombre, prioritaria = false }: Props) {
   const [fallo, setFallo] = useState(false);
-  const { icono: Icono, fondo } = ESTILOS[categoria] ?? RESPALDO;
+  const { icono: Icono } = ESTILOS[categoria] ?? RESPALDO;
 
-  // aspect-[16/9] reserva el espacio antes de que cargue la imagen y evita
-  // que la tarjeta salte cuando aparece (CLS).
+  // El aspect fija el espacio antes de que cargue la imagen y evita que la
+  // tarjeta salte al aparecer (CLS).
+  // Retrato 4/5 en escritorio; en móvil eso alarga demasiado la columna, así
+  // que ahí va cuadrado: más contenido sin perder el aire.
   return (
-    <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${fondo}`}>
+    <div className="relative aspect-square overflow-hidden bg-crema-200 sm:aspect-[4/5]">
       {imagen && !fallo ? (
         <>
           <img
             src={imagen}
-            alt={nombre ? `${nombre} en Itablooom Studio` : 'Tratamiento estético'}
+            alt={nombre ? `${nombre} en Goddess Studio` : 'Tratamiento estético'}
             loading={prioritaria ? 'eager' : 'lazy'}
             decoding="async"
             width={800}
             height={450}
             onError={() => setFallo(true)}
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
           />
-          {/* Velo crema: integra fotos de temperaturas distintas con la paleta. */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-tinta-900/25 via-transparent to-crema-100/15"
-          />
+          {/* Velo mínimo: unifica fotos de temperaturas distintas sin ensuciar. */}
+          <div aria-hidden="true" className="absolute inset-0 bg-crema-100/5" />
         </>
       ) : (
         <div className="flex h-full w-full items-center justify-center">
-          <div aria-hidden="true" className="absolute h-40 w-40 rounded-full border border-white/40" />
-          <div aria-hidden="true" className="absolute h-28 w-28 rounded-full border border-white/50" />
+          <div aria-hidden="true" className="linea-oro absolute h-24 w-24 rounded-full border" />
           <Icono
             size={30}
             strokeWidth={1.25}

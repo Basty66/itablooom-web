@@ -76,7 +76,7 @@
     /* Tope deliberadamente contenido: en pantallas grandes un display de 5rem
        se come la sección y obliga a scrollear para leer el subtítulo. */
     --paso-4: clamp(2.25rem, 1.7vw + 1.83rem, 3.1rem);
-    --paso-5: clamp(2.6rem, 2.4vw + 2rem, 3.9rem);
+    --paso-5: clamp(2.8rem, 3vw + 2.1rem, 4.6rem);
   }
 
   html {
@@ -113,13 +113,13 @@
 
   /* Un solo anillo de foco para todo el sitio, visible sobre crema y sobre tinta. */
   :focus-visible {
-    outline: 2px solid var(--color-rosa-400);
-    outline-offset: 3px;
-    border-radius: 2px;
+    outline: 1px solid var(--color-dorado-500);
+    outline-offset: 4px;
+    border-radius: 0;
   }
 
   ::selection {
-    background-color: var(--color-rosa-200);
+    background-color: var(--color-dorado-200);
     color: var(--color-tinta-900);
   }
 
@@ -130,16 +130,23 @@
     background: var(--color-crema-200);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-rosa-300);
+    background: var(--color-dorado-300);
     border-radius: 999px;
     border: 2px solid var(--color-crema-200);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-rosa-400);
+    background: var(--color-dorado-400);
   }
 }
 
 @layer utilities {
+  /* Tracking editorial: el texto chico muy espaciado es la firma del estilo. */
+  .espaciado-amplio { letter-spacing: 0.28em; }
+  .espaciado-medio { letter-spacing: 0.16em; }
+
+  /* Línea fina dorada: único separador del sistema, en vez de sombras. */
+  .linea-oro { border-color: color-mix(in oklab, var(--color-dorado-400) 35%, transparent); }
+
   .texto--2 { font-size: var(--paso--2); }
   .texto--1 { font-size: var(--paso--1); }
   .texto-0 { font-size: var(--paso-0); }
@@ -167,7 +174,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.035;
+    opacity: 0.02;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }

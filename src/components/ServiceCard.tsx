@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Clock3, ArrowRight } from 'lucide-react';
 import type { Service } from '../types';
 import { formatPrice, formatDuration } from '../lib/format';
 import ServiceVisual, { etiquetaCategoria } from './ui/ServiceVisual';
@@ -15,8 +14,10 @@ interface Props {
 
 /**
  * Tarjeta de servicio, compartida entre el home y el catálogo.
- * Densidad ajustada: la versión anterior ocupaba casi una pantalla de móvil
- * por tarjeta, así que se recortó la imagen y el espaciado interno.
+ *
+ * Sin caja: la tarjeta con borde, radio y sombra competía con la foto. Acá la
+ * imagen apoya directo sobre el fondo y una línea fina separa el pie, que es
+ * el único recurso de división del sistema.
  */
 export default function ServiceCard({
   service,
@@ -26,7 +27,7 @@ export default function ServiceCard({
 }: Props) {
   return (
     <article
-      className={`anim-entrada group flex flex-col overflow-hidden rounded-2xl border border-tinta-900/8 bg-crema-50 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-dorado-300 hover:shadow-[0_22px_50px_-28px_rgba(20,16,14,0.45)] ${className}`}
+      className={`anim-entrada group flex flex-col ${className}`}
       style={{ animationDelay: `${delay}ms` }}
     >
       <ServiceVisual
@@ -36,45 +37,36 @@ export default function ServiceCard({
         prioritaria={prioritaria}
       />
 
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <div className="mb-2 flex items-start justify-between gap-2">
-          <h3 className="texto-0 font-medium leading-snug text-tinta-900">{service.name}</h3>
-          <span className="shrink-0 rounded-full bg-dorado-100 px-2.5 py-0.5 texto--1 font-medium text-dorado-700">
-            {etiquetaCategoria(service.category)}
-          </span>
-        </div>
+      <div className="flex flex-1 flex-col pt-5">
+        <p className="texto--1 uppercase espaciado-medio text-dorado-700">
+          {etiquetaCategoria(service.category)}
+        </p>
 
-        <p className="mb-3 line-clamp-2 texto--1 leading-snug text-tinta-600">
+        <h3 className="mt-2 font-display texto-2 leading-tight text-tinta-900">{service.name}</h3>
+
+        <p className="mt-2 line-clamp-2 texto--1 leading-relaxed text-tinta-600">
           {service.description}
         </p>
 
-        <div className="mb-3 flex items-center gap-1.5 texto--1 text-tinta-500">
-          <Clock3 size={13} strokeWidth={1.5} aria-hidden="true" />
-          <span>{formatDuration(service.duration_minutes)}</span>
-        </div>
-
         {/* mt-auto alinea el pie de todas las tarjetas aunque el texto varíe. */}
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-tinta-900/8 pt-3">
+        <div className="linea-oro mt-5 flex items-baseline justify-between gap-4 border-t pt-4">
           <div>
-            <p className="font-display texto-1 leading-none text-tinta-900">
-              {formatPrice(service.price)}
-            </p>
+            <p className="texto-0 text-tinta-900">{formatPrice(service.price)}</p>
             <p className="mt-0.5 texto--1 text-tinta-500">
-              Reserva con {formatPrice(service.deposit_amount)}
+              {formatDuration(service.duration_minutes)}
             </p>
           </div>
 
           <Link
             to={`/agendar?service=${service.id}`}
             aria-label={`Reservar ${service.name}`}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-dorado-300 to-dorado-400 px-4 py-2 texto--1 font-medium text-tinta-900 transition-all duration-200 ease-out hover:from-dorado-200 hover:to-dorado-300 active:scale-95"
+            className="relative texto--1 uppercase espaciado-medio text-tinta-900 transition-colors duration-300 hover:text-dorado-700"
           >
             Reservar
-            <ArrowRight
-              size={14}
-              strokeWidth={1.5}
+            {/* Subrayado que se extiende al pasar el cursor. */}
+            <span
               aria-hidden="true"
-              className="transition-transform duration-200 ease-out group-hover:translate-x-0.5"
+              className="absolute -bottom-1 left-0 h-px w-0 bg-dorado-500 transition-all duration-300 ease-out group-hover:w-full"
             />
           </Link>
         </div>

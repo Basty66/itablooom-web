@@ -30,7 +30,7 @@ export default function HomePage() {
       <Hero />
       <ComoFunciona />
 
-      <Section className="bg-nude-100">
+      <Section className="bg-crema-100">
         <SectionHeading
           eyebrow="Tratamientos"
           title="Los más pedidos"
@@ -76,15 +76,11 @@ export default function HomePage() {
       <Faq />
 
       {/* Cierre: última oportunidad de conversión antes del footer. */}
-      <section className="textura-papel relative overflow-hidden bg-tinta-900 py-20 md:py-28">
-        <div
-          aria-hidden="true"
-          className="absolute -bottom-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-rosa-500/20 blur-3xl"
-        />
+      <section className="bg-tinta-900 py-20 md:py-28">
         <Container className="relative text-center">
-          <h2 className="texto-3 text-crema-100">
+          <h2 className="texto-3 leading-tight text-crema-100">
             ¿Lista para tu próxima
-            <span className="italic text-rosa-300"> sesión?</span>
+            <span className="italic text-dorado-300"> sesión?</span>
           </h2>
           <p className="mx-auto mt-4 max-w-md text-crema-100/70">
             Elige tu tratamiento y asegura tu horario en menos de un minuto.

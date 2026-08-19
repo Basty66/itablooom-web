@@ -33,7 +33,7 @@ const PILARES = [
 
 export default function SobreMi() {
   return (
-    <Section id="sobre-mi" className="bg-nude-100">
+    <Section id="sobre-mi" className="bg-crema-100">
       <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-14">
         {/* La foto va primero en móvil: pone rostro antes que texto. */}
         <div className="lg:col-span-5">
@@ -41,7 +41,7 @@ export default function SobreMi() {
             {/* Marco dorado desplazado: da profundidad sin recargar. */}
             <div
               aria-hidden="true"
-              className="absolute -bottom-3 -right-3 h-full w-full rounded-3xl border border-dorado-400/40"
+              className="linea-oro absolute -bottom-4 -right-4 h-full w-full border"
             />
             <img
               src="/images/g-ignacia.jpg"
@@ -52,7 +52,7 @@ export default function SobreMi() {
               height={1100}
               /* En móvil un 4/5 se comía media pantalla: ahí va apaisada y
                  recupera el retrato vertical recién en escritorio. */
-              className="relative aspect-[3/2] w-full rounded-3xl object-cover object-top shadow-[0_24px_60px_-32px_rgba(20,16,14,0.5)] sm:aspect-[4/3] lg:aspect-[4/5]"
+              className="relative aspect-[3/2] w-full object-cover object-top sm:aspect-[4/3] lg:aspect-[4/5]"
             />
           </div>
         </div>
@@ -78,7 +78,7 @@ export default function SobreMi() {
                 className="anim-entrada flex items-start gap-3 sm:gap-4"
                 style={{ animationDelay: `${i * 80}ms` }}
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dorado-100">
+                <span className="linea-oro flex h-10 w-10 shrink-0 items-center justify-center border">
                   <Icono size={17} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
                 </span>
                 <div>

@@ -38,14 +38,26 @@ export function SectionHeading({
   as: Tag = 'h2',
   align = 'center',
 }: HeadingProps) {
-  const alineacion = align === 'center' ? 'text-center mx-auto' : 'text-left';
+  const centrado = align === 'center';
   return (
-    <div className={`max-w-2xl ${alineacion}`}>
+    <div className={`max-w-2xl ${centrado ? 'mx-auto text-center' : 'text-left'}`}>
       {eyebrow && (
-        <p className="texto--1 mb-3 font-medium uppercase tracking-[0.2em] text-dorado-700">{eyebrow}</p>
+        <p className="texto--1 uppercase espaciado-amplio text-dorado-700">{eyebrow}</p>
       )}
-      <Tag className={`${Tag === 'h1' ? 'texto-5' : 'texto-3'} text-tinta-900`}>{title}</Tag>
-      {subtitle && <p className="mt-4 text-tinta-600">{subtitle}</p>}
+
+      {/* Regla fina bajo el rótulo: el separador del sistema, en vez de peso. */}
+      {eyebrow && (
+        <div
+          aria-hidden="true"
+          className={`linea-oro mb-7 mt-5 w-12 border-t ${centrado ? 'mx-auto' : ''}`}
+        />
+      )}
+
+      <Tag className={`${Tag === 'h1' ? 'texto-4' : 'texto-3'} leading-tight text-tinta-900`}>
+        {title}
+      </Tag>
+
+      {subtitle && <p className="mt-5 texto-0 leading-relaxed text-tinta-600">{subtitle}</p>}
     </div>
   );
 }

@@ -4,29 +4,29 @@ import type { ReactNode, ButtonHTMLAttributes } from 'react';
 type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';
 
+/*
+ * Sin sombras ni degradados: en este sistema el peso lo dan el contraste y el
+ * espacio, no la profundidad falsa. Esquinas rectas —el pill redondeado leía
+ * más "app" que "estudio de belleza"— y línea fina como recurso principal.
+ */
 const VARIANTES: Record<Variant, string> = {
-  /*
-   * El degradado leve da el brillo metálico del oro; un plano se ve a pintura.
-   * Texto en tinta y no en blanco: sobre oro, el blanco no llega al contraste.
-   */
-  primary:
-    'bg-gradient-to-b from-dorado-300 to-dorado-400 text-tinta-900 shadow-sm ' +
-    'hover:from-dorado-200 hover:to-dorado-300 hover:shadow-md',
-  secondary: 'bg-tinta-900 text-crema-100 hover:bg-tinta-800 shadow-sm hover:shadow-md',
-  outline: 'border border-dorado-400/50 text-tinta-900 hover:border-dorado-400 hover:bg-dorado-100/50',
-  ghost: 'text-tinta-700 hover:text-tinta-900 hover:bg-dorado-100/60',
+  primary: 'bg-tinta-900 text-crema-100 hover:bg-tinta-800',
+  secondary: 'bg-dorado-400 text-tinta-900 hover:bg-dorado-300',
+  outline: 'border border-dorado-400/45 text-tinta-900 hover:border-dorado-500 hover:bg-dorado-100/40',
+  ghost: 'text-tinta-700 hover:text-tinta-900',
 };
 
+/** Botones anchos y bajos: el aire horizontal es parte del gesto editorial. */
 const TAMANOS: Record<Size, string> = {
-  sm: 'px-4 py-2 texto--1 gap-1.5',
-  md: 'px-6 py-3 texto-0 gap-2',
-  lg: 'px-8 py-4 texto-0 gap-2.5',
+  sm: 'px-5 py-2.5 gap-2',
+  md: 'px-7 py-3 gap-2.5',
+  lg: 'px-9 py-4 gap-3',
 };
 
 const BASE =
-  'inline-flex items-center justify-center rounded-full font-medium tracking-wide ' +
-  'transition-all duration-200 ease-out active:scale-95 ' +
-  'disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none';
+  'inline-flex items-center justify-center texto--1 font-medium uppercase espaciado-medio ' +
+  'transition-all duration-300 ease-out active:scale-[0.98] ' +
+  'disabled:opacity-40 disabled:pointer-events-none';
 
 interface BaseProps {
   variant?: Variant;
@@ -86,7 +86,7 @@ export default function Button({
   }
 
   return (
-    <button type="button" className={clases} {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}>
+    <button className={clases} {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}>
       {children}
     </button>
   );
