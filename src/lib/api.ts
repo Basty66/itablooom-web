@@ -35,17 +35,6 @@ async function apiFetch<T>(
   throw new Error('Max retries exceeded');
 }
 
-async function checkConnection(): Promise<boolean> {
-  try {
-    const res = await fetch(`${API_BASE}/api/health`, {
-      signal: AbortSignal.timeout(5000),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
 // ============================================
 // SERVICIOS
 // ============================================
@@ -158,15 +147,39 @@ export async function syncPendingBookings(): Promise<void> {
   }
 }
 
+/**
+ * Intenta reservar y, solo si falla por red, guarda la reserva para reintentar.
+ *
+ * Antes se hacía un ping previo a /api/health. Ese endpoint se eliminó para
+ * bajar del límite de 12 funciones de Vercel, así que el ping devolvía 404,
+ * `res.ok` era false y TODA reserva moría con "Sin conexión" sin llegar nunca
+ * a Mercado Pago.
+ *
+ * Preguntar por adelantado si hay internet era además redundante: la propia
+ * petición ya lo responde, y de paso ahorramos un viaje por reserva.
+ */
 export async function createPreferenceWithOfflineSupport(
   data: Parameters<typeof createPreference>[0]
 ) {
-  const connected = await checkConnection();
-  if (!connected) {
-    savePendingBooking(data as unknown as Record<string, unknown>);
-    throw new Error('Sin conexión. Tu reserva se guardó y se procesará cuando vuelva la internet.');
+  try {
+    return await createPreference(data);
+  } catch (err) {
+    // Un 409 (horario ya tomado) o un 400 son respuestas del servidor: hay
+    // conexión y reintentar no ayuda, así que el error debe llegar al usuario.
+    // Solo guardamos como pendiente cuando el navegador no pudo ni salir.
+    const sinRed =
+      (IS_BROWSER && !navigator.onLine) ||
+      err instanceof TypeError ||
+      (err instanceof DOMException && err.name === 'TimeoutError');
+
+    if (sinRed) {
+      savePendingBooking(data as unknown as Record<string, unknown>);
+      throw new Error(
+        'Sin conexión. Tu reserva se guardó y se procesará cuando vuelva la internet.'
+      );
+    }
+    throw err;
   }
-  return createPreference(data);
 }
 
 if (IS_BROWSER) {
