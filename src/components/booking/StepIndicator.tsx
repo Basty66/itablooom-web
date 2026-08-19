@@ -25,9 +25,9 @@ export default function StepIndicator({ actual }: { actual: number }) {
                 aria-current={activo ? 'step' : undefined}
                 className={`flex h-9 w-9 items-center justify-center rounded-full texto--1 font-medium transition-all duration-300 ease-out ${
                   completado
-                    ? 'bg-rosa-300 text-tinta-900'
+                    ? 'bg-dorado-300 text-tinta-900'
                     : activo
-                      ? 'bg-tinta-900 text-crema-100 ring-4 ring-rosa-200'
+                      ? 'bg-tinta-900 text-crema-100 ring-4 ring-dorado-200'
                       : 'bg-tinta-900/8 text-tinta-400'
                 }`}
               >
@@ -46,7 +46,7 @@ export default function StepIndicator({ actual }: { actual: number }) {
               <span
                 aria-hidden="true"
                 className={`mt-4 h-px flex-1 transition-colors duration-500 ${
-                  completado ? 'bg-rosa-300' : 'bg-tinta-900/12'
+                  completado ? 'bg-dorado-300' : 'bg-tinta-900/12'
                 }`}
               />
             )}

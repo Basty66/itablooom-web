@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Droplets, Sparkle, Wand2, GraduationCap } from 'lucide-react';
+import { Droplets, Sparkles, Eye, Feather, Wand2 } from 'lucide-react';
 import type { Service } from '../../types';
 
 /**
@@ -14,13 +14,18 @@ import type { Service } from '../../types';
 
 type Categoria = Service['category'];
 
+/**
+ * Las claves siguen siendo facial/laser/course porque así está la columna
+ * `category` en la base; lo que cambia es a qué servicio de Goddess representan.
+ * Al migrar los datos conviene renombrarlas a unas/pestanas/cejas.
+ */
 const ESTILOS: Record<Categoria, { icono: typeof Droplets; fondo: string; etiqueta: string }> = {
-  facial: { icono: Droplets, fondo: 'from-rosa-100 via-crema-200 to-crema-300', etiqueta: 'Facial' },
-  laser: { icono: Sparkle, fondo: 'from-crema-200 via-rosa-100 to-rosa-200', etiqueta: 'Láser' },
-  course: { icono: GraduationCap, fondo: 'from-rosa-200 via-rosa-100 to-crema-200', etiqueta: 'Curso' },
+  facial: { icono: Sparkles, fondo: 'from-rosa-100 via-nude-200 to-nude-300', etiqueta: 'Uñas' },
+  laser: { icono: Eye, fondo: 'from-nude-200 via-rosa-100 to-rosa-200', etiqueta: 'Pestañas' },
+  course: { icono: Feather, fondo: 'from-dorado-300/40 via-nude-200 to-rosa-100', etiqueta: 'Cejas' },
 };
 
-const RESPALDO = { icono: Wand2, fondo: 'from-crema-200 to-rosa-100', etiqueta: 'Servicio' };
+const RESPALDO = { icono: Wand2, fondo: 'from-nude-200 to-rosa-100', etiqueta: 'Servicio' };
 
 export function etiquetaCategoria(categoria: Categoria): string {
   return (ESTILOS[categoria] ?? RESPALDO).etiqueta;

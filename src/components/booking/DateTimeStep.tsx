@@ -61,7 +61,7 @@ export default function DateTimeStep({
     return (
       <div>
         <div className="mb-3 flex items-center gap-2">
-          <Icono size={15} strokeWidth={1.5} className="text-rosa-500" aria-hidden="true" />
+          <Icono size={15} strokeWidth={1.5} className="text-dorado-500" aria-hidden="true" />
           <h4 className="texto--1 font-medium uppercase tracking-[0.15em] text-tinta-600">
             {titulo}
           </h4>
@@ -102,7 +102,7 @@ export default function DateTimeStep({
       <div>
         <div className="mb-4 flex items-baseline justify-between gap-3">
           <h3 className="flex items-center gap-2 texto-1 text-tinta-900">
-            <CalendarDays size={18} strokeWidth={1.5} className="text-rosa-500" aria-hidden="true" />
+            <CalendarDays size={18} strokeWidth={1.5} className="text-dorado-500" aria-hidden="true" />
             Elige el día
           </h3>
           <span className="texto--1 capitalize text-tinta-500">{rangoMeses}</span>
@@ -155,7 +155,7 @@ export default function DateTimeStep({
                       {relativa && (
                         <span
                           className={`texto--2 sm:texto--1 leading-none ${
-                            activo ? 'text-rosa-200' : 'text-rosa-600'
+                            activo ? 'text-dorado-200' : 'text-dorado-700'
                           }`}
                         >
                           {relativa}

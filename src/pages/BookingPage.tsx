@@ -74,10 +74,28 @@ export default function BookingPage() {
     : paso === 2 ? fecha !== null && hora !== ''
     : Boolean(datos.name && datos.email && datos.phone);
 
+  /*
+   * El scroll va en un efecto y no junto a `setPaso`: React aplica el cambio
+   * de estado de forma asíncrona, así que llamarlo en el mismo handler
+   * scrollea contra el contenido anterior y la clienta queda mirando el paso
+   * viejo. El offset compensa la altura del navbar sticky, que si no tapa el
+   * encabezado del paso.
+   */
+  const montado = useRef(false);
+  useEffect(() => {
+    if (!montado.current) {
+      montado.current = true;
+      return;
+    }
+    const el = formRef.current;
+    if (!el) return;
+    const destino = el.getBoundingClientRect().top + window.scrollY - 96;
+    window.scrollTo({ top: Math.max(destino, 0), behavior: 'smooth' });
+  }, [paso]);
+
   function avanzar() {
     setPaso(paso + 1);
     setError('');
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -113,7 +131,6 @@ export default function BookingPage() {
   function volver() {
     setPaso(paso - 1);
     setError('');
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   return (

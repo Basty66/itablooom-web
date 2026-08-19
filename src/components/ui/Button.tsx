@@ -5,10 +5,16 @@ type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';
 
 const VARIANTES: Record<Variant, string> = {
-  primary: 'bg-tinta-900 text-crema-100 hover:bg-tinta-800 shadow-sm hover:shadow-md',
-  secondary: 'bg-rosa-300 text-tinta-900 hover:bg-rosa-400 shadow-sm hover:shadow-md',
-  outline: 'border border-tinta-900/25 text-tinta-900 hover:border-tinta-900 hover:bg-tinta-900/5',
-  ghost: 'text-tinta-700 hover:text-tinta-900 hover:bg-tinta-900/5',
+  /*
+   * El degradado leve da el brillo metálico del oro; un plano se ve a pintura.
+   * Texto en tinta y no en blanco: sobre oro, el blanco no llega al contraste.
+   */
+  primary:
+    'bg-gradient-to-b from-dorado-300 to-dorado-400 text-tinta-900 shadow-sm ' +
+    'hover:from-dorado-200 hover:to-dorado-300 hover:shadow-md',
+  secondary: 'bg-tinta-900 text-crema-100 hover:bg-tinta-800 shadow-sm hover:shadow-md',
+  outline: 'border border-dorado-400/50 text-tinta-900 hover:border-dorado-400 hover:bg-dorado-100/50',
+  ghost: 'text-tinta-700 hover:text-tinta-900 hover:bg-dorado-100/60',
 };
 
 const TAMANOS: Record<Size, string> = {

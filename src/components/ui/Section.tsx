@@ -42,7 +42,7 @@ export function SectionHeading({
   return (
     <div className={`max-w-2xl ${alineacion}`}>
       {eyebrow && (
-        <p className="texto--1 mb-3 font-medium uppercase tracking-[0.2em] text-rosa-600">{eyebrow}</p>
+        <p className="texto--1 mb-3 font-medium uppercase tracking-[0.2em] text-dorado-700">{eyebrow}</p>
       )}
       <Tag className={`${Tag === 'h1' ? 'texto-5' : 'texto-3'} text-tinta-900`}>{title}</Tag>
       {subtitle && <p className="mt-4 text-tinta-600">{subtitle}</p>}

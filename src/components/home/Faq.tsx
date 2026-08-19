@@ -27,7 +27,7 @@ const PREGUNTAS = [
   {
     pregunta: '¿Necesito alguna preparación previa?',
     respuesta:
-      'Para depilación láser: llega con la zona rasurada y sin exposición solar reciente. Para tratamientos faciales: llega sin maquillaje si te es posible.',
+      'Para pestañas: llega sin maquillaje en los ojos y sin rímel. Para uñas: si traes esmaltado permanente anterior, avísanos al reservar para considerar el retiro.',
   },
 ];
 
@@ -53,7 +53,7 @@ export default function Faq() {
                   onClick={() => setAbierta(activa ? null : i)}
                   aria-expanded={activa}
                   aria-controls={`faq-panel-${i}`}
-                  className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-rosa-600"
+                  className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-dorado-700"
                 >
                   <span className="texto-0 font-medium text-tinta-900">{pregunta}</span>
                   <Plus

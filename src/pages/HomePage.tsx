@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CalendarHeart } from 'lucide-react';
 import type { Service } from '../types';
-import { getServices } from '../lib/api';
+import { SERVICIOS_PRUEBA } from '../lib/datos-prueba';
 import Hero from '../components/home/Hero';
 import ComoFunciona from '../components/home/ComoFunciona';
 import Faq from '../components/home/Faq';
@@ -15,15 +15,13 @@ export default function HomePage() {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    let vigente = true;
-    getServices()
-      .then((data) => vigente && setServices(data.slice(0, 3)))
-      .catch(() => vigente && setServices([]))
-      .finally(() => vigente && setCargando(false));
-    // Evita setState si el usuario navega antes de que responda la API.
-    return () => {
-      vigente = false;
-    };
+    // MAQUETA: datos de prueba en vez de la API. Al conectar la base real,
+    // volver a getServices() y borrar lib/datos-prueba.ts.
+    const t = setTimeout(() => {
+      setServices(SERVICIOS_PRUEBA.slice(0, 3));
+      setCargando(false);
+    }, 250);
+    return () => clearTimeout(t);
   }, []);
 
   return (
@@ -31,18 +29,30 @@ export default function HomePage() {
       <Hero />
       <ComoFunciona />
 
-      <Section className="bg-crema-200/60">
+      <Section className="bg-nude-100">
         <SectionHeading
           eyebrow="Tratamientos"
           title="Los más pedidos"
-          subtitle="Cada servicio incluye su duración y valor. Elige y reserva al instante."
+          subtitle="Cada servicio muestra su duración y valor. Elige y reserva al instante."
         />
 
-        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/*
+          En móvil las tres tarjetas apiladas ocupaban 2,3 pantallas de scroll.
+          Acá van en carrusel con scroll-snap: se ve una a la vez y las demás
+          asoman invitando a deslizar. Desde sm vuelve a ser grilla normal.
+          Los márgenes negativos permiten que el carrusel sangre hasta el borde
+          sin romper el ancho del contenedor.
+        */}
+        <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
           {cargando
-            ? Array.from({ length: 3 }).map((_, i) => <ServiceCardSkeleton key={i} />)
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="w-[78%] shrink-0 snap-center sm:w-auto">
+                  <ServiceCardSkeleton />
+                </div>
+              ))
             : services.map((service, i) => (
                 <ServiceCard
+                  className="w-[78%] shrink-0 snap-center sm:w-auto"
                   key={service.id}
                   service={service}
                   delay={i * 90}

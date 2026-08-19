@@ -39,9 +39,9 @@ export default function Navbar() {
         <div className="flex h-18 items-center justify-between py-4">
           <Link to="/" className="group flex items-baseline gap-2">
             <span className="font-display texto-2 font-medium tracking-tight text-tinta-900">
-              Itablooom
+              Goddess
             </span>
-            <span className="texto--1 uppercase tracking-[0.25em] text-rosa-600 transition-colors duration-200 group-hover:text-rosa-400">
+            <span className="texto--1 uppercase tracking-[0.25em] text-dorado-700 transition-colors duration-200 group-hover:text-dorado-500">
               Studio
             </span>
           </Link>
@@ -58,7 +58,7 @@ export default function Navbar() {
                 >
                   {link.label}
                   <span
-                    className={`absolute bottom-0 left-0 h-px bg-rosa-400 transition-all duration-300 ease-out ${
+                    className={`absolute bottom-0 left-0 h-px bg-dorado-400 transition-all duration-300 ease-out ${
                       activo ? 'w-full' : 'w-0 group-hover:w-full'
                     }`}
                   />
@@ -116,7 +116,7 @@ export default function Navbar() {
                   to={link.path}
                   className={`block rounded-xl px-4 py-3 font-medium transition-colors duration-200 ${
                     activo
-                      ? 'bg-rosa-100 text-rosa-700'
+                      ? 'bg-rosa-100 text-rosa-600'
                       : 'text-tinta-800 hover:bg-rosa-100'
                   }`}
                   style={{ transitionDelay: abierto ? `${i * 50}ms` : '0ms' }}

@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react';
 import { SearchX } from 'lucide-react';
 import type { Service } from '../types';
-import { getServices } from '../lib/api';
+import { SERVICIOS_PRUEBA, CATEGORIAS_GODDESS } from '../lib/datos-prueba';
 import ServiceCard from '../components/ServiceCard';
 import { Section, SectionHeading } from '../components/ui/Section';
 import { ServiceCardSkeleton } from '../components/ui/Skeleton';
 
-const CATEGORIAS = [
-  { id: 'all', label: 'Todos' },
-  { id: 'facial', label: 'Facial' },
-  { id: 'laser', label: 'Láser' },
-  { id: 'course', label: 'Cursos' },
-] as const;
+const CATEGORIAS = CATEGORIAS_GODDESS;
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
@@ -27,7 +22,9 @@ export default function ServicesPage() {
     setCargando(true);
     setError(false);
     try {
-      setServices(await getServices());
+      // MAQUETA: al conectar la base real, volver a `await getServices()`.
+      await new Promise((r) => setTimeout(r, 250));
+      setServices(SERVICIOS_PRUEBA);
     } catch {
       setError(true);
     } finally {
@@ -43,8 +40,8 @@ export default function ServicesPage() {
       <SectionHeading
         as="h1"
         eyebrow="Catálogo"
-        title="Nuestros tratamientos"
-        subtitle="Estética facial, depilación láser y formación profesional."
+        title="Nuestros servicios"
+        subtitle="Uñas, pestañas y cejas. Todo con hora reservada."
       />
 
       <div

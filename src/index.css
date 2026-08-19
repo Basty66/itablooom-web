@@ -31,6 +31,29 @@
      4.5:1. Este llega a ~5.2:1 manteniendo el mismo matiz. */
   --color-rosa-600: #a34a55;
 
+  /*
+   * Goddess Studio: nude y dorado.
+   * El dorado de marca (#c4a265) sirve para superficies y detalles, pero sobre
+   * crema da ~2.2:1 y no alcanza para texto. Por eso hay una versión oscura
+   * (dorado-700) reservada a textos pequeños, con el mismo matiz.
+   */
+  --color-nude-100: #faf3ea;
+  --color-nude-200: #f5e6d3;
+  --color-nude-300: #e8d4b8;
+
+  /* Oro con saturación real, no beige: el dorado apagado se leía como barro
+     sobre crema. El 400 es el oro de marca; el 700 existe solo para texto
+     pequeño, donde el oro brillante no alcanza el contraste AA. */
+  --color-dorado-100: #fbf1cf;
+  --color-dorado-200: #f4e0a0;
+  --color-dorado-300: #e9cb6b;
+  --color-dorado-400: #d4af37;
+  --color-dorado-500: #b8912a;
+  /* El 500 sobre crema da 2.74:1 y el titular necesita 3:1. Este llega a
+     3.4:1 sin perder el matiz dorado. */
+  --color-dorado-600: #a67f1e;
+  --color-dorado-700: #6b5215;
+
   --font-display: "Cormorant Garamond", "Georgia", serif;
   --font-sans: "Jost", system-ui, -apple-system, sans-serif;
 

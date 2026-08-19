@@ -31,8 +31,8 @@ const NAVEGACION = [
 ];
 
 const HORARIOS = [
-  ['Lunes a viernes', '9:00 — 19:00'],
-  ['Sábados', '9:00 — 14:00'],
+  ['Lunes a viernes', '10:00 — 20:00'],
+  ['Sábados', '10:00 — 15:00'],
   ['Domingos', 'Cerrado'],
 ];
 
@@ -43,12 +43,12 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-5">
             <div className="flex items-baseline gap-2">
-              <span className="font-display texto-2 font-medium text-crema-100">Itablooom</span>
-              <span className="texto--1 uppercase tracking-[0.25em] text-rosa-300">Studio</span>
+              <span className="font-display texto-2 font-medium text-crema-100">Goddess</span>
+              <span className="texto--1 uppercase tracking-[0.25em] text-dorado-300">Studio</span>
             </div>
             <p className="mt-4 max-w-sm texto--1 text-crema-100/60">
-              Estética facial profesional. Microneedling, depilación láser, limpiezas profundas y
-              cursos de esmaltado permanente.
+              Esmaltado permanente, uñas acrílicas, extensión de pestañas y diseño de cejas.
+              Atención personalizada con hora reservada.
             </p>
 
             <div className="mt-6 flex items-center gap-3">
@@ -89,7 +89,7 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Pie de página" className="md:col-span-3">
-            <h2 className="texto--1 mb-4 font-medium uppercase tracking-[0.2em] text-rosa-300">
+            <h2 className="texto--1 mb-4 font-medium uppercase tracking-[0.2em] text-dorado-300">
               Navegación
             </h2>
             <ul className="space-y-2.5">
@@ -108,7 +108,7 @@ export default function Footer() {
           </nav>
 
           <div className="md:col-span-4">
-            <h2 className="texto--1 mb-4 font-medium uppercase tracking-[0.2em] text-rosa-300">
+            <h2 className="texto--1 mb-4 font-medium uppercase tracking-[0.2em] text-dorado-300">
               Atención
             </h2>
             <dl className="space-y-2.5">
@@ -127,13 +127,13 @@ export default function Footer() {
             </dl>
             <p className="mt-5 flex items-center gap-2 texto--1 text-crema-100/60">
               <MapPin size={15} strokeWidth={1.5} aria-hidden="true" className="text-rosa-300" />
-              Santiago, Chile
+              Melipilla, Chile
             </p>
           </div>
         </div>
 
         <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-crema-100/10 pt-8 texto--1 text-crema-100/45 sm:flex-row">
-          <p>© {new Date().getFullYear()} Itablooom Studio</p>
+          <p>© {new Date().getFullYear()} Goddess Studio</p>
           <p>Diseñado y desarrollado por BS Digital Tech</p>
         </div>
       </Container>
