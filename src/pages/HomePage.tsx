@@ -4,6 +4,7 @@ import type { Service } from '../types';
 import { SERVICIOS_PRUEBA } from '../lib/datos-prueba';
 import Hero from '../components/home/Hero';
 import ComoFunciona from '../components/home/ComoFunciona';
+import SobreMi from '../components/home/SobreMi';
 import Faq from '../components/home/Faq';
 import ServiceCard from '../components/ServiceCard';
 import Button from '../components/ui/Button';
@@ -69,6 +70,8 @@ export default function HomePage() {
           </div>
         )}
       </Section>
+
+      <SobreMi />
 
       <Faq />
 
