@@ -23,12 +23,12 @@ export default function StepIndicator({ actual }: { actual: number }) {
             <div className="flex w-16 flex-col items-center gap-2 sm:w-24">
               <span
                 aria-current={activo ? 'step' : undefined}
-                className={`flex h-9 w-9 items-center justify-center rounded-full texto--1 font-medium transition-all duration-300 ease-out ${
+                className={`flex h-9 w-9 items-center justify-center border texto--1 transition-all duration-300 ease-out ${
                   completado
-                    ? 'bg-dorado-300 text-tinta-900'
+                    ? 'border-tinta-900 bg-tinta-900 text-crema-100'
                     : activo
-                      ? 'bg-tinta-900 text-crema-100 ring-4 ring-dorado-200'
-                      : 'bg-tinta-900/8 text-tinta-400'
+                      ? 'border-tinta-900 text-tinta-900'
+                      : 'border-dorado-400/35 text-tinta-400'
                 }`}
               >
                 {completado ? <Check size={15} strokeWidth={2} aria-hidden="true" /> : paso.num}
@@ -46,7 +46,7 @@ export default function StepIndicator({ actual }: { actual: number }) {
               <span
                 aria-hidden="true"
                 className={`mt-4 h-px flex-1 transition-colors duration-500 ${
-                  completado ? 'bg-dorado-300' : 'bg-tinta-900/12'
+                  completado ? 'bg-tinta-900' : 'bg-dorado-400/30'
                 }`}
               />
             )}

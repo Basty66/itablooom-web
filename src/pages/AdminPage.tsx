@@ -22,8 +22,8 @@ function StatCard({ icono: Icono, label, valor, loading }: { icono: typeof Trend
   return (
     <div className="rounded-2xl border border-tinta-900/8 bg-crema-50 p-4">
       <div className="flex items-center gap-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-rosa-100">
-          <Icono size={15} strokeWidth={1.5} className="text-rosa-600" aria-hidden="true" />
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-crema-200">
+          <Icono size={15} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
         </span>
         <p className="texto--1 text-tinta-500">{label}</p>
       </div>
@@ -91,7 +91,7 @@ export default function AdminPage() {
   if (autenticado === null) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center bg-crema-100">
-        <Loader2 size={30} strokeWidth={1.3} className="animate-spin text-rosa-400" aria-hidden="true" />
+        <Loader2 size={30} strokeWidth={1.3} className="animate-spin text-dorado-500" aria-hidden="true" />
         <span className="sr-only">Verificando sesión…</span>
       </div>
     );
@@ -178,7 +178,7 @@ export default function AdminPage() {
                   <div key={dia.date} className="flex flex-1 flex-col items-center gap-1">
                     <span className="texto--2 text-tinta-500">{formatPrice(Number(dia.total))}</span>
                     <div
-                      className="w-full rounded-t-lg bg-rosa-300 transition-all duration-500"
+                      className="w-full rounded-t-lg bg-dorado-400 transition-all duration-500"
                       style={{ height: `${Math.max(height, 4)}%` }}
                     />
                     <span className="texto--2 text-tinta-400">
@@ -198,7 +198,7 @@ export default function AdminPage() {
             <div className="space-y-3">
               {stats.serviciosTop.map((s, i) => (
                 <div key={s.name} className="flex items-center gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rosa-100 texto--1 font-medium text-rosa-600">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-crema-200 texto--1 font-medium text-dorado-700">
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -226,7 +226,7 @@ export default function AdminPage() {
                 type="date"
                 value={fecha}
                 onChange={(e) => setFecha(e.target.value)}
-                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 py-2.5 pl-11 pr-4 texto--1 text-tinta-900 transition-colors duration-200 focus:border-rosa-400 focus:outline-none"
+                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 py-2.5 pl-11 pr-4 texto--1 text-tinta-900 transition-colors duration-200 focus:border-dorado-500 focus:outline-none"
               />
             </span>
           </label>
@@ -245,7 +245,7 @@ export default function AdminPage() {
                 placeholder="Nombre o correo…"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 py-2.5 pl-11 pr-4 texto--1 text-tinta-900 placeholder:text-tinta-400 transition-colors duration-200 focus:border-rosa-400 focus:outline-none"
+                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 py-2.5 pl-11 pr-4 texto--1 text-tinta-900 placeholder:text-tinta-400 transition-colors duration-200 focus:border-dorado-500 focus:outline-none"
               />
             </span>
           </label>
@@ -260,8 +260,8 @@ export default function AdminPage() {
           </div>
 
           {error && (
-            <p role="alert" className="flex items-center gap-2 bg-rosa-100 px-5 py-3 texto--1 text-tinta-800">
-              <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-rosa-600" aria-hidden="true" />
+            <p role="alert" className="flex items-center gap-2 bg-crema-200 px-5 py-3 texto--1 text-tinta-800">
+              <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-dorado-700" aria-hidden="true" />
               {error}
             </p>
           )}
@@ -283,7 +283,7 @@ export default function AdminPage() {
             <ul className="divide-y divide-tinta-900/8">
               {visibles.map((b) => (
                 <li key={b.id} className="flex items-center gap-4 px-5 py-4">
-                  <span className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-rosa-100">
+                  <span className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-crema-200">
                     <span className="texto--2 font-medium tabular-nums text-tinta-900">
                       {b.booking_time ? String(b.booking_time).slice(0, 5) : '—'}
                     </span>
@@ -308,7 +308,7 @@ export default function AdminPage() {
                         b.status === 'confirmed' ? 'bg-emerald-100 text-emerald-900'
                         : b.status === 'pending' ? 'bg-amber-100 text-amber-900'
                         : b.status === 'cancelled' ? 'bg-tinta-900/8 text-tinta-600'
-                        : 'bg-rosa-200 text-tinta-900'
+                        : 'bg-dorado-200 text-tinta-900'
                       }`}>
                         {b.status === 'confirmed' ? 'Confirmada'
                           : b.status === 'pending' ? 'Pendiente'

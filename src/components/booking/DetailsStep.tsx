@@ -20,9 +20,9 @@ interface Props {
 }
 
 const INPUT =
-  'w-full rounded-xl border border-tinta-900/15 bg-crema-50 px-4 py-3 texto-0 text-tinta-900 ' +
-  'placeholder:text-tinta-400 transition-colors duration-200 hover:border-tinta-900/25 ' +
-  'focus:border-rosa-400 focus:outline-none';
+  'w-full border-0 border-b border-dorado-400/40 bg-transparent px-0 py-3 texto-0 text-tinta-900 ' +
+  'placeholder:text-tinta-400 transition-colors duration-300 hover:border-dorado-500 ' +
+  'focus:border-tinta-900 focus:outline-none focus:ring-0';
 
 function Campo({
   label,
@@ -38,7 +38,7 @@ function Campo({
       <span className="mb-1.5 block texto--1 font-medium text-tinta-700">{label}</span>
       <span className="relative block">
         {icono && (
-          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-tinta-400">
+          <span className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-tinta-400">
             {icono}
           </span>
         )}
@@ -60,7 +60,7 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
             autoComplete="name"
             value={datos.name}
             onChange={(e) => set({ name: e.target.value })}
-            className={`${INPUT} pl-11`}
+            className={`${INPUT} pl-8`}
             placeholder="María González"
           />
         </Campo>
@@ -72,7 +72,7 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
             autoComplete="email"
             value={datos.email}
             onChange={(e) => set({ email: e.target.value })}
-            className={`${INPUT} pl-11`}
+            className={`${INPUT} pl-8`}
             placeholder="maria@ejemplo.cl"
           />
         </Campo>
@@ -84,7 +84,7 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
             autoComplete="tel"
             value={datos.phone}
             onChange={(e) => set({ phone: e.target.value })}
-            className={`${INPUT} pl-11`}
+            className={`${INPUT} pl-8`}
             placeholder="+56 9 1234 5678"
           />
         </Campo>
@@ -120,8 +120,8 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
       )}
 
       {service && fecha && hora && (
-        <p className="flex items-start gap-2 rounded-2xl bg-crema-200/50 p-4 texto--1 text-tinta-600">
-          <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-rosa-600" aria-hidden="true" />
+        <p className="flex items-start gap-2 linea-oro border-t p-0 pt-5 texto--1 text-tinta-600">
+          <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-dorado-700" aria-hidden="true" />
           Tienes 10 minutos para completar el pago. Después el horario vuelve a quedar disponible.
         </p>
       )}

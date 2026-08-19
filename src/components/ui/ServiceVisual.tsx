@@ -20,12 +20,12 @@ type Categoria = Service['category'];
  * Al migrar los datos conviene renombrarlas a unas/pestanas/cejas.
  */
 const ESTILOS: Record<Categoria, { icono: typeof Droplets; fondo: string; etiqueta: string }> = {
-  facial: { icono: Sparkles, fondo: 'from-rosa-100 via-nude-200 to-nude-300', etiqueta: 'Uñas' },
-  laser: { icono: Eye, fondo: 'from-nude-200 via-rosa-100 to-rosa-200', etiqueta: 'Pestañas' },
-  course: { icono: Feather, fondo: 'from-dorado-300/40 via-nude-200 to-rosa-100', etiqueta: 'Cejas' },
+  facial: { icono: Sparkles, fondo: 'from-crema-200 via-nude-200 to-nude-300', etiqueta: 'Uñas' },
+  laser: { icono: Eye, fondo: 'from-nude-200 via-nude-200 to-nude-300', etiqueta: 'Pestañas' },
+  course: { icono: Feather, fondo: 'from-dorado-300/40 via-nude-200 to-nude-200', etiqueta: 'Cejas' },
 };
 
-const RESPALDO = { icono: Wand2, fondo: 'from-nude-200 to-rosa-100', etiqueta: 'Servicio' };
+const RESPALDO = { icono: Wand2, fondo: 'from-nude-200 to-nude-200', etiqueta: 'Servicio' };
 
 export function etiquetaCategoria(categoria: Categoria): string {
   return (ESTILOS[categoria] ?? RESPALDO).etiqueta;

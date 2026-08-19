@@ -43,14 +43,14 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
             aria-checked={activo}
             onClick={() => onSeleccionar(service)}
             style={{ animationDelay: `${i * 60}ms` }}
-            className={`anim-entrada group relative flex gap-3 overflow-hidden rounded-2xl border p-3 text-left transition-all duration-200 ease-out active:scale-[0.99] sm:gap-4 sm:p-4 ${
+            className={`anim-entrada group relative flex gap-3 overflow-hidden border p-3 text-left transition-all duration-200 ease-out active:scale-[0.99] sm:gap-4 sm:p-4 ${
               activo
-                ? 'border-tinta-900 bg-rosa-100/60 shadow-[0_10px_30px_-18px_rgba(20,16,14,0.5)]'
-                : 'border-tinta-900/10 bg-crema-50 hover:border-rosa-300'
+                ? 'border-tinta-900 bg-crema-50'
+                : 'border-dorado-400/35 hover:border-dorado-500'
             }`}
           >
             {/* Miniatura: ancho fijo para que todas las filas queden alineadas. */}
-            <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-rosa-100 to-crema-300 sm:h-20 sm:w-24">
+            <span className="relative h-16 w-16 shrink-0 overflow-hidden bg-crema-200 sm:h-20 sm:w-24">
               {service.image_url && (
                 <img
                   src={service.image_url}
@@ -71,7 +71,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
                       <Clock3 size={12} strokeWidth={1.5} aria-hidden="true" />
                       {formatDuration(service.duration_minutes)}
                     </span>
-                    <span className="rounded-full bg-rosa-100 px-2 py-0.5 texto--1 text-rosa-600">
+                    <span className="texto--1 uppercase espaciado-medio text-dorado-700">
                       {etiquetaCategoria(service.category)}
                     </span>
                   </span>
@@ -79,8 +79,8 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
 
                 <span
                   aria-hidden="true"
-                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-all duration-200 ${
-                    activo ? 'bg-tinta-900 text-crema-100' : 'border border-tinta-900/20'
+                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center transition-all duration-300 ${
+                    activo ? 'bg-tinta-900 text-crema-100' : 'border border-dorado-400/40'
                   }`}
                 >
                   {activo && <Check size={12} strokeWidth={2.5} />}

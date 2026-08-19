@@ -33,10 +33,10 @@ export default function ScrollIndicator({ destino }: { destino: string }) {
         visible ? 'opacity-100' : 'pointer-events-none opacity-0'
       }`}
     >
-      <span className="texto--1 uppercase tracking-[0.2em] text-tinta-500 transition-colors duration-200 group-hover:text-tinta-900">
+      <span className="texto--2 uppercase espaciado-amplio text-tinta-500 transition-colors duration-200 group-hover:text-tinta-900">
         Descubre más
       </span>
-      <span className="flex h-10 w-10 items-center justify-center rounded-full border border-tinta-900/15 bg-crema-50/70 backdrop-blur-sm transition-all duration-200 ease-out group-hover:border-rosa-400 group-hover:bg-crema-50 active:scale-90">
+      <span className="linea-oro flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out group-hover:border-dorado-500 active:scale-90">
         {/* El rebote va en el icono y no en el botón, para que el área de
             click quede quieta y no se escape del cursor. */}
         <ChevronDown

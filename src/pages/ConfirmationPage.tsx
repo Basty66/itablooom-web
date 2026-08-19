@@ -40,8 +40,8 @@ function Estado({
   return (
     <div className="text-center">
       <span
-        className={`anim-velo mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full ${
-          tono === 'exito' ? 'bg-rosa-200' : 'bg-tinta-900/8'
+        className={`anim-velo mx-auto mb-6 flex h-16 w-16 items-center justify-center border border-dorado-400/50 ${
+          tono === 'exito' ? 'bg-crema-50' : 'bg-crema-200'
         }`}
       >
         <Icono size={36} strokeWidth={1.3} className="text-tinta-900" aria-hidden="true" />
@@ -115,7 +115,7 @@ export default function ConfirmationPage() {
   if (cargando) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-crema-100">
-        <Loader2 size={34} strokeWidth={1.3} className="animate-spin text-rosa-400" aria-hidden="true" />
+        <Loader2 size={34} strokeWidth={1.3} className="animate-spin text-dorado-500" aria-hidden="true" />
         <span className="sr-only">Cargando tu reserva…</span>
       </div>
     );
@@ -165,7 +165,7 @@ export default function ConfirmationPage() {
           texto="Ya reservamos tu horario. Te esperamos el día de tu sesión."
         />
 
-        <div className="mt-10 rounded-3xl border border-tinta-900/8 bg-crema-50 p-6 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-8">
+        <div className="mt-10 linea-oro border bg-crema-50 p-6 sm:p-8">
           <h2 className="texto-2 mb-6 text-tinta-900">Detalle de tu reserva</h2>
 
           <dl className="space-y-5">
@@ -189,7 +189,7 @@ export default function ConfirmationPage() {
               },
             ].map(({ icono: Icono, label, valor }) => (
               <div key={label} className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-rosa-100">
+                <span className="linea-oro flex h-11 w-11 shrink-0 items-center justify-center border">
                   <Icono size={18} strokeWidth={1.5} className="text-tinta-800" aria-hidden="true" />
                 </span>
                 <div className="min-w-0">
@@ -200,9 +200,9 @@ export default function ConfirmationPage() {
             ))}
           </dl>
 
-          <div className="mt-7 border-t border-tinta-900/10 pt-6">
+          <div className="mt-7 linea-oro border-t pt-6">
             <h3 className="mb-4 flex items-center gap-2 texto-1 text-tinta-900">
-              <CreditCard size={17} strokeWidth={1.5} className="text-rosa-500" aria-hidden="true" />
+              <CreditCard size={17} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
               Resumen de pago
             </h3>
             <dl className="space-y-2.5 texto--1">
@@ -213,7 +213,7 @@ export default function ConfirmationPage() {
             </dl>
           </div>
 
-          <div className="mt-7 rounded-2xl bg-crema-200/60 p-5">
+          <div className="mt-7 linea-oro border-t p-0 pt-6">
             <h3 className="mb-3 texto-0 font-medium text-tinta-900">Antes de tu cita</h3>
             <ul className="space-y-2 texto--1 text-tinta-600">
               {[
@@ -225,14 +225,14 @@ export default function ConfirmationPage() {
                 <li key={linea} className="flex items-start gap-2.5">
                   <span
                     aria-hidden="true"
-                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-rosa-400"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-dorado-400"
                   />
                   {linea}
                 </li>
               ))}
             </ul>
             <p className="mt-4 flex items-center gap-2 texto--1 text-tinta-500">
-              <MapPin size={14} strokeWidth={1.5} className="text-rosa-500" aria-hidden="true" />
+              <MapPin size={14} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
               Santiago, Chile
             </p>
           </div>

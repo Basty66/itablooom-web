@@ -28,7 +28,7 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
     <div className="flex min-h-[70vh] items-center bg-crema-100 py-16">
       <Container className="max-w-md">
         <div className="rounded-3xl border border-tinta-900/8 bg-crema-50 p-8 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)]">
-          <span className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-rosa-200">
+          <span className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-dorado-200">
             <Lock size={22} strokeWidth={1.5} className="text-tinta-900" aria-hidden="true" />
           </span>
 
@@ -48,7 +48,7 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 px-4 py-3 texto-0 text-tinta-900 transition-colors duration-200 hover:border-tinta-900/25 focus:border-rosa-400 focus:outline-none"
+                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 px-4 py-3 texto-0 text-tinta-900 transition-colors duration-200 hover:border-tinta-900/25 focus:border-dorado-500 focus:outline-none"
                 placeholder="••••••••"
               />
             </label>
@@ -56,9 +56,9 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
             {error && (
               <p
                 role="alert"
-                className="anim-entrada mt-4 flex items-center gap-2 rounded-xl bg-rosa-100 px-4 py-3 texto--1 text-tinta-800"
+                className="anim-entrada mt-4 flex items-center gap-2 rounded-xl bg-crema-200 px-4 py-3 texto--1 text-tinta-800"
               >
-                <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-rosa-600" aria-hidden="true" />
+                <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-dorado-700" aria-hidden="true" />
                 {error}
               </p>
             )}

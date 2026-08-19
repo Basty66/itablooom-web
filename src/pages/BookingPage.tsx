@@ -137,7 +137,7 @@ export default function BookingPage() {
     <div className="min-h-screen bg-crema-100 py-10 md:py-16">
       <Container className="max-w-2xl">
         <header className="mb-8 text-center">
-          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-rosa-600">
+          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-dorado-700">
             Reserva tu hora
           </p>
           <h1 className="texto-3 text-tinta-900">{TITULOS[paso - 1]}</h1>
@@ -221,9 +221,9 @@ export default function BookingPage() {
           {error && (
             <p
               role="alert"
-              className="anim-entrada mt-4 flex items-center gap-2 rounded-xl bg-rosa-100 px-4 py-3 texto--1 text-tinta-800"
+              className="anim-entrada mt-4 flex items-center gap-2 rounded-xl bg-crema-200 px-4 py-3 texto--1 text-tinta-800"
             >
-              <AlertCircle size={16} strokeWidth={1.5} className="shrink-0 text-rosa-500" aria-hidden="true" />
+              <AlertCircle size={16} strokeWidth={1.5} className="shrink-0 text-dorado-700" aria-hidden="true" />
               {error}
             </p>
           )}

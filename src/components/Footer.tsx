@@ -71,7 +71,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-crema-100/15 text-crema-100/70 transition-all duration-200 ease-out hover:border-rosa-300 hover:text-rosa-300 active:scale-95"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-crema-100/15 text-crema-100/70 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-dorado-300 active:scale-95"
                 >
                   {icono}
                 </a>
@@ -82,7 +82,7 @@ export default function Footer() {
               href={linkWhatsApp()}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-block py-1 texto--1 text-crema-100/60 transition-colors duration-200 hover:text-rosa-300"
+              className="mt-3 inline-block py-1 texto--1 text-crema-100/60 transition-colors duration-200 hover:text-dorado-300"
             >
               {WHATSAPP_VISIBLE}
             </a>
@@ -126,7 +126,7 @@ export default function Footer() {
               ))}
             </dl>
             <p className="mt-5 flex items-center gap-2 texto--1 text-crema-100/60">
-              <MapPin size={15} strokeWidth={1.5} aria-hidden="true" className="text-rosa-300" />
+              <MapPin size={15} strokeWidth={1.5} aria-hidden="true" className="text-dorado-300" />
               Melipilla, Chile
             </p>
           </div>

@@ -110,7 +110,7 @@ export default function ReschedulePage() {
     return (
       <div className="min-h-screen bg-crema-100 py-16">
         <Container className="max-w-lg text-center">
-          <AlertCircle size={40} strokeWidth={1.3} className="mx-auto mb-4 text-rosa-500" />
+          <AlertCircle size={40} strokeWidth={1.3} className="mx-auto mb-4 text-dorado-700" />
           <h1 className="texto-3 text-tinta-900">Link inválido</h1>
           <p className="mt-3 texto-0 text-tinta-600">Pedile a Itablooom Studio el link correcto de reagendado.</p>
         </Container>
@@ -137,14 +137,14 @@ export default function ReschedulePage() {
     <div className="min-h-screen bg-crema-100 py-10 md:py-16">
       <Container className="max-w-lg">
         <header className="mb-8 text-center">
-          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-rosa-600">Reagendar cita</p>
+          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-dorado-700">Reagendar cita</p>
           <h1 className="texto-3 text-tinta-900">
             {verificado ? 'Elegí tu nuevo horario' : 'Verificá tu reserva'}
           </h1>
         </header>
 
         {error && (
-          <div className="mb-6 rounded-xl bg-rosa-100 px-4 py-3 texto--1 text-tinta-800">
+          <div className="mb-6 rounded-xl bg-crema-200 px-4 py-3 texto--1 text-tinta-800">
             {error}
           </div>
         )}
@@ -168,7 +168,7 @@ export default function ReschedulePage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="maria@ejemplo.cl"
-                  className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 px-4 py-3 texto-0 text-tinta-900 placeholder:text-tinta-400 transition-colors focus:border-rosa-400 focus:outline-none"
+                  className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 px-4 py-3 texto-0 text-tinta-900 placeholder:text-tinta-400 transition-colors focus:border-dorado-500 focus:outline-none"
                 />
               </label>
               <button
@@ -181,7 +181,7 @@ export default function ReschedulePage() {
             </div>
             <p className="mt-4 texto--1 text-center text-tinta-500">
               ¿No encontrás tu reserva?{' '}
-              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-rosa-600 underline">Escribinos</a>
+              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-dorado-700 underline">Escribinos</a>
             </p>
           </div>
         ) : (
@@ -203,7 +203,7 @@ export default function ReschedulePage() {
               {/* Calendario */}
               <div className="mb-6">
                 <h3 className="mb-3 flex items-center gap-2 texto-1 text-tinta-900">
-                  <CalendarDays size={17} strokeWidth={1.5} className="text-rosa-500" />
+                  <CalendarDays size={17} strokeWidth={1.5} className="text-dorado-700" />
                   Elegí el nuevo día
                 </h3>
                 <div className="grid grid-cols-7 gap-1.5">
@@ -217,7 +217,7 @@ export default function ReschedulePage() {
                         className={`flex flex-col items-center rounded-xl py-2 transition-all duration-200 ${
                           activo
                             ? 'bg-tinta-900 text-crema-100'
-                            : 'text-tinta-800 hover:bg-rosa-100 active:scale-95'
+                            : 'text-tinta-800 hover:bg-crema-200 active:scale-95'
                         }`}
                       >
                         <span className="texto--2 capitalize opacity-60">{format(dia, 'EEE', { locale: es }).slice(0, 3)}</span>
@@ -233,7 +233,7 @@ export default function ReschedulePage() {
               {fecha && (
                 <div className="anim-entrada">
                   <h3 className="mb-3 flex items-center gap-2 texto-1 text-tinta-900">
-                    <Clock3 size={17} strokeWidth={1.5} className="text-rosa-500" />
+                    <Clock3 size={17} strokeWidth={1.5} className="text-dorado-700" />
                     Elegí la hora
                   </h3>
                   {cargandoSlots ? (
@@ -250,7 +250,7 @@ export default function ReschedulePage() {
                           className={`rounded-xl py-2.5 texto--1 font-medium tabular-nums transition-all duration-200 ${
                             hora === slot.time
                               ? 'bg-tinta-900 text-crema-100'
-                              : 'bg-rosa-100/70 text-tinta-800 hover:bg-rosa-200 active:scale-95'
+                              : 'bg-crema-200/70 text-tinta-800 hover:bg-dorado-200 active:scale-95'
                           }`}
                         >
                           {slot.time}

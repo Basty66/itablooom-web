@@ -76,7 +76,7 @@ export default function Navbar() {
             aria-expanded={abierto}
             aria-controls="menu-movil"
             aria-label={abierto ? 'Cerrar menú' : 'Abrir menú'}
-            className="rounded-full p-2 text-tinta-800 transition-colors duration-200 hover:bg-tinta-900/5 md:hidden"
+            className="p-2 text-tinta-800 transition-colors duration-200 hover:bg-tinta-900/5 md:hidden"
           >
             {abierto ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
           </button>
@@ -101,7 +101,7 @@ export default function Navbar() {
 
         {/* Panel del menú */}
         <div
-          className={`relative mx-auto mt-2 w-[calc(100%-2.5rem)] max-w-sm rounded-2xl border border-tinta-900/8 bg-crema-50 p-3 shadow-2xl transition-all duration-300 ease-out ${
+          className={`linea-oro relative mx-auto mt-2 w-[calc(100%-2.5rem)] max-w-sm border bg-crema-50 p-3 transition-all duration-300 ease-out ${
             abierto
               ? 'translate-y-0 opacity-100 scale-100'
               : '-translate-y-3 opacity-0 scale-95'
@@ -114,10 +114,10 @@ export default function Navbar() {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`block rounded-xl px-4 py-3 font-medium transition-colors duration-200 ${
+                  className={`block px-4 py-3 texto--1 uppercase espaciado-medio transition-colors duration-300 ${
                     activo
-                      ? 'bg-rosa-100 text-rosa-600'
-                      : 'text-tinta-800 hover:bg-rosa-100'
+                      ? 'bg-crema-200 text-dorado-700'
+                      : 'text-tinta-800 hover:bg-crema-200'
                   }`}
                   style={{ transitionDelay: abierto ? `${i * 50}ms` : '0ms' }}
                 >

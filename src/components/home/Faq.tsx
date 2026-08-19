@@ -60,7 +60,7 @@ export default function Faq() {
                     size={19}
                     strokeWidth={1.5}
                     aria-hidden="true"
-                    className={`shrink-0 text-rosa-500 transition-transform duration-300 ease-out ${
+                    className={`shrink-0 text-dorado-700 transition-transform duration-300 ease-out ${
                       activa ? 'rotate-45' : ''
                     }`}
                   />

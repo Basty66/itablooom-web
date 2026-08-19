@@ -60,7 +60,7 @@ export default function ServicesPage() {
               className={`rounded-full px-6 py-2.5 texto--1 font-medium transition-all duration-200 ease-out active:scale-95 ${
                 activa
                   ? 'bg-tinta-900 text-crema-100 shadow-sm'
-                  : 'border border-tinta-900/15 text-tinta-600 hover:border-rosa-300 hover:text-tinta-900'
+                  : 'border border-tinta-900/15 text-tinta-600 hover:border-dorado-400 hover:text-tinta-900'
               }`}
             >
               {cat.label}
