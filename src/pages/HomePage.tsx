@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CalendarHeart } from 'lucide-react';
 import type { Service } from '../types';
-import { SERVICIOS_PRUEBA } from '../lib/datos-prueba';
+import { getServices } from '../lib/api';
 import Hero from '../components/home/Hero';
 import ComoFunciona from '../components/home/ComoFunciona';
 import SobreMi from '../components/home/SobreMi';
@@ -16,13 +16,15 @@ export default function HomePage() {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    // MAQUETA: datos de prueba en vez de la API. Al conectar la base real,
-    // volver a getServices() y borrar lib/datos-prueba.ts.
-    const t = setTimeout(() => {
-      setServices(SERVICIOS_PRUEBA.slice(0, 3));
-      setCargando(false);
-    }, 250);
-    return () => clearTimeout(t);
+    let vigente = true;
+    getServices()
+      .then((data) => vigente && setServices(data.slice(0, 3)))
+      .catch(() => vigente && setServices([]))
+      .finally(() => vigente && setCargando(false));
+    // Evita setState si la clienta navega antes de que responda la API.
+    return () => {
+      vigente = false;
+    };
   }, []);
 
   return (

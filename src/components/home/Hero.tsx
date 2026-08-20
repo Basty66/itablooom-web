@@ -2,8 +2,7 @@ import { Container } from '../ui/Section';
 import Button from '../ui/Button';
 import ScrollIndicator from '../ui/ScrollIndicator';
 import { RUBRO, CIUDAD } from '../../lib/contacto';
-import { DEPOSITO_FIJO } from '../../lib/datos-prueba';
-import { formatPrice } from '../../lib/format';
+
 
 /**
  * Hero minimalista.
@@ -64,7 +63,7 @@ export default function Hero() {
               className="anim-entrada mt-8 texto--1 text-tinta-500"
               style={{ animationDelay: '400ms' }}
             >
-              Reserva con {formatPrice(DEPOSITO_FIJO)} · Pago seguro con Mercado Pago
+              Reserva con un abono · Pago seguro con Mercado Pago
             </p>
           </div>
 

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { SearchX } from 'lucide-react';
 import type { Service } from '../types';
-import { SERVICIOS_PRUEBA, CATEGORIAS_GODDESS } from '../lib/datos-prueba';
+import { getServices } from '../lib/api';
+import { CATEGORIAS_GODDESS } from '../lib/categorias';
 import ServiceCard from '../components/ServiceCard';
 import { Section, SectionHeading } from '../components/ui/Section';
 import { ServiceCardSkeleton } from '../components/ui/Skeleton';
@@ -22,9 +23,7 @@ export default function ServicesPage() {
     setCargando(true);
     setError(false);
     try {
-      // MAQUETA: al conectar la base real, volver a `await getServices()`.
-      await new Promise((r) => setTimeout(r, 250));
-      setServices(SERVICIOS_PRUEBA);
+      setServices(await getServices());
     } catch {
       setError(true);
     } finally {

@@ -25,6 +25,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing date or serviceId' });
     }
 
+    /*
+     * Postgres lanza un error de casteo si el id no tiene forma de UUID, y eso
+     * derribaba la función con un 500 en vez de un error legible. Validamos
+     * antes de consultar.
+     */
+    const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID.test(String(serviceId))) {
+      return res.status(400).json({ error: 'serviceId inválido' });
+    }
+
     const services = await sql`SELECT * FROM services WHERE id = ${serviceId as string}`;
     const service = services[0] as Record<string, unknown>;
 

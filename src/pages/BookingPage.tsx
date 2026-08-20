@@ -3,8 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, CreditCard, Loader2, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Service, TimeSlot } from '../types';
-import { getAvailableTimeSlots, createPreferenceWithOfflineSupport } from '../lib/api';
-import { SERVICIOS_PRUEBA } from '../lib/datos-prueba';
+import { getServices, getAvailableTimeSlots, createPreferenceWithOfflineSupport } from '../lib/api';
 import { Container } from '../components/ui/Section';
 import StepIndicator from '../components/booking/StepIndicator';
 import ServiceStep from '../components/booking/ServiceStep';
@@ -42,14 +41,10 @@ export default function BookingPage() {
   });
 
   useEffect(() => {
-    // MAQUETA: mismos datos de prueba que el home y el catálogo. Mientras esto
-    // leía de la API, el flujo mostraba los servicios viejos de Itablooom y no
-    // los de Goddess. Al conectar la base real, volver a `getServices()`.
-    const t = setTimeout(() => {
-      setServices(SERVICIOS_PRUEBA);
-      setCargandoServices(false);
-    }, 200);
-    return () => clearTimeout(t);
+    getServices()
+      .then(setServices)
+      .catch(() => setError('No pudimos cargar los servicios. Recarga la página.'))
+      .finally(() => setCargandoServices(false));
   }, []);
 
   useEffect(() => {

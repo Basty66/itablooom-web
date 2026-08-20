@@ -59,6 +59,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID.test(String(serviceId))) {
+      return res.status(400).json({ error: 'serviceId inválido' });
+    }
+
     const services = await sql`SELECT * FROM services WHERE id = ${serviceId}`;
     const service = services[0] as any;
 
