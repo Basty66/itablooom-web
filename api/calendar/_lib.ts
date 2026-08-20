@@ -242,3 +242,64 @@ export async function getCalendarEvents(date: string): Promise<{ start: string; 
     return [];
   }
 }
+
+/**
+ * Crea en el calendario el evento espejo de un bloqueo hecho desde el panel.
+ *
+ * Devuelve null en vez de lanzar: si Google falla, el bloqueo igual debe
+ * guardarse en la base, que es lo que rige la disponibilidad de la web.
+ */
+export async function crearBloqueoCalendario(data: {
+  date: string;
+  timeStart: string;
+  timeEnd: string;
+  motivo: string;
+}): Promise<string | null> {
+  const calendarId = process.env.GOOGLE_CALENDAR_ID;
+  if (!calendarId) return null;
+
+  const timeZone = process.env.GOOGLE_CALENDAR_TZ || 'America/Santiago';
+  const hhmm = (t: string) => t.slice(0, 5);
+
+  try {
+    const token = await getAccessToken();
+    const res = await fetch(`${CALENDAR_API}/calendars/${encodeURIComponent(calendarId)}/events`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        summary: `No disponible — ${data.motivo}`,
+        // Sin Z ni offset: la hora es la de pared y `timeZone` la interpreta.
+        start: { dateTime: `${data.date}T${hhmm(data.timeStart)}:00`, timeZone },
+        end: { dateTime: `${data.date}T${hhmm(data.timeEnd)}:00`, timeZone },
+        transparency: 'opaque',
+      }),
+    });
+    if (!res.ok) {
+      console.error('No se pudo espejar el bloqueo en Calendar:', res.status);
+      return null;
+    }
+    const body = (await res.json()) as { id?: string };
+    return body.id || null;
+  } catch (error: any) {
+    console.error('Error al espejar bloqueo:', error?.message);
+    return null;
+  }
+}
+
+/** Borra un evento del calendario. Silencioso: si ya no está, da igual. */
+export async function borrarEventoCalendario(eventoId: string): Promise<boolean> {
+  const calendarId = process.env.GOOGLE_CALENDAR_ID;
+  if (!calendarId) return false;
+
+  try {
+    const token = await getAccessToken();
+    const res = await fetch(
+      `${CALENDAR_API}/calendars/${encodeURIComponent(calendarId)}/events/${eventoId}`,
+      { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }
+    );
+    // 410 = ya estaba borrado; para nosotros el resultado es el mismo.
+    return res.status === 204 || res.status === 410;
+  } catch {
+    return false;
+  }
+}
