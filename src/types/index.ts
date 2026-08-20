@@ -21,12 +21,18 @@ export interface Booking {
   client_rut?: string;
   booking_date: string | Date;
   booking_time: string;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  /** no_show: la clienta no llegó; el depósito queda como ingreso. */
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'no_show';
   deposit_paid: boolean;
   deposit_amount: number;
   total_amount: number;
   payment_id?: string;
   calendar_event_id?: string;
+  deposit_paid_at?: string;
+  remaining_paid?: boolean;
+  remaining_paid_at?: string;
+  remaining_paid_method?: 'mp' | 'cash' | 'transfer';
+  no_show_at?: string;
   notes?: string;
   created_at: string;
 }

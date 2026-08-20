@@ -263,3 +263,48 @@ export async function getAdminStats(): Promise<AdminStats | null> {
     return null;
   }
 }
+
+// ============================================
+// GESTIÓN DE PAGOS Y ASISTENCIA (requiere sesión)
+// ============================================
+
+export type MetodoPagoSaldo = 'mp' | 'cash' | 'transfer';
+
+/** Calcula el saldo en vez de leerlo: la columna no existe a propósito. */
+export function saldoPendiente(b: Booking): number {
+  return Math.max(Number(b.total_amount || 0) - Number(b.deposit_amount || 0), 0);
+}
+
+async function accionReserva(
+  id: string,
+  accion: string,
+  body?: Record<string, unknown>
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/bookings/${id}?action=${accion}`, {
+      method: 'PUT',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body ?? {}),
+      signal: AbortSignal.timeout(15000),
+    });
+    const data = await res.json().catch(() => ({}));
+    return res.ok ? { ok: true } : { ok: false, error: data.error || `HTTP ${res.status}` };
+  } catch {
+    return { ok: false, error: 'Sin conexión con el servidor' };
+  }
+}
+
+/** Registra el cobro del saldo y deja la cita como completada. */
+export function registrarPagoSaldo(id: string, method: MetodoPagoSaldo) {
+  return accionReserva(id, 'remaining-payment', { method });
+}
+
+/** Marca inasistencia: el depósito queda como ingreso y el horario se libera. */
+export function marcarNoShow(id: string) {
+  return accionReserva(id, 'no-show');
+}
+
+export function cambiarEstadoReserva(id: string, status: Booking['status']) {
+  return accionReserva(id, 'status', { status });
+}
