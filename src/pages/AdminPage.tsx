@@ -20,7 +20,7 @@ function parseBookingDate(raw: string | Date | null | undefined): Date | null {
 
 function StatCard({ icono: Icono, label, valor, loading }: { icono: typeof TrendingUp; label: string; valor: string; loading?: boolean }) {
   return (
-    <div className="rounded-2xl border border-tinta-900/8 bg-crema-50 p-4">
+    <div className="linea-oro border bg-crema-50 p-4">
       <div className="flex items-center gap-2">
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-crema-200">
           <Icono size={15} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
@@ -115,7 +115,7 @@ export default function AdminPage() {
       ? format(parseBookingDate(b.booking_date)!, "EEEE d 'de' MMMM", { locale: es })
       : 'próximamente';
     const hora = b.booking_time ? String(b.booking_time).slice(0, 5) : '';
-    const msg = `Hola ${b.client_name}, te recordamos tu cita en Itablooom Studio el ${fecha} a las ${hora}. ¡Te esperamos! 💅✨\n\nSi necesitás reagendar, entrá a: https://itablooom-web.vercel.app/reagendar`;
+    const msg = `Hola ${b.client_name}, te recordamos tu hora en Goddess Studio el ${fecha} a las ${hora}. ¡Te esperamos!\n\nSi necesitas reagendar, entra a: ${window.location.origin}/reagendar`;
     const phone = (b.client_phone || '').replace(/[^0-9]/g, '');
     window.open(`https://api.whatsapp.com/send?phone=56${phone.startsWith('9') ? '' : '9'}${phone}&text=${encodeURIComponent(msg)}`, '_blank');
   }
@@ -127,11 +127,11 @@ export default function AdminPage() {
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="texto-3 text-tinta-900">Panel</h1>
-            <p className="mt-1 texto--1 text-tinta-600">Itablooom Studio</p>
+            <p className="mt-1 texto--1 uppercase espaciado-medio text-dorado-700">Goddess Studio</p>
           </div>
           <button
             onClick={salir}
-            className="inline-flex items-center gap-2 rounded-full border border-tinta-900/20 px-4 py-2 texto--1 font-medium text-tinta-700 transition-all duration-200 hover:border-tinta-900 hover:text-tinta-900 active:scale-95"
+            className="inline-flex items-center gap-2 border border-dorado-400/40 px-4 py-2 texto--1 font-medium text-tinta-700 transition-all duration-200 hover:border-tinta-900 hover:text-tinta-900 active:scale-95"
           >
             <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
             Salir
@@ -168,7 +168,7 @@ export default function AdminPage() {
 
         {/* Gráfico semanal simple */}
         {stats && stats.ingresosSemana.length > 0 && (
-          <div className="mb-8 rounded-2xl border border-tinta-900/8 bg-crema-50 p-5">
+          <div className="mb-8 linea-oro border bg-crema-50 p-5">
             <h2 className="mb-4 texto-1 text-tinta-900">Últimos 7 días</h2>
             <div className="flex items-end gap-2" style={{ height: 120 }}>
               {stats.ingresosSemana.map((dia) => {
@@ -178,7 +178,7 @@ export default function AdminPage() {
                   <div key={dia.date} className="flex flex-1 flex-col items-center gap-1">
                     <span className="texto--2 text-tinta-500">{formatPrice(Number(dia.total))}</span>
                     <div
-                      className="w-full rounded-t-lg bg-dorado-400 transition-all duration-500"
+                      className="w-full bg-dorado-400 transition-all duration-500"
                       style={{ height: `${Math.max(height, 4)}%` }}
                     />
                     <span className="texto--2 text-tinta-400">
@@ -193,7 +193,7 @@ export default function AdminPage() {
 
         {/* Servicios más pedidos */}
         {stats && stats.serviciosTop.length > 0 && (
-          <div className="mb-8 rounded-2xl border border-tinta-900/8 bg-crema-50 p-5">
+          <div className="mb-8 linea-oro border bg-crema-50 p-5">
             <h2 className="mb-4 texto-1 text-tinta-900">Servicios más pedidos</h2>
             <div className="space-y-3">
               {stats.serviciosTop.map((s, i) => (
@@ -212,7 +212,7 @@ export default function AdminPage() {
         )}
 
         {/* Filtros */}
-        <div className="mb-6 grid gap-3 rounded-2xl border border-tinta-900/8 bg-crema-50 p-4 sm:grid-cols-2">
+        <div className="mb-6 grid gap-3 linea-oro border bg-crema-50 p-4 sm:grid-cols-2">
           <label className="block">
             <span className="mb-1.5 block texto--1 font-medium text-tinta-700">Fecha</span>
             <span className="relative block">

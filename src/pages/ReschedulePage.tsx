@@ -112,7 +112,7 @@ export default function ReschedulePage() {
         <Container className="max-w-lg text-center">
           <AlertCircle size={40} strokeWidth={1.3} className="mx-auto mb-4 text-dorado-700" />
           <h1 className="texto-3 text-tinta-900">Link inválido</h1>
-          <p className="mt-3 texto-0 text-tinta-600">Pedile a Itablooom Studio el link correcto de reagendado.</p>
+          <p className="mt-3 texto-0 text-tinta-600">Pide a Goddess Studio el link correcto para reagendar.</p>
         </Container>
       </div>
     );
@@ -144,7 +144,7 @@ export default function ReschedulePage() {
         </header>
 
         {error && (
-          <div className="mb-6 rounded-xl bg-crema-200 px-4 py-3 texto--1 text-tinta-800">
+          <div className="mb-6 linea-oro border px-4 py-3 texto--1 text-tinta-800">
             {error}
           </div>
         )}
@@ -174,7 +174,7 @@ export default function ReschedulePage() {
               <button
                 onClick={verificar}
                 disabled={!email}
-                className="w-full rounded-full bg-tinta-900 px-7 py-3 texto-0 font-medium text-crema-100 transition-all hover:bg-tinta-800 active:scale-95 disabled:opacity-40"
+                className="w-full bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95 disabled:opacity-40"
               >
                 Verificar reserva
               </button>
@@ -267,7 +267,7 @@ export default function ReschedulePage() {
                   <button
                     onClick={reagendar}
                     disabled={enviando}
-                    className="w-full rounded-full bg-tinta-900 px-7 py-3 texto-0 font-medium text-crema-100 transition-all hover:bg-tinta-800 active:scale-95 disabled:opacity-40"
+                    className="w-full bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95 disabled:opacity-40"
                   >
                     {enviando ? (
                       <span className="inline-flex items-center gap-2">

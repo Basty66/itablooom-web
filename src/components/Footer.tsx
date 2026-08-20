@@ -26,7 +26,7 @@ function InstagramIcon({ size = 17 }: { size?: number }) {
 
 const NAVEGACION = [
   { to: '/', label: 'Inicio' },
-  { to: '/servicios', label: 'Tratamientos' },
+  { to: '/servicios', label: 'Servicios' },
   { to: '/agendar', label: 'Reservar hora' },
 ];
 

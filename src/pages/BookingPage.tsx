@@ -14,7 +14,7 @@ import { formatPrice, formatDuration } from '../lib/format';
 import { CalendarDays, Clock3 } from 'lucide-react';
 import { es } from 'date-fns/locale';
 
-const TITULOS = ['Elige tu tratamiento', 'Fecha y hora', 'Tus datos'];
+const TITULOS = ['Elige tu servicio', 'Fecha y hora', 'Tus datos'];
 
 export default function BookingPage() {
   const [searchParams] = useSearchParams();
@@ -128,7 +128,7 @@ export default function BookingPage() {
       });
       window.location.href = init_point;
     } catch {
-      setError('No pudimos iniciar el pago. Revisa tu conexión e intentá nuevamente.');
+      setError('No pudimos iniciar el pago. Revisa tu conexión e intenta nuevamente.');
       setProcesando(false);
     }
   }
@@ -227,7 +227,7 @@ export default function BookingPage() {
           {error && (
             <p
               role="alert"
-              className="anim-entrada mt-4 flex items-center gap-2 rounded-xl bg-crema-200 px-4 py-3 texto--1 text-tinta-800"
+              className="anim-entrada mt-4 flex items-center gap-2 linea-oro border px-4 py-3 texto--1 text-tinta-800"
             >
               <AlertCircle size={16} strokeWidth={1.5} className="shrink-0 text-dorado-700" aria-hidden="true" />
               {error}
@@ -251,7 +251,7 @@ export default function BookingPage() {
             <button
               type="submit"
               disabled={!pasoCompleto || procesando}
-              className="inline-flex items-center gap-2 rounded-full bg-tinta-900 px-7 py-3 texto-0 font-medium text-crema-100 shadow-sm transition-all duration-200 ease-out hover:bg-tinta-800 hover:shadow-md active:scale-95 disabled:pointer-events-none disabled:opacity-40"
+              className="inline-flex items-center gap-2 bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 shadow-sm transition-all duration-200 ease-out hover:bg-tinta-800 hover:shadow-md active:scale-95 disabled:pointer-events-none disabled:opacity-40"
             >
               {procesando ? (
                 <>

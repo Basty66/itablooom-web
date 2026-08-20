@@ -25,7 +25,7 @@ function NotFound() {
       <p className="mt-3 texto-1 text-tinta-600">Esta página no existe</p>
       <Link
         to="/"
-        className="mt-8 inline-flex items-center rounded-full bg-tinta-900 px-7 py-3 texto-0 font-medium text-crema-100 transition-all hover:bg-tinta-800 active:scale-95"
+        className="mt-8 inline-flex items-center bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95"
       >
         Volver al inicio
       </Link>
@@ -48,7 +48,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
           <p className="mt-3 texto-0 text-tinta-600">Intentá recargar la página.</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-8 inline-flex items-center rounded-full bg-tinta-900 px-7 py-3 texto-0 font-medium text-crema-100 transition-all hover:bg-tinta-800 active:scale-95"
+            className="mt-8 inline-flex items-center bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95"
           >
             Recargar
           </button>

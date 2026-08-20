@@ -32,7 +32,7 @@ export default function HomePage() {
 
       <Section className="bg-crema-100">
         <SectionHeading
-          eyebrow="Tratamientos"
+          eyebrow="Servicios"
           title="Los más pedidos"
           subtitle="Cada servicio muestra su duración y valor. Elige y reserva al instante."
         />
