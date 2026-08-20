@@ -8,6 +8,7 @@ import { formatPrice } from '../lib/format';
 import { Container } from '../components/ui/Section';
 import { Skeleton } from '../components/ui/Skeleton';
 import LoginGate from '../components/admin/LoginGate';
+import Bloqueos from '../components/admin/Bloqueos';
 
 /** Parsea booking_date sin importar si viene como string ISO o Date. */
 function parseBookingDate(raw: string | Date | null | undefined): Date | null {
@@ -165,6 +166,9 @@ export default function AdminPage() {
             loading={cargandoStats}
           />
         </div>
+
+        <Bloqueos fecha={fecha} />
+
 
         {/* Gráfico semanal simple */}
         {stats && stats.ingresosSemana.length > 0 && (

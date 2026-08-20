@@ -37,7 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(429).json({ error: 'Demasiadas solicitudes. Intenta más tarde.' });
     }
 
-    const { serviceId, clientName, clientEmail, clientPhone, clientRut, date, time, notes } = req.body;
+    const { serviceId, clientName, clientEmail, clientPhone, clientRut, date, time, notes, paymentType } = req.body;
 
     if (!serviceId || !clientName || !clientEmail || !clientPhone || !date || !time) {
       return res.status(400).json({ error: 'Faltan campos obligatorios' });
@@ -103,7 +103,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const bookingResult = await sql`
       INSERT INTO bookings (service_id, client_name, client_email, client_phone, client_rut, booking_date, booking_time, deposit_amount, total_amount, notes, status)
-      VALUES (${serviceId}, ${clientName}, ${clientEmail}, ${clientPhone}, ${clientRut || null}, ${date}, ${time}, ${service.deposit_amount}, ${service.price}, ${notes || null}, 'pending')
+      VALUES (${serviceId}, ${clientName}, ${clientEmail}, ${clientPhone}, ${clientRut || null}, ${date}, ${time}, ${paymentType === 'full' ? service.price : service.deposit_amount}, ${service.price}, ${notes || null}, 'pending')
       RETURNING id
     `;
 
@@ -112,8 +112,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
     const appUrl = process.env.APP_URL || 'https://itablooom-web.vercel.app';
 
-    const paymentAmount = service.price;
-    const paymentLabel = service.name;
+    /*
+     * La clienta elige entre abonar o pagar todo. Antes se cobraba siempre
+     * `service.price`, mientras la web anunciaba una reserva por el depósito:
+     * quien reservaba el curso veía $5.000 y se le cobraban $32.000.
+     */
+    const pagaTodo = paymentType === 'full';
+    const deposito = Number(service.deposit_amount) || 0;
+    const total = Number(service.price) || 0;
+    const paymentAmount = pagaTodo ? total : deposito;
+    const paymentLabel = pagaTodo ? service.name : `${service.name} — Abono de reserva`;
 
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',

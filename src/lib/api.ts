@@ -64,6 +64,7 @@ export async function createPreference(data: {
   date: string;
   time: string;
   notes?: string;
+  paymentType?: 'deposit' | 'full';
 }): Promise<{ id: string; init_point: string; sandbox_init_point: string; bookingId: string }> {
   return apiFetch('/api/create-preference', {
     method: 'POST',
@@ -76,7 +77,7 @@ export async function checkPaymentStatus(
   bookingId: string
 ): Promise<{ status: string; deposit_paid: boolean }> {
   try {
-    return await apiFetch(`/api/payment-status?bookingId=${bookingId}`, {}, 1, 1000);
+    return await apiFetch(`/api/bookings/${bookingId}?action=payment-status`, {}, 1, 1000);
   } catch {
     return { status: 'pending', deposit_paid: false };
   }
@@ -307,4 +308,87 @@ export function marcarNoShow(id: string) {
 
 export function cambiarEstadoReserva(id: string, status: Booking['status']) {
   return accionReserva(id, 'status', { status });
+}
+
+// ============================================
+// BLOQUEOS DE AGENDA (requiere sesión)
+// ============================================
+
+export interface Bloqueo {
+  id: string;
+  date: string;
+  time_start: string;
+  time_end: string;
+  reason?: string | null;
+}
+
+export async function getBloqueos(date: string): Promise<Bloqueo[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/blocks?date=${date}`, {
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(15000),
+    });
+    return res.ok ? await res.json() : [];
+  } catch {
+    return [];
+  }
+}
+
+/** El bloqueo se espeja como evento en Google Calendar. */
+export async function crearBloqueo(datos: {
+  date: string;
+  timeStart: string;
+  timeEnd: string;
+  reason?: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/blocks`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos),
+      signal: AbortSignal.timeout(20000),
+    });
+    const data = await res.json().catch(() => ({}));
+    return res.ok ? { ok: true } : { ok: false, error: data.error || 'No se pudo bloquear' };
+  } catch {
+    return { ok: false, error: 'Sin conexión con el servidor' };
+  }
+}
+
+export async function borrarBloqueo(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/blocks?id=${id}`, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(15000),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Genera un link de Mercado Pago para que la clienta pague el saldo.
+ * El webhook lo reconoce por el sufijo `_remaining` y no lo confunde con la seña.
+ */
+export async function generarLinkSaldo(
+  id: string
+): Promise<{ ok: boolean; init_point?: string; monto?: number; error?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/bookings/${id}?action=remaining-link`, {
+      method: 'PUT',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(20000),
+    });
+    const data = await res.json().catch(() => ({}));
+    return res.ok
+      ? { ok: true, init_point: data.init_point, monto: data.monto }
+      : { ok: false, error: data.error || 'No se pudo generar el link' };
+  } catch {
+    return { ok: false, error: 'Sin conexión con el servidor' };
+  }
 }

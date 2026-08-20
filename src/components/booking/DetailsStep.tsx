@@ -9,6 +9,8 @@ export interface DatosCliente {
   phone: string;
   rut: string;
   notes: string;
+  /** `deposit` reserva con el abono; `full` paga todo online. */
+  paymentType: 'deposit' | 'full';
 }
 
 interface Props {
@@ -111,12 +113,57 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
       </Campo>
 
       {service && (
-        <div className="rounded-2xl border border-tinta-900/10 bg-crema-50 p-4 sm:p-5">
-          <span className="texto--1 font-medium text-tinta-700">Monto a pagar</span>
-          <span className="mt-1 block font-display texto-2 sm:texto-3 text-tinta-900">
-            {formatPrice(service.price)}
-          </span>
-        </div>
+        <fieldset>
+          <legend className="mb-4 texto--1 uppercase espaciado-medio text-tinta-900">
+            ¿Cómo prefieres pagar?
+          </legend>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              {
+                tipo: 'deposit' as const,
+                titulo: 'Abono de reserva',
+                detalle: 'El resto lo pagas en el local',
+                monto: service.deposit_amount,
+              },
+              {
+                tipo: 'full' as const,
+                titulo: 'Pago total',
+                detalle: 'Llegas sin nada pendiente',
+                monto: service.price,
+              },
+            ].map(({ tipo, titulo, detalle, monto }) => {
+              const activo = datos.paymentType === tipo;
+              return (
+                <button
+                  key={tipo}
+                  type="button"
+                  role="radio"
+                  aria-checked={activo}
+                  onClick={() => set({ paymentType: tipo })}
+                  className={`border p-5 text-left transition-all duration-300 ${
+                    activo
+                      ? 'border-tinta-900 bg-crema-50'
+                      : 'border-dorado-400/35 hover:border-dorado-500'
+                  }`}
+                >
+                  <span className="block texto--2 uppercase espaciado-medio text-dorado-700">
+                    {titulo}
+                  </span>
+                  <span className="mt-2 block font-display texto-2 text-tinta-900">
+                    {formatPrice(monto)}
+                  </span>
+                  <span className="mt-1 block texto--1 text-tinta-500">{detalle}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {datos.paymentType === 'deposit' && (
+            <p className="mt-3 texto--1 text-tinta-500">
+              Saldo a pagar en el local: {formatPrice(service.price - service.deposit_amount)}
+            </p>
+          )}
+        </fieldset>
       )}
 
       {service && fecha && hora && (

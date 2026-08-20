@@ -37,6 +37,8 @@ export default function BookingPage() {
     phone: '',
     rut: '',
     notes: '',
+    // Abonar es el default: menos fricción para confirmar la hora.
+    paymentType: 'deposit',
   });
 
   useEffect(() => {
@@ -125,6 +127,7 @@ export default function BookingPage() {
         date: format(fecha, 'yyyy-MM-dd'),
         time: hora,
         notes: datos.notes,
+        paymentType: datos.paymentType,
       });
       window.location.href = init_point;
     } catch {

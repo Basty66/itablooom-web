@@ -53,7 +53,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const payment = (await paymentResponse.json()) as any;
-    const bookingId = payment.external_reference;
+    /*
+     * El depósito y el saldo llegan por el mismo webhook. Se distinguen por el
+     * sufijo `_remaining` que pone el link generado desde el panel: sin esto,
+     * cobrar el saldo se registraba como si fuera la seña y la reserva volvía
+     * a quedar "con saldo pendiente" para siempre.
+     */
+    const referencia = String(payment.external_reference || '');
+    const esSaldo = referencia.endsWith('_remaining');
+    const bookingId = esSaldo ? referencia.replace(/_remaining$/, '') : referencia;
+
+    if (esSaldo) {
+      if (payment.status === 'approved') {
+        await sql`
+          UPDATE bookings
+          SET remaining_paid = true,
+              remaining_paid_method = 'mp',
+              remaining_paid_at = NOW(),
+              status = 'completed',
+              updated_at = NOW()
+          WHERE id = ${bookingId} AND remaining_paid = false
+        `;
+        console.log(`Saldo pagado por Mercado Pago para ${bookingId}`);
+      }
+      return res.status(200).end();
+    }
 
     if (!bookingId) {
       return res.status(200).end();
@@ -80,7 +104,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         UPDATE bookings
         SET status = 'confirmed',
             deposit_paid = true,
-            payment_id = ${paymentId}
+            deposit_paid_at = NOW(),
+            payment_id = ${paymentId},
+            -- Si abonó el total, no queda saldo que cobrar en el local.
+            remaining_paid = (deposit_amount >= total_amount),
+            remaining_paid_method = CASE WHEN deposit_amount >= total_amount THEN 'mp' ELSE remaining_paid_method END,
+            remaining_paid_at = CASE WHEN deposit_amount >= total_amount THEN NOW() ELSE remaining_paid_at END,
+            updated_at = NOW()
         WHERE id = ${bookingId}
       `;
 
