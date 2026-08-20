@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
-import { RESERVA_TTL_MINUTOS } from '../_shared/bookings.js';
+import { RESERVA_TTL_MINUTOS, HORARIO, PASO_MINUTOS, minutosDesdeISO } from '../_shared/bookings.js';
 import { getCalendarEvents } from '../calendar/_lib.js';
 
 const sql = neon(process.env.DATABASE_URL!);
@@ -62,20 +62,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Bloquear slots que tienen eventos en el Google Calendar del dueño
     const calendarEvents = await getCalendarEvents(date as string);
-    const calendarRanges = calendarEvents.map((ev) => {
-      const startDate = new Date(ev.start);
-      const endDate = new Date(ev.end);
-      const startMin = startDate.getHours() * 60 + startDate.getMinutes();
-      const endMin = endDate.getHours() * 60 + endDate.getMinutes();
-      return { start: startMin, end: endMin };
-    });
+    // Nada de new Date().getHours(): eso devolvía la hora en UTC del servidor
+    // y desplazaba los bloqueos cuatro horas respecto de Chile.
+    const calendarRanges = calendarEvents
+      .map((ev) => {
+        const start = minutosDesdeISO(ev.start);
+        const end = minutosDesdeISO(ev.end);
+        return start !== null && end !== null ? { start, end } : null;
+      })
+      .filter(Boolean) as { start: number; end: number }[];
+
+    // El horario depende del día: sábado cierra antes y domingo no se atiende.
+    // Sin esto la API aceptaba reservas de domingo aunque el calendario del
+    // frontend las deshabilitara.
+    const [anio, mes, dia] = (date as string).split('-').map(Number);
+    const diaSemana = new Date(anio, mes - 1, dia).getDay();
+    const horario = HORARIO[diaSemana];
+
+    if (!horario) return res.status(200).json([]);
 
     const slots = [];
-    const startHour = 9;
-    const endHour = 19;
+    const { abre: startHour, cierra: endHour } = horario;
 
     for (let hour = startHour; hour < endHour; hour++) {
-      for (let min = 0; min < 60; min += 30) {
+      for (let min = 0; min < 60; min += PASO_MINUTOS) {
         const time = `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
         const slotStartMin = hour * 60 + min;
         const slotEndMin = slotStartMin + serviceDuration;

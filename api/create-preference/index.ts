@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
-import { RESERVA_TTL_MINUTOS, expirarReservasVencidas } from '../_shared/bookings.js';
+import { RESERVA_TTL_MINUTOS, expirarReservasVencidas, HORARIO } from '../_shared/bookings.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -64,6 +64,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (!service) {
       return res.status(404).json({ error: 'Servicio no encontrado' });
+    }
+
+    /*
+     * El día y la hora se validan en el servidor y no solo en el formulario:
+     * el frontend deshabilita domingos y horarios fuera de rango, pero la API
+     * es alcanzable directamente y aceptaba cualquier fecha.
+     */
+    const [anio, mes, dia] = String(date).split('-').map(Number);
+    const horario = HORARIO[new Date(anio, mes - 1, dia).getDay()];
+    if (!horario) {
+      return res.status(400).json({ error: 'Ese día no atendemos' });
+    }
+
+    const [hh, mm] = String(time).split(':').map(Number);
+    const inicio = hh * 60 + mm;
+    const duracion = Number((service as any).duration_minutes) || 60;
+    if (inicio < horario.abre * 60 || inicio + duracion > horario.cierra * 60) {
+      return res.status(400).json({ error: 'Ese horario está fuera de la atención de ese día' });
     }
 
     // Libera los cupos de quienes abandonaron el checkout antes de evaluar
