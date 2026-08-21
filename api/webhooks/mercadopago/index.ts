@@ -169,8 +169,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               const [y, m, d] = dateStr.split('-');
               const calEventUrl = `https://calendar.google.com/calendar/r/day/${y}/${m}/${d}`;
 
+              /*
+               * El correo decía "Monto pagado" y mostraba total_amount: con un
+               * abono de $5.000 sobre un servicio de $16.000, anunciaba $16.000
+               * como cobrados. Ahora muestra lo realmente pagado y, si queda
+               * saldo, cuánto falta cobrar.
+               */
+              const pagado = Number(booking.deposit_amount) || 0;
+              const totalServicio = Number(booking.total_amount) || 0;
+              const saldoPendiente = Math.max(totalServicio - pagado, 0);
+
               await resend.emails.send({
-                from: 'Itablooom <onboarding@resend.dev>',
+                from: 'Goddess Studio <onboarding@resend.dev>',
                 to: ownerEmail,
                 subject: `Nueva reserva: ${esc(booking.service_name)} — ${esc(booking.client_name)}`,
                 html: `
@@ -184,14 +194,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         <!-- Header -->
         <tr><td style="background-color:#14100e;padding:32px 32px 28px;text-align:center;">
-          <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e9b4b9;font-weight:500;">Itablooom Studio</p>
+          <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e9cb6b;font-weight:500;">Goddess Studio</p>
           <h1 style="margin:0;font-size:22px;font-weight:600;color:#faf6ef;letter-spacing:-0.01em;">Nueva cita agendada</h1>
         </td></tr>
 
         <!-- Badge -->
         <tr><td style="padding:28px 32px 0;text-align:center;">
-          <div style="display:inline-block;background-color:#fae8e9;border-radius:999px;padding:8px 20px;">
-            <span style="font-size:13px;font-weight:600;color:#a34a55;">${esc(booking.service_name)}</span>
+          <div style="display:inline-block;background-color:#fbf1cf;border-radius:999px;padding:8px 20px;">
+            <span style="font-size:13px;font-weight:600;color:#6b5215;">${esc(booking.service_name)}</span>
           </div>
         </td></tr>
 
@@ -225,7 +235,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             <tr>
               <td style="padding:14px 20px;background-color:#fdfbf7;">
                 <span style="font-size:12px;color:#9a8d84;text-transform:uppercase;letter-spacing:0.08em;">Email</span><br>
-                <a href="mailto:${esc(booking.client_email)}" style="font-size:15px;font-weight:600;color:#a34a55;text-decoration:none;">${esc(booking.client_email)}</a>
+                <a href="mailto:${esc(booking.client_email)}" style="font-size:15px;font-weight:600;color:#6b5215;text-decoration:none;">${esc(booking.client_email)}</a>
               </td>
             </tr>
           </table>
@@ -233,9 +243,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         <!-- Monto -->
         <tr><td style="padding:20px 32px 0;text-align:center;">
-          <div style="background-color:#fae8e9;border-radius:16px;padding:20px;">
-            <p style="margin:0 0 4px;font-size:12px;color:#a34a55;text-transform:uppercase;letter-spacing:0.08em;font-weight:500;">Monto pagado</p>
-            <p style="margin:0;font-size:28px;font-weight:700;color:#14100e;letter-spacing:-0.02em;">$${Number(booking.total_amount).toLocaleString('es-CL')}</p>
+          <div style="background-color:#fbf1cf;border-radius:16px;padding:20px;">
+            <p style="margin:0 0 4px;font-size:12px;color:#6b5215;text-transform:uppercase;letter-spacing:0.08em;font-weight:500;">${saldoPendiente > 0 ? 'Abono recibido' : 'Pago total recibido'}</p>
+            <p style="margin:0;font-size:28px;font-weight:700;color:#14100e;letter-spacing:-0.02em;">$${pagado.toLocaleString('es-CL')}</p>
+            ${saldoPendiente > 0
+              ? `<p style="margin:8px 0 0;font-size:13px;color:#5a4f47;">Saldo por cobrar en el local: <strong>$${saldoPendiente.toLocaleString('es-CL')}</strong> · Total $${totalServicio.toLocaleString('es-CL')}</p>`
+              : ''}
           </div>
         </td></tr>
 
@@ -254,7 +267,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       <!-- Footer -->
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
         <tr><td style="padding:20px 0;text-align:center;">
-          <p style="margin:0;font-size:11px;color:#9a8d84;letter-spacing:0.05em;">Itablooom Studio · Santiago, Chile</p>
+          <p style="margin:0;font-size:11px;color:#9a8d84;letter-spacing:0.05em;">Goddess Studio · Melipilla, Chile</p>
         </td></tr>
       </table>
 
