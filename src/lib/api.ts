@@ -246,7 +246,16 @@ export async function adminSalir(): Promise<void> {
 
 export interface AdminStats {
   ingresosSemana: { date: string; total: number; count: number }[];
-  ingresosMes: { total: number; count: number };
+  ingresosMes: { total: number; count: number; por_cobrar?: number };
+  gastosMes?: number;
+  gastos?: Gasto[];
+  porMetodo?: {
+    mercadopago: number;
+    efectivo: number;
+    transferencia: number;
+    saldo_mp: number;
+    no_shows: number;
+  };
   serviciosTop: { name: string; count: number; revenue: number }[];
   citasHoy: { total: number; confirmed: number; pending: number };
   clientesTotales: number;
@@ -390,5 +399,51 @@ export async function generarLinkSaldo(
       : { ok: false, error: data.error || 'No se pudo generar el link' };
   } catch {
     return { ok: false, error: 'Sin conexión con el servidor' };
+  }
+}
+
+// ============================================
+// GASTOS (requiere sesión)
+// ============================================
+
+export interface Gasto {
+  id: string;
+  fecha: string;
+  descripcion: string;
+  monto: number;
+  categoria: string;
+}
+
+/** Comparte endpoint con las estadísticas por el límite de funciones de Vercel. */
+export async function crearGasto(datos: {
+  descripcion: string;
+  monto: number;
+  categoria: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/stats`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos),
+      signal: AbortSignal.timeout(15000),
+    });
+    const d = await res.json().catch(() => ({}));
+    return res.ok ? { ok: true } : { ok: false, error: d.error || 'No se pudo guardar' };
+  } catch {
+    return { ok: false, error: 'Sin conexión con el servidor' };
+  }
+}
+
+export async function borrarGasto(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/stats?gastoId=${id}`, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(15000),
+    });
+    return res.ok;
+  } catch {
+    return false;
   }
 }

@@ -156,6 +156,12 @@ export default function ConfirmationPage() {
     );
   }
 
+  // `deposit_amount` guarda lo efectivamente cobrado: si la clienta eligió
+  // pagar todo, ahí queda el total y el saldo da cero.
+  const pagado = Number(booking.deposit_amount) || 0;
+  const totalServicio = Number(booking.total_amount) || 0;
+  const saldoPendiente = booking.remaining_paid ? 0 : Math.max(totalServicio - pagado, 0);
+
   return (
     <div className="min-h-screen bg-crema-100 py-14 md:py-20">
       <Container className="max-w-2xl">
@@ -205,11 +211,36 @@ export default function ConfirmationPage() {
               <CreditCard size={17} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
               Resumen de pago
             </h3>
+            {/*
+              Antes decía "Pagado" y mostraba total_amount: quien abonaba
+              $5.000 de un servicio de $16.000 veía $16.000 como pagados.
+              El saldo se calcula, no se guarda: así no se desincroniza si el
+              precio del servicio cambia después de la reserva.
+            */}
             <dl className="space-y-2.5 texto--1">
               <div className="flex justify-between gap-4">
-                <dt className="text-tinta-600">Pagado</dt>
-                <dd className="font-medium text-tinta-900">{formatPrice(booking.total_amount)}</dd>
+                <dt className="text-tinta-600">
+                  {saldoPendiente > 0 ? 'Abonaste' : 'Pagaste'}
+                </dt>
+                <dd className="font-medium text-tinta-900">{formatPrice(pagado)}</dd>
               </div>
+
+              {saldoPendiente > 0 && (
+                <>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-tinta-600">Saldo a pagar en el local</dt>
+                    <dd className="font-medium text-tinta-900">{formatPrice(saldoPendiente)}</dd>
+                  </div>
+                  <div className="linea-oro flex justify-between gap-4 border-t pt-2.5">
+                    <dt className="text-tinta-500">Valor del servicio</dt>
+                    <dd className="text-tinta-500">{formatPrice(totalServicio)}</dd>
+                  </div>
+                </>
+              )}
+
+              {saldoPendiente === 0 && (
+                <p className="text-tinta-500">Tu servicio queda pagado por completo.</p>
+              )}
             </dl>
           </div>
 

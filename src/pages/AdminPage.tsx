@@ -3,12 +3,14 @@ import { CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle, TrendingUp, 
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Booking } from '../types';
-import { getBookingsByDate, adminSesionActiva, adminSalir, getAdminStats, type AdminStats } from '../lib/api';
+import { getBookingsByDate, adminSesionActiva, adminSalir, getAdminStats, saldoPendiente, type AdminStats } from '../lib/api';
 import { formatPrice } from '../lib/format';
 import { Container } from '../components/ui/Section';
 import { Skeleton } from '../components/ui/Skeleton';
 import LoginGate from '../components/admin/LoginGate';
 import Bloqueos from '../components/admin/Bloqueos';
+import Finanzas from '../components/admin/Finanzas';
+import Gastos from '../components/admin/Gastos';
 import CitaFila from '../components/admin/CitaFila';
 
 /** Parsea booking_date sin importar si viene como string ISO o Date. */
@@ -20,7 +22,7 @@ function parseBookingDate(raw: string | Date | null | undefined): Date | null {
   return new Date(y, m - 1, d);
 }
 
-function StatCard({ icono: Icono, label, valor, loading }: { icono: typeof TrendingUp; label: string; valor: string; loading?: boolean }) {
+function StatCard({ icono: Icono, label, valor, nota, loading }: { icono: typeof TrendingUp; label: string; valor: string; nota?: string; loading?: boolean }) {
   return (
     <div className="linea-oro border bg-crema-50 p-4">
       <div className="flex items-center gap-2">
@@ -32,7 +34,10 @@ function StatCard({ icono: Icono, label, valor, loading }: { icono: typeof Trend
       {loading ? (
         <Skeleton className="mt-2 h-7 w-20" />
       ) : (
-        <p className="mt-2 font-display texto-2 leading-tight text-tinta-900">{valor}</p>
+        <>
+          <p className="mt-2 font-display texto-2 leading-tight text-tinta-900">{valor}</p>
+          {nota && <p className="mt-1 texto--2 text-tinta-500">{nota}</p>}
+        </>
       )}
     </div>
   );
@@ -108,9 +113,19 @@ export default function AdminPage() {
     );
   });
 
-  const ingresosHoy = bookings
-    .filter((b) => b.deposit_paid)
-    .reduce((t, b) => t + Number(b.total_amount || 0), 0);
+  /*
+   * Lo cobrado hoy, no el valor de los servicios: si la clienta solo abonó,
+   * en caja entró el abono. Sumar total_amount mostraba $36.000 cuando
+   * habían entrado $10.000.
+   */
+  const cobradas = bookings.filter((b) => b.deposit_paid && b.status !== 'cancelled');
+  const ingresosHoy = cobradas.reduce(
+    (t, b) => t + (b.remaining_paid ? Number(b.total_amount || 0) : Number(b.deposit_amount || 0)),
+    0
+  );
+  const porCobrarHoy = cobradas.reduce((t, b) => t + (b.remaining_paid ? 0 : saldoPendiente(b)), 0);
+  // Valor de los servicios del día: lo que se factura si todas pagan el total.
+  const agendadoHoy = cobradas.reduce((t, b) => t + Number(b.total_amount || 0), 0);
 
   function enviarRecordatorio(b: Booking) {
     const fecha = parseBookingDate(b.booking_date)
@@ -144,14 +159,29 @@ export default function AdminPage() {
         <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
           <StatCard
             icono={DollarSign}
-            label="Hoy"
+            label="Cobrado hoy"
             valor={formatPrice(ingresosHoy)}
+            nota={
+              porCobrarHoy > 0
+                ? `de ${formatPrice(agendadoHoy)} agendados · faltan ${formatPrice(porCobrarHoy)}`
+                : agendadoHoy > 0
+                  ? 'todo cobrado'
+                  : undefined
+            }
             loading={cargando}
           />
           <StatCard
             icono={TrendingUp}
-            label="Este mes"
-            valor={stats ? `${stats.ingresosMes.count} citas · ${formatPrice(stats.ingresosMes.total)}` : '—'}
+            label="Cobrado este mes"
+            valor={stats ? formatPrice(stats.ingresosMes.total) : '—'}
+            nota={
+              stats
+                ? `${stats.ingresosMes.count} citas` +
+                  (Number(stats.ingresosMes.por_cobrar) > 0
+                    ? ` · faltan ${formatPrice(Number(stats.ingresosMes.por_cobrar))}`
+                    : '')
+                : undefined
+            }
             loading={cargandoStats}
           />
           <StatCard
@@ -167,6 +197,16 @@ export default function AdminPage() {
             loading={cargandoStats}
           />
         </div>
+
+        {stats?.porMetodo && (
+          <Finanzas
+            datos={stats.porMetodo}
+            porCobrar={Number(stats.ingresosMes?.por_cobrar) || 0}
+            gastos={Number(stats.gastosMes) || 0}
+          />
+        )}
+
+        {stats && <Gastos gastos={stats.gastos || []} onCambio={cargarStats} />}
 
         <Bloqueos fecha={fecha} />
 
