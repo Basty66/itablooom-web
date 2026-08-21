@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle, TrendingUp, Users, Star, DollarSign, MessageCircle } from 'lucide-react';
+import { CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle, TrendingUp, Users, Star, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Booking } from '../types';
@@ -9,6 +9,7 @@ import { Container } from '../components/ui/Section';
 import { Skeleton } from '../components/ui/Skeleton';
 import LoginGate from '../components/admin/LoginGate';
 import Bloqueos from '../components/admin/Bloqueos';
+import CitaFila from '../components/admin/CitaFila';
 
 /** Parsea booking_date sin importar si viene como string ISO o Date. */
 function parseBookingDate(raw: string | Date | null | undefined): Date | null {
@@ -256,8 +257,8 @@ export default function AdminPage() {
         </div>
 
         {/* Lista de citas del día */}
-        <div className="overflow-hidden rounded-2xl border border-tinta-900/8 bg-crema-50">
-          <div className="border-b border-tinta-900/8 px-5 py-4">
+        <div className="linea-oro overflow-hidden border bg-crema-50">
+          <div className="linea-oro border-b px-5 py-4">
             <h2 className="texto-1 capitalize text-tinta-900">
               {format(parseBookingDate(fecha) || new Date(), "EEEE d 'de' MMMM, yyyy", { locale: es })}
             </h2>
@@ -286,43 +287,15 @@ export default function AdminPage() {
           ) : (
             <ul className="divide-y divide-tinta-900/8">
               {visibles.map((b) => (
-                <li key={b.id} className="flex items-center gap-4 px-5 py-4">
-                  <span className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-crema-200">
-                    <span className="texto--2 font-medium tabular-nums text-tinta-900">
-                      {b.booking_time ? String(b.booking_time).slice(0, 5) : '—'}
-                    </span>
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="texto-0 font-medium text-tinta-900">{b.client_name}</p>
-                    <p className="texto--1 text-tinta-600">{b.service_name || 'Servicio'}</p>
-                    <p className="texto--1 text-tinta-500">{b.client_phone}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-2">
-                      {b.status === 'confirmed' && (
-                        <button
-                          onClick={() => enviarRecordatorio(b)}
-                          title="Enviar recordatorio por WhatsApp"
-                          className="rounded-full bg-emerald-100 p-2 text-emerald-700 transition-all duration-200 hover:bg-emerald-200 active:scale-95"
-                        >
-                          <MessageCircle size={15} strokeWidth={1.5} aria-hidden="true" />
-                        </button>
-                      )}
-                      <span className={`inline-block rounded-full px-3 py-1 texto--1 font-medium ${
-                        b.status === 'confirmed' ? 'bg-emerald-100 text-emerald-900'
-                        : b.status === 'pending' ? 'bg-amber-100 text-amber-900'
-                        : b.status === 'cancelled' ? 'bg-tinta-900/8 text-tinta-600'
-                        : 'bg-dorado-200 text-tinta-900'
-                      }`}>
-                        {b.status === 'confirmed' ? 'Confirmada'
-                          : b.status === 'pending' ? 'Pendiente'
-                          : b.status === 'cancelled' ? 'Cancelada'
-                          : 'Completada'}
-                      </span>
-                    </div>
-                    <p className="mt-1 texto--1 text-tinta-500">{formatPrice(Number(b.total_amount || 0))}</p>
-                  </div>
-                </li>
+                <CitaFila
+                  key={b.id}
+                  booking={b}
+                  onRecordatorio={enviarRecordatorio}
+                  onCambio={() => {
+                    cargar();
+                    cargarStats();
+                  }}
+                />
               ))}
             </ul>
           )}
