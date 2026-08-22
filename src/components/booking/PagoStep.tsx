@@ -1,0 +1,116 @@
+import { Check, Wallet, CreditCard, Timer } from 'lucide-react';
+import type { Service } from '../../types';
+import { formatPrice } from '../../lib/format';
+import type { DatosCliente } from './DetailsStep';
+
+interface Props {
+  datos: DatosCliente;
+  onCambio: (datos: DatosCliente) => void;
+  service: Service | null;
+}
+
+/**
+ * Elección entre abonar o pagar todo online.
+ *
+ * Vivía al final del paso de datos, después de cinco campos: en móvil la
+ * clienta llegaba a la decisión de pago con el formulario ya lleno y sin
+ * verla venir. Acá tiene su propio paso, que además es donde se explica qué
+ * queda pendiente en cada caso.
+ */
+export default function PagoStep({ datos, onCambio, service }: Props) {
+  if (!service) return null;
+
+  const total = Number(service.price) || 0;
+  const abono = Number(service.deposit_amount) || 0;
+  const saldo = Math.max(total - abono, 0);
+
+  const opciones = [
+    {
+      tipo: 'deposit' as const,
+      icono: Wallet,
+      titulo: 'Reservar con abono',
+      monto: abono,
+      detalle:
+        saldo > 0
+          ? `Pagas ${formatPrice(saldo)} en el local el día de tu cita.`
+          : 'Confirmas tu hora al instante.',
+      nota: 'Lo más elegido',
+    },
+    {
+      tipo: 'full' as const,
+      icono: CreditCard,
+      titulo: 'Pagar todo ahora',
+      monto: total,
+      detalle: 'Llegas sin nada pendiente: el día de tu cita solo te relajas.',
+      nota: null,
+    },
+  ];
+
+  return (
+    <fieldset>
+      <legend className="sr-only">¿Cómo prefieres pagar?</legend>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {opciones.map(({ tipo, icono: Icono, titulo, monto, detalle, nota }) => {
+          const activo = datos.paymentType === tipo;
+          return (
+            <button
+              key={tipo}
+              type="button"
+              role="radio"
+              aria-checked={activo}
+              onClick={() => onCambio({ ...datos, paymentType: tipo })}
+              /*
+               * El elegido se marca con borde y relleno rosa más una palomita.
+               * Antes el estado activo usaba `border-tinta-900`, o sea el
+               * color del propio fondo: el borde era invisible y no se
+               * distinguía cuál de las dos opciones estaba seleccionada.
+               */
+              className={`relative rounded-2xl border p-5 text-left transition-all duration-300 ease-out ${
+                activo
+                  ? 'border-rosa-300 bg-rosa-300/10'
+                  : 'border-crema-100/10 bg-tinta-880 hover:border-dorado-400/40 hover:bg-tinta-870'
+              }`}
+            >
+              <span className="flex items-start justify-between gap-3">
+                <Icono
+                  size={20}
+                  strokeWidth={1.4}
+                  aria-hidden="true"
+                  className={activo ? 'text-rosa-300' : 'text-dorado-400/70'}
+                />
+                {activo ? (
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-rosa-300">
+                    <Check size={14} strokeWidth={2.5} className="text-vino-900" aria-hidden="true" />
+                  </span>
+                ) : (
+                  nota && (
+                    <span className="chip rounded-full px-2.5 py-0.5 texto--2 uppercase espaciado-medio">
+                      {nota}
+                    </span>
+                  )
+                )}
+              </span>
+
+              <span className="mt-4 block texto--2 uppercase espaciado-amplio text-nacar-300">
+                {titulo}
+              </span>
+              <span
+                className={`mt-1 block font-display texto-3 ${activo ? 'text-rosa-300' : 'text-dorado-400'}`}
+              >
+                {formatPrice(monto)}
+              </span>
+              <span className="mt-2 block texto--1 leading-relaxed text-nacar-200/80">{detalle}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="linea-oro mt-6 flex items-start gap-2 border-t pt-5 texto--1 text-nacar-200/80">
+        <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-dorado-300" aria-hidden="true" />
+        Tu horario queda tomado por 10 minutos mientras completas el pago. Si no alcanzas, vuelve a
+        elegirlo sin problema.
+      </p>
+    </fieldset>
+  );
+}

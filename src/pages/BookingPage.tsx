@@ -1,33 +1,28 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-  ChevronLeft, ChevronRight, CreditCard, Loader2, AlertCircle,
-  Sparkles, CalendarDays, Clock3, UserRound,
+  CreditCard, Loader2, AlertCircle, Sparkles, Clock3, UserRound, ChevronRight, ChevronUp,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Service, TimeSlot } from '../types';
 import { getServices, getAvailableTimeSlots, createPreferenceWithOfflineSupport } from '../lib/api';
 import { Container } from '../components/ui/Section';
+import SeccionAcordeon from '../components/booking/SeccionAcordeon';
 import ServiceStep from '../components/booking/ServiceStep';
 import DateTimeStep from '../components/booking/DateTimeStep';
+import PagoStep from '../components/booking/PagoStep';
 import DetailsStep, { type DatosCliente } from '../components/booking/DetailsStep';
 import { formatPrice, formatDuration } from '../lib/format';
 
-/** Cada paso trae su rótulo y un titular con la segunda línea acentuada. */
-const PASOS = [
-  { rotulo: 'Servicio', titulo: 'Elige tu', acento: 'tratamiento' },
-  { rotulo: 'Fecha y hora', titulo: '¿Cuándo te', acento: 'esperamos?' },
-  { rotulo: 'Tus datos', titulo: 'Solo faltan tus', acento: 'datos' },
-];
+type Paso = 'servicio' | 'horario' | 'pago' | 'datos';
 
 const PROFESIONAL = 'Ignacia Ramírez';
 
 export default function BookingPage() {
   const [searchParams] = useSearchParams();
-  const columnaRef = useRef<HTMLDivElement>(null);
 
-  const [paso, setPaso] = useState(1);
+  const [abierta, setAbierta] = useState<Paso>('servicio');
   const [services, setServices] = useState<Service[]>([]);
   const [cargandoServices, setCargandoServices] = useState(true);
   const [service, setService] = useState<Service | null>(null);
@@ -37,6 +32,7 @@ export default function BookingPage() {
   const [cargandoSlots, setCargandoSlots] = useState(false);
   const [procesando, setProcesando] = useState(false);
   const [error, setError] = useState('');
+  const [resumenAbierto, setResumenAbierto] = useState(false);
 
   const [datos, setDatos] = useState<DatosCliente>({
     name: '',
@@ -59,7 +55,11 @@ export default function BookingPage() {
     const id = searchParams.get('service');
     if (id && services.length > 0) {
       const encontrado = services.find((s) => s.id === id);
-      if (encontrado) setService(encontrado);
+      // Si llega con el servicio en la URL, ese paso ya está resuelto.
+      if (encontrado) {
+        setService(encontrado);
+        setAbierta((actual) => (actual === 'servicio' ? 'horario' : actual));
+      }
     }
   }, [searchParams, services]);
 
@@ -79,41 +79,44 @@ export default function BookingPage() {
     if (fecha && service) cargarSlots();
   }, [fecha, service, cargarSlots]);
 
-  const pasoCompleto =
-    paso === 1 ? service !== null
-    : paso === 2 ? fecha !== null && hora !== ''
-    : Boolean(datos.name && datos.email && datos.phone);
+  const listo = {
+    servicio: service !== null,
+    horario: fecha !== null && hora !== '',
+    pago: true, // siempre hay una opción marcada por defecto
+    datos: Boolean(datos.name && datos.email && datos.phone),
+  };
+  const todoListo = listo.servicio && listo.horario && listo.datos;
 
-  /*
-   * El scroll va en un efecto y no junto a `setPaso`: React aplica el cambio
-   * de estado de forma asíncrona, así que llamarlo en el mismo handler
-   * scrollea contra el contenido anterior y la clienta queda mirando el paso
-   * viejo. El offset compensa la altura del navbar sticky.
+  const total = Number(service?.price) || 0;
+  const abono = Number(service?.deposit_amount) || 0;
+  const aPagarAhora = datos.paymentType === 'full' ? total : abono;
+  const saldo = datos.paymentType === 'full' ? 0 : Math.max(total - abono, 0);
+
+  /**
+   * Qué falta para poder pagar. La barra inferior lo dice explícitamente y
+   * lleva a la sección pendiente: un botón gris sin explicación deja a la
+   * clienta adivinando por qué no puede avanzar.
    */
-  const montado = useRef(false);
-  useEffect(() => {
-    if (!montado.current) {
-      montado.current = true;
-      return;
-    }
-    const el = columnaRef.current;
-    if (!el) return;
-    const destino = el.getBoundingClientRect().top + window.scrollY - 96;
-    window.scrollTo({ top: Math.max(destino, 0), behavior: 'smooth' });
-  }, [paso]);
+  const pendiente: { texto: string; ir: Paso } | null =
+    !listo.servicio ? { texto: 'Elige un servicio', ir: 'servicio' }
+    : !listo.horario ? { texto: 'Elige día y hora', ir: 'horario' }
+    : !listo.datos ? { texto: 'Completa tus datos', ir: 'datos' }
+    : null;
+
+  const formRef = useRef<HTMLFormElement>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
 
-    if (paso < 3) {
-      setPaso(paso + 1);
+    // Si falta algo, el botón abre la sección pendiente en vez de fallar.
+    if (pendiente) {
+      setAbierta(pendiente.ir);
       return;
     }
-
     if (!service || !fecha || !hora) return;
-    setProcesando(true);
 
+    setProcesando(true);
     try {
       const { init_point } = await createPreferenceWithOfflineSupport({
         serviceId: service.id,
@@ -133,63 +136,43 @@ export default function BookingPage() {
     }
   }
 
-  const total = Number(service?.price) || 0;
-  const abono = Number(service?.deposit_amount) || 0;
-  const aPagarAhora = datos.paymentType === 'full' ? total : abono;
-  const { titulo, acento } = PASOS[paso - 1];
+  const resumenServicio = service
+    ? `${service.name} · ${formatDuration(service.duration_minutes)} · ${formatPrice(service.price)}`
+    : undefined;
+  const resumenHorario =
+    fecha && hora ? `${format(fecha, "EEE d 'de' MMM", { locale: es })} · ${hora}` : undefined;
+  const resumenPago = service
+    ? datos.paymentType === 'full'
+      ? `Pago total · ${formatPrice(total)}`
+      : `Abono · ${formatPrice(abono)}`
+    : undefined;
+  const resumenDatos = listo.datos ? `${datos.name} · ${datos.phone}` : undefined;
 
   return (
-    <div className="min-h-screen bg-tinta-900 py-10 md:py-14">
+    <div className="min-h-screen bg-tinta-900 py-8 md:py-14">
       <Container>
-        <form onSubmit={onSubmit}>
-          {/* Hilo de pasos: rótulos unidos por líneas, con el activo numerado. */}
-          <ol className="mb-10 flex flex-wrap items-center gap-3 sm:gap-4">
-            {PASOS.map((p, i) => {
-              const n = i + 1;
-              const activo = n === paso;
-              const hecho = n < paso;
-              return (
-                <li key={p.rotulo} className="flex items-center gap-3 sm:gap-4">
-                  {i > 0 && (
-                    <span
-                      aria-hidden="true"
-                      className={`h-px w-6 sm:w-8 ${hecho || activo ? 'bg-rosa-300/30' : 'bg-dorado-400/10'}`}
-                    />
-                  )}
-                  <span
-                    aria-current={activo ? 'step' : undefined}
-                    /* Los pasos que faltan van igual de legibles que los ya
-                       hechos: lo que distingue al actual es el rosa, no que
-                       los otros estén desvanecidos. Al 50% quedaban en
-                       2.37:1 y no se alcanzaban a leer. */
-                    className={`texto--1 uppercase espaciado-amplio transition-colors duration-300 ${
-                      activo ? 'text-rosa-300' : 'text-nacar-300'
-                    }`}
-                  >
-                    {activo && <span className="mr-2 tabular-nums">0{n}</span>}
-                    {p.rotulo}
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
+        <header className="mb-8">
+          <p className="texto--1 uppercase espaciado-amplio text-rosa-300">Reserva tu hora</p>
+          <h1 className="mt-4 texto-5 text-crema-100">
+            ¿Cuándo te
+            <br />
+            <span className="italic text-dorado-400">esperamos?</span>
+          </h1>
+        </header>
 
+        <form ref={formRef} onSubmit={onSubmit}>
           <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
-            <div ref={columnaRef} className="min-w-0 flex-1">
-              <div className="vidrio mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1">
-                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-rosa-300" />
-                <span className="texto--2 uppercase espaciado-medio text-nacar-200/80">
-                  Paso {paso} de 3
-                </span>
-              </div>
-
-              <h1 className="mb-10 texto-5 text-crema-100">
-                {titulo}
-                <br />
-                <span className="italic text-dorado-400">{acento}</span>
-              </h1>
-
-              {paso === 1 && (
+            {/* Columna del flujo */}
+            <div className="min-w-0 flex-1 space-y-4">
+              <SeccionAcordeon
+                numero="1"
+                titulo="Tu servicio"
+                resumen={resumenServicio}
+                abierta={abierta === 'servicio'}
+                completa={listo.servicio}
+                bloqueada={false}
+                onAbrir={() => setAbierta('servicio')}
+              >
                 <ServiceStep
                   services={services}
                   seleccionado={service}
@@ -198,12 +181,21 @@ export default function BookingPage() {
                     setFecha(null);
                     setHora('');
                     setSlots([]);
+                    setAbierta('horario');
                   }}
                   cargando={cargandoServices}
                 />
-              )}
+              </SeccionAcordeon>
 
-              {paso === 2 && (
+              <SeccionAcordeon
+                numero="2"
+                titulo="Día y hora"
+                resumen={resumenHorario}
+                abierta={abierta === 'horario'}
+                completa={listo.horario}
+                bloqueada={!listo.servicio}
+                onAbrir={() => setAbierta('horario')}
+              >
                 <DateTimeStep
                   fecha={fecha}
                   hora={hora}
@@ -213,57 +205,63 @@ export default function BookingPage() {
                     setFecha(d);
                     setHora('');
                   }}
-                  onHora={setHora}
+                  onHora={(h) => {
+                    setHora(h);
+                    setAbierta('pago');
+                  }}
                 />
-              )}
+              </SeccionAcordeon>
 
-              {paso === 3 && (
-                <DetailsStep
+              <SeccionAcordeon
+                numero="3"
+                titulo="Cómo prefieres pagar"
+                resumen={resumenPago}
+                abierta={abierta === 'pago'}
+                completa={listo.horario}
+                bloqueada={!listo.horario}
+                onAbrir={() => setAbierta('pago')}
+              >
+                <PagoStep
                   datos={datos}
-                  onCambio={setDatos}
+                  onCambio={(d) => {
+                    setDatos(d);
+                    setAbierta('datos');
+                  }}
                   service={service}
-                  fecha={fecha}
-                  hora={hora}
                 />
-              )}
+              </SeccionAcordeon>
+
+              <SeccionAcordeon
+                numero="4"
+                titulo="Tus datos"
+                resumen={resumenDatos}
+                abierta={abierta === 'datos'}
+                completa={listo.datos}
+                bloqueada={!listo.horario}
+                onAbrir={() => setAbierta('datos')}
+              >
+                <DetailsStep datos={datos} onCambio={setDatos} />
+              </SeccionAcordeon>
 
               {error && (
                 <p
                   role="alert"
-                  className="anim-entrada mt-6 flex items-center gap-2 rounded-[var(--radius-suave)] border border-dorado-400/30 bg-tinta-850 px-4 py-3 texto--1 text-crema-100/90"
+                  className="anim-entrada flex items-center gap-2 rounded-[var(--radius-suave)] border border-dorado-400/30 bg-tinta-850 px-4 py-3 texto--1 text-crema-100/90"
                 >
                   <AlertCircle size={16} strokeWidth={1.5} className="shrink-0 text-dorado-300" aria-hidden="true" />
                   {error}
                 </p>
               )}
-
-              {paso > 1 && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPaso(paso - 1);
-                    setError('');
-                  }}
-                  className="mt-8 inline-flex items-center gap-1.5 rounded-[var(--radius-suave)] border border-crema-100/20 px-5 py-3 texto--1 uppercase espaciado-medio text-nacar-200/85 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-crema-100 active:scale-95"
-                >
-                  <ChevronLeft size={16} strokeWidth={1.5} aria-hidden="true" />
-                  Atrás
-                </button>
-              )}
             </div>
 
-            {/*
-              Resumen fijo al costado: la clienta ve siempre qué lleva elegido
-              y cuánto va a pagar. Antes el total aparecía recién al final y
-              obligaba a volver atrás para confirmarlo.
-            */}
-            <aside className="w-full lg:w-[22rem] lg:shrink-0">
+            {/* Resumen lateral: solo desde escritorio. En móvil su lugar lo
+                toma la barra inferior fija, que no obliga a scrollear. */}
+            <aside className="hidden w-[21rem] shrink-0 lg:block">
               <div className="relative overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 p-6 lg:sticky lg:top-28">
                 <span
                   aria-hidden="true"
                   className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-rosa-300/50 to-transparent"
                 />
-
                 <h2 className="font-display texto-2 text-crema-100">Tu reserva</h2>
                 <p className="mt-1 texto--2 uppercase espaciado-amplio text-nacar-300">Resumen</p>
 
@@ -310,55 +308,138 @@ export default function BookingPage() {
                     </p>
                   </div>
                 ) : (
-                  <p className="flex items-center gap-2 texto--1 text-nacar-300">
-                    <CalendarDays size={15} strokeWidth={1.5} aria-hidden="true" />
-                    Aún no eliges día ni hora.
-                  </p>
+                  <p className="texto--1 text-nacar-300">Aún no eliges día ni hora.</p>
                 )}
 
                 <div className="mt-7 flex items-end justify-between gap-4">
                   <span className="texto--2 uppercase espaciado-amplio text-nacar-300">
-                    {datos.paymentType === 'full' ? 'Total' : 'Abono'}
+                    {datos.paymentType === 'full' ? 'Pagas ahora' : 'Abonas ahora'}
                   </span>
-                  <span className="font-display texto-3 text-dorado-400">
-                    {formatPrice(aPagarAhora)}
-                  </span>
+                  <span className="font-display texto-3 text-dorado-400">{formatPrice(aPagarAhora)}</span>
                 </div>
-                {/* El valor completo solo aparece si queda saldo: repetirlo
-                    cuando ya se paga todo confunde más de lo que informa. */}
-                {service && datos.paymentType === 'deposit' && total > abono && (
+                {saldo > 0 && (
                   <p className="mt-1 text-right texto--1 text-nacar-300">
-                    Servicio {formatPrice(total)} · saldo en el local
+                    Saldo en el local {formatPrice(saldo)}
                   </p>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={!pasoCompleto || procesando}
-                  className="brillo brillo-hover mt-6 flex w-full items-center justify-center gap-2 rounded-[var(--radius-suave)] bg-rosa-300 px-6 py-4 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 ease-out hover:bg-rosa-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
-                >
-                  {procesando ? (
-                    <>
-                      <Loader2 size={17} strokeWidth={1.5} className="animate-spin" aria-hidden="true" />
-                      Procesando…
-                    </>
-                  ) : paso === 3 ? (
-                    <>
-                      <CreditCard size={17} strokeWidth={1.5} aria-hidden="true" />
-                      Pagar y reservar
-                    </>
-                  ) : (
-                    <>
-                      Continuar
-                      <ChevronRight size={16} strokeWidth={1.5} aria-hidden="true" />
-                    </>
-                  )}
-                </button>
+                <BotonPagar
+                  className="mt-6 w-full"
+                  procesando={procesando}
+                  pendiente={pendiente}
+                  todoListo={todoListo}
+                />
               </div>
             </aside>
           </div>
+
+          {/*
+            Barra fija en móvil: el monto y la acción quedan siempre a la vista.
+            Antes el botón vivía dentro del resumen, que en móvil caía al final
+            de la página: avanzar costaba casi dos pantallas de scroll.
+          */}
+          <div className="fixed inset-x-0 bottom-0 z-40 lg:hidden">
+            {resumenAbierto && (
+              <div className="anim-entrada vidrio border-t px-5 pb-3 pt-4">
+                <dl className="space-y-2 texto--1">
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-nacar-300">Servicio</dt>
+                    <dd className="min-w-0 truncate text-crema-100">{service?.name ?? '—'}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-nacar-300">Día y hora</dt>
+                    <dd className="text-crema-100">{resumenHorario ?? '—'}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-nacar-300">Atiende</dt>
+                    <dd className="text-crema-100">{PROFESIONAL}</dd>
+                  </div>
+                  {saldo > 0 && (
+                    <div className="linea-oro flex justify-between gap-4 border-t pt-2">
+                      <dt className="text-nacar-300">Saldo en el local</dt>
+                      <dd className="text-crema-100">{formatPrice(saldo)}</dd>
+                    </div>
+                  )}
+                </dl>
+              </div>
+            )}
+
+            <div className="vidrio flex items-center gap-3 border-t px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+              <button
+                type="button"
+                onClick={() => setResumenAbierto((v) => !v)}
+                aria-expanded={resumenAbierto}
+                className="min-w-0 flex-1 text-left"
+              >
+                <span className="flex items-center gap-1 texto--2 uppercase espaciado-medio text-nacar-300">
+                  {datos.paymentType === 'full' ? 'Pagas ahora' : 'Abonas ahora'}
+                  <ChevronUp
+                    size={13}
+                    strokeWidth={1.8}
+                    aria-hidden="true"
+                    className={`transition-transform duration-300 ${resumenAbierto ? '' : 'rotate-180'}`}
+                  />
+                </span>
+                <span className="block font-display texto-2 text-dorado-400">
+                  {formatPrice(aPagarAhora)}
+                </span>
+              </button>
+
+              <BotonPagar
+                className="shrink-0"
+                procesando={procesando}
+                pendiente={pendiente}
+                todoListo={todoListo}
+              />
+            </div>
+          </div>
+
+          {/* Deja aire bajo el contenido para que la barra no tape el final. */}
+          <div aria-hidden="true" className="h-24 lg:hidden" />
         </form>
       </Container>
     </div>
+  );
+}
+
+/** Acción principal: paga si todo está listo, o lleva a lo que falta. */
+function BotonPagar({
+  procesando,
+  pendiente,
+  todoListo,
+  className = '',
+}: {
+  procesando: boolean;
+  pendiente: { texto: string; ir: string } | null;
+  todoListo: boolean;
+  className?: string;
+}) {
+  return (
+    <button
+      type="submit"
+      disabled={procesando}
+      className={`brillo brillo-hover flex items-center justify-center gap-2 rounded-[var(--radius-suave)] px-6 py-3.5 texto--1 font-medium uppercase espaciado-medio transition-all duration-300 ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 ${
+        todoListo
+          ? 'bg-rosa-300 text-vino-900 hover:bg-rosa-200'
+          : 'border border-dorado-400/45 text-dorado-300 hover:bg-dorado-400/10'
+      } ${className}`}
+    >
+      {procesando ? (
+        <>
+          <Loader2 size={17} strokeWidth={1.5} className="animate-spin" aria-hidden="true" />
+          Procesando…
+        </>
+      ) : pendiente ? (
+        <>
+          {pendiente.texto}
+          <ChevronRight size={16} strokeWidth={1.5} aria-hidden="true" />
+        </>
+      ) : (
+        <>
+          <CreditCard size={17} strokeWidth={1.5} aria-hidden="true" />
+          Pagar
+        </>
+      )}
+    </button>
   );
 }

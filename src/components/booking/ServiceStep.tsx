@@ -62,13 +62,19 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
             aria-checked={activo}
             onClick={() => onSeleccionar(service)}
             style={{ animationDelay: `${i * 60}ms` }}
-            className="anim-entrada group relative flex w-full items-center gap-4 py-5 pl-4 pr-1 text-left transition-colors duration-300 hover:superficie sm:gap-5"
+            className={`anim-entrada group relative flex w-full items-center gap-4 py-5 pl-4 pr-1 text-left transition-colors duration-300 sm:gap-5 ${
+              activo ? 'bg-rosa-300/8' : 'hover:bg-tinta-850'
+            }`}
           >
-            {/* Barra de selección: marca la fila sin teñir el fondo. */}
+            {/*
+              Barra de selección al canto. Era `bg-tinta-900`, es decir el
+              color del propio fondo: marcaba la fila con una barra invisible
+              y no había forma de saber cuál estaba elegida.
+            */}
             <span
               aria-hidden="true"
               className={`absolute left-0 top-0 h-full w-0.5 transition-colors duration-300 ${
-                activo ? 'bg-tinta-900' : 'bg-transparent'
+                activo ? 'bg-rosa-300' : 'bg-transparent'
               }`}
             />
 
@@ -99,12 +105,12 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
             </span>
 
             <span className="shrink-0 pl-2 text-right">
-              <span className="block texto-0 tabular-nums text-crema-100">
+              <span className="block font-display texto-1 tabular-nums text-dorado-400">
                 {formatPrice(service.price)}
               </span>
               <span
                 className={`mt-1 block texto--2 uppercase espaciado-medio transition-colors duration-300 ${
-                  activo ? 'text-crema-100' : 'text-nacar-300'
+                  activo ? 'text-rosa-300' : 'text-nacar-300'
                 }`}
               >
                 {activo ? 'Elegido' : 'Elegir'}

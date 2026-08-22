@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import { User, Mail, Phone, Timer } from 'lucide-react';
-import type { Service } from '../../types';
-import { formatPrice } from '../../lib/format';
+import { User, Mail, Phone } from 'lucide-react';
 
 export interface DatosCliente {
   name: string;
@@ -16,9 +14,6 @@ export interface DatosCliente {
 interface Props {
   datos: DatosCliente;
   onCambio: (datos: DatosCliente) => void;
-  service: Service | null;
-  fecha: Date | null;
-  hora: string;
 }
 
 /*
@@ -58,7 +53,7 @@ function Campo({
   );
 }
 
-export default function DetailsStep({ datos, onCambio, service, fecha, hora }: Props) {
+export default function DetailsStep({ datos, onCambio }: Props) {
   const set = (parcial: Partial<DatosCliente>) => onCambio({ ...datos, ...parcial });
   return (
     <div className="space-y-8">
@@ -120,66 +115,6 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
         />
       </Campo>
 
-      {service && (
-        <fieldset>
-          <legend className="mb-4 texto--1 uppercase espaciado-medio text-crema-100">
-            ¿Cómo prefieres pagar?
-          </legend>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              {
-                tipo: 'deposit' as const,
-                titulo: 'Abono de reserva',
-                detalle: 'El resto lo pagas en el local',
-                monto: service.deposit_amount,
-              },
-              {
-                tipo: 'full' as const,
-                titulo: 'Pago total',
-                detalle: 'Llegas sin nada pendiente',
-                monto: service.price,
-              },
-            ].map(({ tipo, titulo, detalle, monto }) => {
-              const activo = datos.paymentType === tipo;
-              return (
-                <button
-                  key={tipo}
-                  type="button"
-                  role="radio"
-                  aria-checked={activo}
-                  onClick={() => set({ paymentType: tipo })}
-                  className={`border p-5 text-left transition-all duration-300 ${
-                    activo
-                      ? 'border-tinta-900 superficie'
-                      : 'border-dorado-400/35 hover:border-dorado-500'
-                  }`}
-                >
-                  <span className="block texto--2 uppercase espaciado-medio text-dorado-300">
-                    {titulo}
-                  </span>
-                  <span className="mt-2 block font-display texto-2 text-crema-100">
-                    {formatPrice(monto)}
-                  </span>
-                  <span className="mt-1 block texto--1 text-nacar-300">{detalle}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {datos.paymentType === 'deposit' && (
-            <p className="mt-3 texto--1 text-nacar-300">
-              Saldo a pagar en el local: {formatPrice(service.price - service.deposit_amount)}
-            </p>
-          )}
-        </fieldset>
-      )}
-
-      {service && fecha && hora && (
-        <p className="flex items-start gap-2 linea-oro border-t p-0 pt-5 texto--1 text-nacar-200/80">
-          <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-dorado-300" aria-hidden="true" />
-          Tienes 10 minutos para completar el pago. Después el horario vuelve a quedar disponible.
-        </p>
-      )}
     </div>
   );
 }

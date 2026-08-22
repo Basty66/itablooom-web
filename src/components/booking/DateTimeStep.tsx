@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { format, addDays, startOfDay, isSameDay, isSameMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { CalendarX2, Sun, Moon } from 'lucide-react';
+import { CalendarX2, Sun, Moon, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { TimeSlot } from '../../types';
 import { TimeSlotSkeleton } from '../ui/Skeleton';
 
@@ -46,6 +47,8 @@ export default function DateTimeStep({
   const hoy = startOfDay(new Date());
   const dias = proximosDias();
   const semanas = [dias.slice(0, 7), dias.slice(7)];
+  // Solo aplica en móvil: desde sm se ven las dos semanas a la vez.
+  const [semana, setSemana] = useState(0);
 
   const disponibles = slots.filter((s) => s.available);
   const manana = slots.filter((s) => Number(s.time.split(':')[0]) < 13);
@@ -107,8 +110,28 @@ export default function DateTimeStep({
       {/* Calendario en tarjeta propia: se lee como un objeto, no como una
           franja más del formulario. */}
       <div className="rounded-2xl border border-crema-100/5 bg-tinta-870 p-5 sm:p-6">
-        <div className="mb-5 flex items-baseline justify-between gap-3">
+        <div className="mb-5 flex items-center justify-between gap-3">
           <h3 className="font-display texto-2 capitalize text-crema-100">{rangoMeses}</h3>
+
+          {/* Navegación entre semanas, solo en móvil: ahí se muestra una sola
+              a la vez para que el calendario no se coma media pantalla. */}
+          <div className="flex gap-2 sm:hidden">
+            {[
+              { dir: -1, Icono: ChevronLeft, label: 'Semana anterior' },
+              { dir: 1, Icono: ChevronRight, label: 'Semana siguiente' },
+            ].map(({ dir, Icono, label }) => (
+              <button
+                key={label}
+                type="button"
+                aria-label={label}
+                disabled={dir < 0 ? semana === 0 : semana === semanas.length - 1}
+                onClick={() => setSemana((s) => Math.min(Math.max(s + dir, 0), semanas.length - 1))}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-dorado-400/25 text-nacar-200/85 transition-colors duration-300 hover:border-rosa-300 hover:text-rosa-300 disabled:opacity-30"
+              >
+                <Icono size={17} strokeWidth={1.5} aria-hidden="true" />
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="mb-3 grid grid-cols-7 gap-1 sm:gap-2">
@@ -124,9 +147,12 @@ export default function DateTimeStep({
         </div>
 
         <div className="space-y-2">
-          {semanas.map((semana, si) => (
-            <div key={si} className="grid grid-cols-7 gap-1 sm:gap-2">
-              {semana.map((dia) => {
+          {semanas.map((sem, si) => (
+            <div
+              key={si}
+              className={`grid-cols-7 gap-1 sm:grid sm:gap-2 ${si === semana ? 'grid' : 'hidden'}`}
+            >
+              {sem.map((dia) => {
                 const domingo = dia.getDay() === 0;
                 const activo = fecha && isSameDay(dia, fecha);
                 const relativa = etiquetaRelativa(dia, hoy);

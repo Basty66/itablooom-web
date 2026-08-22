@@ -20,42 +20,59 @@ const RUBROS = CATEGORIAS_GODDESS.filter((c) => c.id !== 'all');
  */
 function TarjetaServicio({ service, prioritaria }: { service: Service; prioritaria: boolean }) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 transition-all duration-500 ease-out hover:-translate-y-2 hover:border-dorado-400/30">
-      <div className="relative">
-        <ServiceVisual
-          categoria={service.category}
-          imagen={service.image_url}
-          nombre={service.name}
-          prioritaria={prioritaria}
-        />
-        {/* Rótulo flotante sobre la foto: ubica el rubro sin gastar una línea
-            del cuerpo de la tarjeta. */}
-        <span className="chip absolute right-4 top-4 rounded-full px-3 py-1 texto--2 uppercase espaciado-medio backdrop-blur-md">
+    /*
+     * Dos formas según el ancho. En móvil la tarjeta es una fila: foto chica a
+     * la izquierda y los datos a la derecha. Con la foto arriba a tamaño
+     * completo cada tarjeta medía 526px y el catálogo se iba a casi seis
+     * pantallas de scroll, con la mayoría del tráfico entrando por teléfono.
+     * Desde sm recupera la tarjeta vertical, donde el espacio sobra.
+     */
+    <article className="group flex overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 transition-all duration-500 ease-out hover:border-dorado-400/30 sm:h-full sm:flex-col sm:hover:-translate-y-2">
+      <div className="relative w-[38%] shrink-0 sm:w-full">
+        {/* En móvil la miniatura llena el alto de la fila; el componente trae
+            su propia proporción, así que acá se recorta con object-cover. */}
+        <div className="h-full [&_div]:h-full [&_div]:rounded-none sm:[&_div]:rounded-[var(--radius-foto)] [&_img]:h-full">
+          <ServiceVisual
+            categoria={service.category}
+            imagen={service.image_url}
+            nombre={service.name}
+            prioritaria={prioritaria}
+          />
+        </div>
+        <span className="chip absolute right-2 top-2 hidden rounded-full px-3 py-1 texto--2 uppercase espaciado-medio backdrop-blur-md sm:right-4 sm:top-4 sm:inline-block">
           {etiquetaCategoria(service.category)}
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col p-6">
-        <div className="flex items-baseline justify-between gap-4">
+      <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-6">
+        <span className="chip mb-2 w-fit rounded-full px-2.5 py-0.5 texto--2 uppercase espaciado-medio sm:hidden">
+          {etiquetaCategoria(service.category)}
+        </span>
+
+        <div className="flex items-baseline justify-between gap-3">
           <h3 className="font-display texto-2 text-crema-100">{service.name}</h3>
           <span className="shrink-0 font-display texto-2 text-dorado-400">
             {formatPrice(service.price)}
           </span>
         </div>
 
-        <p className="mt-2 flex items-center gap-1.5 texto--2 uppercase espaciado-medio text-nacar-300">
+        <p className="mt-1.5 flex items-center gap-1.5 texto--2 uppercase espaciado-medio text-nacar-300 sm:mt-2">
           <Clock3 size={13} strokeWidth={1.5} aria-hidden="true" />
           {formatDuration(service.duration_minutes)}
         </p>
 
-        <p className="mt-4 texto-0 leading-relaxed text-nacar-200/80">{service.description}</p>
+        {/* La descripción completa solo desde sm: en la fila de móvil dos
+            líneas alcanzan para decidir y el resto está en el agendador. */}
+        <p className="mt-2 line-clamp-2 texto--1 leading-relaxed text-nacar-200/80 sm:mt-4 sm:line-clamp-none sm:texto-0">
+          {service.description}
+        </p>
 
         <Link
           to={`/agendar?service=${service.id}`}
           aria-label={`Reservar ${service.name}`}
-          className="brillo brillo-hover mt-6 flex w-full items-center justify-center rounded-[var(--radius-suave)] bg-rosa-300 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 ease-out hover:bg-rosa-200 active:scale-[0.98]"
+          className="brillo brillo-hover mt-3 flex w-full items-center justify-center rounded-[var(--radius-suave)] bg-rosa-300 py-2.5 texto--2 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 ease-out hover:bg-rosa-200 active:scale-[0.98] sm:mt-6 sm:py-3.5 sm:texto--1"
         >
-          Reservar ahora
+          Reservar
         </Link>
       </div>
     </article>
@@ -93,25 +110,31 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-tinta-900">
       {/* Portada del catálogo: solo tipografía, con un velo rosado detrás. */}
-      <section className="relative overflow-hidden px-5 pb-16 pt-16 sm:px-6 md:pt-24">
+      <section className="relative overflow-hidden px-5 pb-10 pt-10 sm:px-6 sm:pb-16 sm:pt-16 md:pt-24">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/3 rounded-full bg-rosa-500/10 blur-[100px]"
         />
         <div className="relative mx-auto max-w-2xl text-center">
           <p className="texto--1 uppercase espaciado-amplio text-rosa-300">Santuario de belleza</p>
-          <h1 className="mt-5 texto-5 text-dorado-400">Nuestros servicios</h1>
-          <div aria-hidden="true" className="linea-oro mx-auto my-6 w-16 border-t" />
-          <p className="texto-1 leading-relaxed text-nacar-200/80">
-            Uñas, pestañas y cejas con hora reservada. Cada servicio muestra su duración y su valor,
-            para que elijas con toda la información a la vista.
+          <h1 className="mt-4 texto-5 text-dorado-400 sm:mt-5">Nuestros servicios</h1>
+          <div aria-hidden="true" className="linea-oro mx-auto my-4 w-16 border-t sm:my-6" />
+          {/* El párrafo largo se guarda para pantallas grandes: en móvil son
+              tres líneas más entre la clienta y el primer servicio. */}
+          <p className="texto-0 leading-relaxed text-nacar-200/80 sm:texto-1">
+            Uñas, pestañas y cejas con hora reservada.
+            <span className="hidden sm:inline">
+              {' '}
+              Cada servicio muestra su duración y su valor, para que elijas con toda la información a
+              la vista.
+            </span>
           </p>
         </div>
       </section>
 
       <Container className="pb-24">
         {cargando && (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <ServiceCardSkeleton key={i} />
             ))}
@@ -138,9 +161,9 @@ export default function ServicesPage() {
           </div>
         )}
 
-        <div className="space-y-20">
+        <div className="space-y-14 sm:space-y-20">
           {porRubro.map((rubro, i) => (
-            <section key={rubro.id} className="space-y-10">
+            <section key={rubro.id} className="space-y-6 sm:space-y-10">
               {/* Encabezado de rubro: número, nombre y una regla que se estira
                   hasta el borde, rematada por un punto. */}
               <div className="flex items-center gap-5">
@@ -153,7 +176,7 @@ export default function ServicesPage() {
                 </span>
               </div>
 
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {rubro.items.map((service, j) => (
                   <TarjetaServicio
                     key={service.id}
