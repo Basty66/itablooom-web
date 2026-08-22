@@ -1,28 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { Container } from './ui/Section';
+import IconoInstagram from './ui/IconoInstagram';
 import { linkWhatsApp, EMAIL, INSTAGRAM_URL, WHATSAPP_VISIBLE } from '../lib/contacto';
-
-/** lucide-react quitó los iconos de marcas, así que Instagram va como SVG propio. */
-function InstagramIcon({ size = 17 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="2" y="2" width="20" height="20" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
 
 const NAVEGACION = [
   { to: '/', label: 'Inicio' },
@@ -57,7 +37,7 @@ export default function Footer() {
 
             <div className="mt-6 flex items-center gap-3">
               {[
-                { href: INSTAGRAM_URL, icono: <InstagramIcon />, label: 'Instagram' },
+                { href: INSTAGRAM_URL, icono: <IconoInstagram />, label: 'Instagram' },
                 {
                   href: linkWhatsApp('Hola! Quiero consultar por un tratamiento'),
                   icono: <Phone size={17} strokeWidth={1.5} aria-hidden="true" />,

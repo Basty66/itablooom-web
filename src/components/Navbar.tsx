@@ -1,7 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Phone, Mail } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Button from './ui/Button';
+import IconoInstagram from './ui/IconoInstagram';
+import { linkWhatsApp, EMAIL, INSTAGRAM_URL, WHATSAPP_VISIBLE } from '../lib/contacto';
 
 const LINKS = [
   { path: '/', label: 'Inicio' },
@@ -89,51 +91,95 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Backdrop + menú overlay — siempre renderizado, controlado por CSS */}
+      {/*
+        Panel a pantalla completa, no un desplegable flotante. El anterior era
+        una tarjeta chica centrada con los enlaces en versalitas grises: se
+        leía como un menú de plantilla y no como parte del sitio. Este usa los
+        mismos recursos que el resto —numeración en rosa, serif grande, líneas
+        finas de oro— y aprovecha el espacio para dejar el contacto a mano.
+      */}
       <div
         id="menu-movil"
-        className={`fixed inset-0 top-18 z-40 md:hidden ${
+        className={`fixed inset-x-0 bottom-0 top-18 z-40 md:hidden ${
           abierto ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
       >
-        {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-tinta-950/70 backdrop-blur-sm transition-opacity duration-300 ease-out ${
+          className={`absolute inset-0 bg-tinta-950/60 transition-opacity duration-300 ease-out ${
             abierto ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={() => setAbierto(false)}
           aria-hidden="true"
         />
 
-        {/* Panel del menú */}
         <div
-          className={`tarjeta relative mx-auto mt-2 w-[calc(100%-2.5rem)] max-w-sm p-3 transition-all duration-300 ease-out ${
-            abierto
-              ? 'translate-y-0 opacity-100 scale-100'
-              : '-translate-y-3 opacity-0 scale-95'
+          className={`textura-papel absolute inset-0 flex flex-col overflow-y-auto border-t border-dorado-400/15 bg-tinta-950 px-5 pb-8 pt-8 transition-all duration-500 ease-out ${
+            abierto ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
           }`}
         >
-          <div className="space-y-1">
+          <p className="texto--2 uppercase espaciado-amplio text-rosa-300">Navegación</p>
+
+          <nav className="mt-6 flex flex-col">
             {LINKS.map((link, i) => {
               const activo = location.pathname === link.path;
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`block rounded-[var(--radius-suave)] px-4 py-3 texto--1 uppercase espaciado-amplio transition-colors duration-300 ${
-                    activo
-                      ? 'bg-tinta-900 text-dorado-300'
-                      : 'text-nacar-100/90 hover:bg-tinta-900'
-                  }`}
-                  style={{ transitionDelay: abierto ? `${i * 50}ms` : '0ms' }}
+                  aria-current={activo ? 'page' : undefined}
+                  className="linea-oro group flex items-baseline gap-4 border-b py-5 first:border-t"
+                  /* Entrada escalonada: los enlaces aparecen en orden, como el
+                     resto de las secciones del sitio. */
+                  style={{
+                    transitionDelay: abierto ? `${i * 60}ms` : '0ms',
+                    opacity: abierto ? 1 : 0,
+                    transform: abierto ? 'translateY(0)' : 'translateY(0.5rem)',
+                    transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
+                  }}
                 >
-                  {link.label}
+                  <span className="texto--2 tabular-nums text-rosa-300">0{i + 1}</span>
+                  <span
+                    className={`font-display texto-3 transition-colors duration-300 ${
+                      activo ? 'text-dorado-400' : 'text-crema-100'
+                    }`}
+                  >
+                    {link.label}
+                  </span>
+                  {activo && (
+                    <span aria-hidden="true" className="ml-auto self-center h-px w-6 bg-dorado-400" />
+                  )}
                 </Link>
               );
             })}
-            <Button to="/agendar" size="md" className="mt-2 w-full">
-              Reservar hora
-            </Button>
+          </nav>
+
+          <Button to="/agendar" size="lg" className="mt-8 w-full">
+            Reservar hora
+          </Button>
+
+          {/* Contacto al pie del panel: en móvil es lo que más se busca
+              después de la navegación. */}
+          <div className="linea-oro mt-auto border-t pt-6">
+            <p className="texto--2 uppercase espaciado-amplio text-nacar-300">Escríbenos</p>
+            <div className="mt-4 flex items-center gap-3">
+              {[
+                { href: linkWhatsApp('Hola! Quiero consultar por un tratamiento'), icono: Phone, label: 'WhatsApp' },
+                { href: INSTAGRAM_URL, icono: IconoInstagram, label: 'Instagram' },
+                { href: `mailto:${EMAIL}`, icono: Mail, label: 'Correo' },
+              ].map(({ href, icono: Icono, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/85 transition-colors duration-200 hover:border-dorado-400 hover:text-dorado-300"
+                >
+                  <Icono size={17} strokeWidth={1.5} aria-hidden="true" />
+                </a>
+              ))}
+              <span className="ml-1 texto-0 text-nacar-200/80">{WHATSAPP_VISIBLE}</span>
+            </div>
           </div>
         </div>
       </div>
