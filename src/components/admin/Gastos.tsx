@@ -52,16 +52,16 @@ export default function Gastos({ gastos, onCambio }: { gastos: Gasto[]; onCambio
   }
 
   const INPUT =
-    'w-full border-0 border-b border-dorado-400/40 bg-transparent py-2 texto--1 text-tinta-900 ' +
-    'placeholder:text-tinta-400 transition-colors duration-300 focus:border-tinta-900 focus:outline-none';
+    'w-full border-0 border-b border-dorado-400/40 bg-transparent py-2 texto--1 text-crema-100 ' +
+    'placeholder:text-nacar-300 transition-colors duration-300 focus:border-dorado-400 focus:outline-none';
 
   return (
     <section className="linea-oro mb-8 border-y py-5">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="texto--1 uppercase espaciado-medio text-tinta-900">Gastos del mes</h2>
+        <h2 className="texto--1 uppercase espaciado-medio text-crema-100">Gastos del mes</h2>
         <button
           onClick={() => setAbierto(!abierto)}
-          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-dorado-700 transition-colors duration-300 hover:text-tinta-900"
+          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-dorado-300 transition-colors duration-300 hover:text-crema-100"
         >
           {abierto ? <X size={14} strokeWidth={1.5} /> : <Plus size={14} strokeWidth={1.5} />}
           {abierto ? 'Cancelar' : 'Agregar'}
@@ -71,7 +71,7 @@ export default function Gastos({ gastos, onCambio }: { gastos: Gasto[]; onCambio
       {abierto && (
         <div className="anim-entrada mb-5 grid gap-4 sm:grid-cols-4 sm:items-end">
           <label className="block sm:col-span-2">
-            <span className="mb-1 block texto--2 uppercase espaciado-medio text-tinta-500">En qué</span>
+            <span className="mb-1 block texto--2 uppercase espaciado-medio text-nacar-300">En qué</span>
             <input
               type="text"
               value={form.descripcion}
@@ -82,7 +82,7 @@ export default function Gastos({ gastos, onCambio }: { gastos: Gasto[]; onCambio
           </label>
 
           <label className="block">
-            <span className="mb-1 block texto--2 uppercase espaciado-medio text-tinta-500">Monto</span>
+            <span className="mb-1 block texto--2 uppercase espaciado-medio text-nacar-300">Monto</span>
             <input
               type="number"
               inputMode="numeric"
@@ -95,7 +95,7 @@ export default function Gastos({ gastos, onCambio }: { gastos: Gasto[]; onCambio
           </label>
 
           <label className="block">
-            <span className="mb-1 block texto--2 uppercase espaciado-medio text-tinta-500">Categoría</span>
+            <span className="mb-1 block texto--2 uppercase espaciado-medio text-nacar-300">Categoría</span>
             <select
               value={form.categoria}
               onChange={(e) => setForm({ ...form, categoria: e.target.value })}
@@ -120,28 +120,28 @@ export default function Gastos({ gastos, onCambio }: { gastos: Gasto[]; onCambio
       )}
 
       {error && (
-        <p role="alert" className="mb-3 texto--1 text-tinta-800">
+        <p role="alert" className="mb-3 texto--1 text-nacar-100">
           {error}
         </p>
       )}
 
       {gastos.length === 0 ? (
-        <p className="texto--1 text-tinta-500">Sin gastos registrados este mes.</p>
+        <p className="texto--1 text-nacar-300">Sin gastos registrados este mes.</p>
       ) : (
         <ul className="divide-y divide-dorado-400/20">
           {gastos.map((g) => (
             <li key={g.id} className="flex items-center gap-3 py-2.5">
               <span className="min-w-0 flex-1">
-                <span className="block texto--1 text-tinta-900">{g.descripcion}</span>
-                <span className="texto--2 text-tinta-500">
+                <span className="block texto--1 text-crema-100">{g.descripcion}</span>
+                <span className="texto--2 text-nacar-300">
                   {String(g.fecha).slice(0, 10)} · {g.categoria}
                 </span>
               </span>
-              <span className="texto--1 tabular-nums text-tinta-900">{formatPrice(g.monto)}</span>
+              <span className="texto--1 tabular-nums text-crema-100">{formatPrice(g.monto)}</span>
               <button
                 onClick={() => quitar(g.id)}
                 aria-label={`Quitar gasto ${g.descripcion}`}
-                className="text-tinta-400 transition-colors duration-200 hover:text-tinta-900"
+                className="text-nacar-300 transition-colors duration-200 hover:text-crema-100"
               >
                 <X size={13} strokeWidth={2} aria-hidden="true" />
               </button>

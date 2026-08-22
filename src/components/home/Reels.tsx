@@ -57,7 +57,7 @@ export default function Reels() {
         <SectionHeading
           align="left"
           tono="rosa"
-        eyebrow="En movimiento"
+        eyebrow="Portafolio"
           title="Nuestros trabajos"
           subtitle="Mira cómo queda cada servicio antes de reservar."
         />
@@ -93,7 +93,7 @@ export default function Reels() {
               type="button"
               onClick={() => reproducir(reel.id)}
               aria-label={`Reproducir ${reel.titulo}`}
-              className="relative block w-full overflow-hidden rounded-[var(--radius-medio)] bg-tinta-850 transition-shadow duration-500 sombra-sutil hover:sombra-hover"
+              className="relative block w-full overflow-hidden rounded-[var(--radius-foto)] bg-tinta-850 transition-shadow duration-500 sombra-sutil hover:sombra-hover"
             >
               <video
                 ref={(el) => {

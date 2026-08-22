@@ -39,7 +39,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
 
   if (services.length === 0) {
     return (
-      <p className="linea-oro border-y py-10 text-center texto--1 text-crema-100/70">
+      <p className="linea-oro border-y py-10 text-center texto--1 text-nacar-200/80">
         No hay servicios disponibles en este momento.
       </p>
     );
@@ -93,7 +93,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
                 {service.name}
               </span>
 
-              <span className="mt-1 texto--1 text-crema-100/55">
+              <span className="mt-1 texto--1 text-nacar-300">
                 {formatDuration(service.duration_minutes)}
               </span>
             </span>

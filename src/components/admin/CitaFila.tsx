@@ -10,12 +10,18 @@ import {
   type MetodoPagoSaldo,
 } from '../../lib/api';
 
+/*
+ * Píldoras tonales: relleno del color al 15% y letra clara del mismo matiz,
+ * en vez de los verdes y ámbar planos de antes. Sobre el fondo oscuro esos
+ * rellenos claros funcionaban como manchas y competían entre sí; así el
+ * estado se distingue por matiz pero todos pesan igual.
+ */
 const ESTADOS: Record<string, { clase: string; label: string }> = {
-  confirmed: { clase: 'bg-emerald-100 text-emerald-900', label: 'Confirmada' },
-  pending: { clase: 'bg-amber-100 text-amber-900', label: 'Pendiente' },
-  cancelled: { clase: 'bg-tinta-900/8 text-tinta-600', label: 'Cancelada' },
-  completed: { clase: 'bg-dorado-200 text-tinta-900', label: 'Completada' },
-  no_show: { clase: 'bg-tinta-900 text-crema-100', label: 'No asistió' },
+  confirmed: { clase: 'bg-emerald-400/15 text-emerald-300 border-emerald-400/30', label: 'Confirmada' },
+  pending: { clase: 'bg-amber-400/15 text-amber-300 border-amber-400/30', label: 'Pendiente' },
+  cancelled: { clase: 'bg-crema-100/8 text-nacar-300 border-crema-100/15', label: 'Cancelada' },
+  completed: { clase: 'bg-dorado-400/18 text-dorado-300 border-dorado-400/35', label: 'Completada' },
+  no_show: { clase: 'bg-rosa-500/20 text-rosa-300 border-rosa-400/35', label: 'No asistió' },
 };
 
 interface Props {
@@ -83,27 +89,27 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
   return (
     <li className="px-5 py-4">
       <div className="flex items-start gap-4">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-crema-200 texto--1 font-medium tabular-nums text-tinta-900">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-tinta-850 texto--1 font-medium tabular-nums text-crema-100">
           {b.booking_time ? String(b.booking_time).slice(0, 5) : '—'}
         </span>
 
         <div className="min-w-0 flex-1">
-          <p className="texto-0 font-medium text-tinta-900">{b.client_name}</p>
-          <p className="texto--1 text-tinta-600">{b.service_name || 'Servicio'}</p>
-          <p className="texto--1 text-tinta-500">{b.client_phone}</p>
+          <p className="texto-0 font-medium text-crema-100">{b.client_name}</p>
+          <p className="texto--1 text-nacar-200/80">{b.service_name || 'Servicio'}</p>
+          <p className="texto--1 text-nacar-300">{b.client_phone}</p>
         </div>
 
         <div className="shrink-0 text-right">
-          <span className={`inline-block px-3 py-1 texto--2 uppercase espaciado-medio ${estado.clase}`}>
+          <span className={`inline-block rounded-full border px-3 py-1 texto--2 uppercase espaciado-medio ${estado.clase}`}>
             {estado.label}
           </span>
-          <p className="mt-1.5 texto--1 text-tinta-900">
+          <p className="mt-1.5 texto--1 text-crema-100">
             {formatPrice(Number(b.total_amount || 0))}
           </p>
           {debeSaldo ? (
-            <p className="texto--1 text-dorado-700">Debe {formatPrice(saldo)}</p>
+            <p className="texto--1 text-dorado-300">Debe {formatPrice(saldo)}</p>
           ) : b.remaining_paid ? (
-            <p className="texto--1 text-tinta-500">Pagado completo</p>
+            <p className="texto--1 text-nacar-300">Pagado completo</p>
           ) : null}
         </div>
       </div>
@@ -112,7 +118,7 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
       {(debeSaldo || puedeNoShow) && (
         <div className="mt-3 flex flex-wrap items-center gap-2 pl-16">
           {b.status === 'confirmed' && (
-            <button onClick={() => onRecordatorio(b)} className={`${BOTON} linea-oro text-tinta-700 hover:border-tinta-900`}>
+            <button onClick={() => onRecordatorio(b)} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
               <MessageCircle size={13} strokeWidth={1.5} aria-hidden="true" />
               Recordar
             </button>
@@ -120,15 +126,15 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
 
           {debeSaldo && (
             <>
-              <button onClick={pedirLink} disabled={!!ocupado} className={`${BOTON} linea-oro text-tinta-700 hover:border-tinta-900`}>
+              <button onClick={pedirLink} disabled={!!ocupado} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
                 {ocupado === 'link' ? <Loader2 size={13} className="animate-spin" /> : <Link2 size={13} strokeWidth={1.5} />}
                 Link de pago
               </button>
-              <button onClick={() => cobrar('cash')} disabled={!!ocupado} className={`${BOTON} linea-oro text-tinta-700 hover:border-tinta-900`}>
+              <button onClick={() => cobrar('cash')} disabled={!!ocupado} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
                 {ocupado === 'cash' ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} strokeWidth={1.5} />}
                 Cobré efectivo
               </button>
-              <button onClick={() => cobrar('transfer')} disabled={!!ocupado} className={`${BOTON} linea-oro text-tinta-700 hover:border-tinta-900`}>
+              <button onClick={() => cobrar('transfer')} disabled={!!ocupado} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
                 {ocupado === 'transfer' ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} strokeWidth={1.5} />}
                 Cobré transferencia
               </button>
@@ -136,7 +142,7 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
           )}
 
           {puedeNoShow && (
-            <button onClick={noShow} disabled={!!ocupado} className={`${BOTON} border-tinta-900/20 text-tinta-500 hover:border-tinta-900 hover:text-tinta-900`}>
+            <button onClick={noShow} disabled={!!ocupado} className={`${BOTON} border-crema-100/20 text-nacar-300 hover:border-dorado-400 hover:text-crema-100`}>
               {ocupado === 'noshow' ? <Loader2 size={13} className="animate-spin" /> : <UserX size={13} strokeWidth={1.5} />}
               No asistió
             </button>
@@ -146,16 +152,16 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
 
       {link && (
         <div className="anim-entrada linea-oro ml-16 mt-3 flex items-center gap-2 border p-3">
-          <Copy size={13} strokeWidth={1.5} className="shrink-0 text-dorado-700" aria-hidden="true" />
-          <span className="texto--1 text-tinta-600">Link copiado — envíaselo por WhatsApp:</span>
-          <a href={link} target="_blank" rel="noopener noreferrer" className="min-w-0 flex-1 truncate texto--1 text-tinta-900 underline">
+          <Copy size={13} strokeWidth={1.5} className="shrink-0 text-dorado-300" aria-hidden="true" />
+          <span className="texto--1 text-nacar-200/80">Link copiado — envíaselo por WhatsApp:</span>
+          <a href={link} target="_blank" rel="noopener noreferrer" className="min-w-0 flex-1 truncate texto--1 text-crema-100 underline">
             {link}
           </a>
         </div>
       )}
 
       {error && (
-        <p role="alert" className="ml-16 mt-2 texto--1 text-tinta-800">
+        <p role="alert" className="ml-16 mt-2 texto--1 text-nacar-100">
           {error}
         </p>
       )}

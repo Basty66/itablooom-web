@@ -21,10 +21,12 @@ interface Props {
   hora: string;
 }
 
-const INPUT =
-  'w-full border-0 border-b border-dorado-400/40 bg-transparent px-0 py-3 texto-0 text-crema-100 ' +
-  'placeholder:text-crema-100/40 transition-colors duration-300 hover:border-dorado-500 ' +
-  'focus:border-tinta-900 focus:outline-none focus:ring-0';
+/*
+ * Campo tonal con una sola línea de oro abajo (utilidad `.campo`). Antes el
+ * foco aplicaba `border-tinta-900`, o sea el color del propio fondo: enfocar
+ * hacía desaparecer la línea en vez de destacarla.
+ */
+const INPUT = 'campo w-full px-3 py-3 texto-0';
 
 function Campo({
   label,
@@ -35,12 +37,18 @@ function Campo({
   icono?: ReactNode;
   children: ReactNode;
 }) {
+  // group/campo + focus-within: la etiqueta pasa a blush cuando el campo toma
+  // el foco, que es como el sistema marca el control activo.
   return (
-    <label className="block">
-      <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">{label}</span>
-      <span className="relative block">
+    <label className="group/campo block">
+      <span className="mb-2 block texto--1 font-medium uppercase espaciado-medio text-nacar-200/85 transition-colors duration-300 group-focus-within/campo:text-blush-100">
+        {label}
+      </span>
+      {/* El desplazamiento del texto lo pone el contenedor, no la constante
+          INPUT: así los campos sin icono no arrastran una sangría vacía. */}
+      <span className={`relative block ${icono ? '[&>input]:pl-11' : ''}`}>
         {icono && (
-          <span className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-crema-100/40">
+          <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-nacar-300">
             {icono}
           </span>
         )}
@@ -152,14 +160,14 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
                   <span className="mt-2 block font-display texto-2 text-crema-100">
                     {formatPrice(monto)}
                   </span>
-                  <span className="mt-1 block texto--1 text-crema-100/55">{detalle}</span>
+                  <span className="mt-1 block texto--1 text-nacar-300">{detalle}</span>
                 </button>
               );
             })}
           </div>
 
           {datos.paymentType === 'deposit' && (
-            <p className="mt-3 texto--1 text-crema-100/55">
+            <p className="mt-3 texto--1 text-nacar-300">
               Saldo a pagar en el local: {formatPrice(service.price - service.deposit_amount)}
             </p>
           )}
@@ -167,7 +175,7 @@ export default function DetailsStep({ datos, onCambio, service, fecha, hora }: P
       )}
 
       {service && fecha && hora && (
-        <p className="flex items-start gap-2 linea-oro border-t p-0 pt-5 texto--1 text-crema-100/70">
+        <p className="flex items-start gap-2 linea-oro border-t p-0 pt-5 texto--1 text-nacar-200/80">
           <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-dorado-300" aria-hidden="true" />
           Tienes 10 minutos para completar el pago. Después el horario vuelve a quedar disponible.
         </p>

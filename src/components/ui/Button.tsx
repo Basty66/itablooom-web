@@ -10,16 +10,23 @@ type Size = 'sm' | 'md' | 'lg';
  * hover, para que el botón se despegue al tocarlo y no antes.
  */
 const VARIANTES: Record<Variant, string> = {
+  /*
+   * El rosa es el acento principal del diseño y el oro queda para detalles.
+   * El relleno es el rosa medio, no el claro: el #ffb2b9 es un color de
+   * *texto* sobre oscuro, y como fondo obligaba a poner tinta encima, que se
+   * leía como advertencia. Con el rosa medio el texto va en crema.
+   */
   primary:
-    'brillo bg-dorado-400 text-tinta-900 sombra-sutil ' +
+    'brillo bg-rosa-550 text-crema-100 sombra-sutil ' +
     'brillo-hover hover:sombra-hover hover:-translate-y-0.5',
+  /* Secundario del sistema: fantasma con canto y letra de oro. */
   secondary:
-    'brillo bg-rosa-300 text-crema-100 sombra-sutil ' +
-    'brillo-hover hover:sombra-hover hover:-translate-y-0.5',
-  outline:
-    'border border-dorado-400/40 text-crema-100 ' +
+    'border border-dorado-400/55 text-dorado-300 ' +
     'hover:border-dorado-400 hover:bg-dorado-400/10 hover:-translate-y-0.5',
-  ghost: 'text-crema-100/75 hover:text-crema-100 hover:bg-crema-100/8',
+  outline:
+    'border border-crema-100/20 text-crema-100 ' +
+    'hover:border-rosa-300/60 hover:bg-crema-100/5 hover:-translate-y-0.5',
+  ghost: 'text-nacar-200/80 hover:text-crema-100 hover:bg-crema-100/8',
   /* Máximo contraste sobre el fondo oscuro: se reserva para el CTA principal. */
   lujo:
     'brillo bg-crema-100 text-tinta-900 sombra-sutil ' +

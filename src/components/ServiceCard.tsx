@@ -38,21 +38,25 @@ export default function ServiceCard({
       />
 
       <div className="flex flex-1 flex-col pt-5">
-        <p className="texto--1 uppercase espaciado-medio text-dorado-300">
+        {/* La categoría va en píldora, no en versalitas sueltas: es el
+            distintivo del sistema para clasificar y se lee de un vistazo. */}
+        <span className="chip w-fit rounded-full px-3 py-1 texto--2 font-medium uppercase espaciado-medio">
           {etiquetaCategoria(service.category)}
-        </p>
+        </span>
 
-        <h3 className="mt-2 font-display texto-2 leading-tight text-crema-100">{service.name}</h3>
+        <h3 className="mt-3 font-display texto-2 text-crema-100">{service.name}</h3>
 
-        <p className="mt-2 line-clamp-2 texto--1 leading-relaxed text-crema-100/70">
+        <p className="mb-5 mt-2 line-clamp-2 texto-0 leading-relaxed text-nacar-200/75">
           {service.description}
         </p>
 
         {/* mt-auto alinea el pie de todas las tarjetas aunque el texto varíe. */}
-        <div className="linea-oro mt-5 flex items-baseline justify-between gap-4 border-t pt-4">
+        <div className="linea-oro mt-auto flex items-baseline justify-between gap-4 border-t pt-4">
           <div>
-            <p className="texto-0 text-crema-100">{formatPrice(service.price)}</p>
-            <p className="mt-0.5 texto--1 text-crema-100/55">
+            {/* El precio es el único dato en oro de la tarjeta: así destaca
+                sin necesidad de agrandarlo ni ponerlo en negrita. */}
+            <p className="font-display texto-2 text-dorado-400">{formatPrice(service.price)}</p>
+            <p className="mt-0.5 texto--1 uppercase espaciado-medio text-nacar-300">
               {formatDuration(service.duration_minutes)}
             </p>
           </div>

@@ -16,7 +16,7 @@ export default function Hero() {
     <section className="fondo-rosado relative lg:[@media(min-height:720px)]:min-h-[90svh] lg:flex lg:items-center">
       <Container className="relative w-full">
         <div className="grid items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-16 lg:pb-40 lg:pt-12">
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-6">
             {/* Línea corta al costado del rótulo: el gesto de apertura del
                 diseño, más elegante que una regla debajo. */}
             <div
@@ -34,11 +34,11 @@ export default function Hero() {
               <span className="texto-5">Goddess</span>
               {/* El desplazamiento a la derecha es del diseño: rompe la
                   alineación y hace que el nombre respire. */}
-              <span className="ml-8 texto-4 italic text-dorado-300 sm:ml-12">Studio</span>
+              <span className="ml-8 texto-4 italic text-rosa-300 sm:ml-12">Studio</span>
             </h1>
 
             <p
-              className="anim-entrada mt-8 max-w-md text-crema-100/70"
+              className="anim-entrada mt-8 max-w-md text-nacar-200/80"
               style={{ animationDelay: '260ms' }}
             >
               Esmaltado permanente, extensión de pestañas y diseño de cejas en {CIUDAD}.
@@ -58,7 +58,7 @@ export default function Hero() {
             </div>
 
             <p
-              className="anim-entrada mt-8 texto--1 text-crema-100/55"
+              className="anim-entrada mt-8 texto--1 text-nacar-300"
               style={{ animationDelay: '400ms' }}
             >
               Reserva con un abono · Pago seguro con Mercado Pago
@@ -66,7 +66,7 @@ export default function Hero() {
           </div>
 
           {/* La foto entra completa y contenida, no como fondo difuminado. */}
-          <div className="anim-velo lg:col-span-5" style={{ animationDelay: '300ms' }}>
+          <div className="anim-velo lg:col-span-6" style={{ animationDelay: '300ms' }}>
             <div className="relative mx-auto max-w-sm lg:max-w-none">
               <img
                 src="/images/g-hero.jpg"
@@ -75,12 +75,12 @@ export default function Hero() {
                 decoding="async"
                 width={900}
                 height={1100}
-                className="aspect-[4/3] w-full rounded-[var(--radius-medio)] object-cover sm:aspect-[4/5]"
+                className="aspect-[4/3] w-full rounded-[var(--radius-foto)] object-cover sm:aspect-[3/4] lg:aspect-[4/5]"
               />
               {/* Marco desplazado: profundidad con una línea, no con sombra. */}
               <div
                 aria-hidden="true"
-                className="linea-oro pointer-events-none absolute inset-0 h-full w-full rounded-[var(--radius-medio)] border sm:-bottom-4 sm:-right-4 sm:inset-auto"
+                className="linea-oro pointer-events-none absolute inset-0 h-full w-full rounded-[var(--radius-foto)] border sm:-bottom-4 sm:-right-4 sm:inset-auto"
               />
             </div>
           </div>

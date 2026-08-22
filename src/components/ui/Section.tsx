@@ -1,8 +1,11 @@
 import type { ReactNode } from 'react';
 
-/** Ancho de lectura consistente en todo el sitio. */
+/**
+ * Ancho de lectura consistente en todo el sitio: 1200px de caja, 20px de
+ * margen en móvil y 24px de canaleta en escritorio.
+ */
 export function Container({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-6xl px-5 sm:px-8 ${className}`}>{children}</div>;
+  return <div className={`mx-auto w-full max-w-[1200px] px-5 sm:px-6 ${className}`}>{children}</div>;
 }
 
 interface SectionProps {
@@ -40,28 +43,34 @@ export function SectionHeading({
   subtitle,
   as: Tag = 'h2',
   align = 'center',
-  tono = 'oro',
+  tono = 'rosa',
 }: HeadingProps) {
   const centrado = align === 'center';
   return (
     <div className={`max-w-2xl ${centrado ? 'mx-auto text-center' : 'text-left'}`}>
       {eyebrow && (
-        <p className={`texto--1 uppercase espaciado-amplio ${tono === 'rosa' ? 'text-rosa-300' : 'text-dorado-300'}`}>{eyebrow}</p>
+        <p
+          className={`texto--1 font-medium uppercase espaciado-amplio ${
+            tono === 'oro' ? 'text-dorado-400' : 'text-rosa-300'
+          }`}
+        >
+          {eyebrow}
+        </p>
       )}
 
       {/* Regla fina bajo el rótulo: el separador del sistema, en vez de peso. */}
       {eyebrow && (
         <div
           aria-hidden="true"
-          className={`${tono === 'rosa' ? 'linea-rosa' : 'linea-oro'} mb-7 mt-5 w-12 border-t ${centrado ? 'mx-auto' : ''}`}
+          className={`${tono === 'oro' ? 'linea-oro' : 'linea-rosa'} mb-6 mt-4 w-10 border-t ${centrado ? 'mx-auto' : ''}`}
         />
       )}
 
-      <Tag className={`${Tag === 'h1' ? 'texto-4' : 'texto-3'} leading-tight text-crema-100`}>
+      <Tag className={`${Tag === 'h1' ? 'texto-5' : 'texto-4'} text-crema-100`}>
         {title}
       </Tag>
 
-      {subtitle && <p className="mt-5 texto-0 leading-relaxed text-crema-100/70">{subtitle}</p>}
+      {subtitle && <p className="mt-4 texto-1 leading-relaxed text-nacar-200/80">{subtitle}</p>}
     </div>
   );
 }

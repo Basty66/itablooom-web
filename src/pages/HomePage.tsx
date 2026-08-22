@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { CalendarHeart } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { CalendarHeart, ArrowRight } from 'lucide-react';
 import type { Service } from '../types';
 import { getServices } from '../lib/api';
 import Hero from '../components/home/Hero';
@@ -37,8 +38,8 @@ export default function HomePage() {
 
       <Section className="bg-tinta-900">
         <SectionHeading
-          eyebrow="Servicios"
-          title="Los más pedidos"
+          eyebrow="Especialidades"
+          title="Nuestros servicios"
           subtitle="Cada servicio muestra su duración y valor. Elige y reserva al instante."
         />
 
@@ -67,11 +68,22 @@ export default function HomePage() {
               ))}
         </div>
 
+        {/* Enlace con flecha en vez de botón: el CTA fuerte de la sección son
+            las tarjetas, y otro bloque sólido acá les restaba peso. */}
         {!cargando && services.length > 0 && (
-          <div className="mt-12 text-center">
-            <Button to="/servicios" variant="outline" size="md">
-              Ver todos los tratamientos
-            </Button>
+          <div className="mt-14 text-center">
+            <Link
+              to="/servicios"
+              className="group inline-flex items-center gap-3 texto--1 font-medium uppercase espaciado-amplio text-dorado-300 transition-colors duration-300 hover:text-dorado-200"
+            >
+              Ver menú completo
+              <ArrowRight
+                size={16}
+                strokeWidth={1.5}
+                aria-hidden="true"
+                className="transition-transform duration-300 ease-out group-hover:translate-x-1"
+              />
+            </Link>
           </div>
         )}
       </Section>
@@ -86,15 +98,20 @@ export default function HomePage() {
       {/* Único bloque claro del sitio: corta el negro y hace que el cierre resalte. */}
       <section className="bg-crema-100 py-20 md:py-28">
         <Container className="relative text-center">
-          <h2 className="texto-3 leading-tight text-tinta-900">
+          <p className="texto--1 font-medium uppercase espaciado-amplio text-rosa-600">
+            Tu próxima visita
+          </p>
+          <h2 className="mt-5 texto-4 text-tinta-900">
             ¿Lista para tu próxima
             <span className="italic text-rosa-600"> sesión?</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-tinta-600">
+          <p className="mx-auto mt-4 texto-1 text-tinta-600">
             Elige tu tratamiento y asegura tu horario en menos de un minuto.
           </p>
+          {/* Acá el secundario del sistema (oro sobre oscuro) no sirve: sobre
+              el crema el oro se borra. Va el primario, que sí contrasta. */}
           <div className="mt-9 flex justify-center">
-            <Button to="/agendar" size="lg" variant="secondary">
+            <Button to="/agendar" size="lg" variant="primary">
               <CalendarHeart size={18} strokeWidth={1.5} />
               Reservar mi hora
             </Button>

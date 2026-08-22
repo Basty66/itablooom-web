@@ -33,7 +33,7 @@ export default function ScrollIndicator({ destino }: { destino: string }) {
         visible ? 'opacity-100' : 'pointer-events-none opacity-0'
       }`}
     >
-      <span className="texto--2 uppercase espaciado-amplio text-crema-100/55 transition-colors duration-200 group-hover:text-crema-100">
+      <span className="texto--2 uppercase espaciado-amplio text-nacar-300 transition-colors duration-200 group-hover:text-crema-100">
         Descubre más
       </span>
       <span className="linea-oro flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out group-hover:border-dorado-500 active:scale-90">

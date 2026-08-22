@@ -31,17 +31,20 @@ export default function Navbar() {
 
   return (
     <header
+      /* Al scrollear pasa a vidrio oscuro. Antes usaba un crema translúcido
+         heredado del tema claro: sobre el fondo negro aparecía una banda
+         blanca que partía la página en dos. */
       className={`sticky top-0 z-50 transition-all duration-300 ease-out ${
-        conScroll ? 'border-b border-crema-100/10 bg-crema-100/105 backdrop-blur-md' : 'bg-transparent'
+        conScroll ? 'vidrio border-b' : 'border-b border-transparent bg-transparent'
       }`}
     >
-      <nav aria-label="Principal" className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+      <nav aria-label="Principal" className="mx-auto w-full max-w-[1200px] px-5 sm:px-6">
         <div className="flex h-18 items-center justify-between py-4">
           <Link to="/" className="group flex items-baseline gap-2">
             <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
               Goddess
             </span>
-            <span className="texto--1 uppercase tracking-[0.25em] text-dorado-300 transition-colors duration-200 group-hover:text-dorado-500">
+            <span className="texto--1 uppercase tracking-[0.25em] text-rosa-300 transition-colors duration-200 group-hover:text-rosa-200">
               Studio
             </span>
           </Link>
@@ -54,11 +57,14 @@ export default function Navbar() {
                   key={link.path}
                   to={link.path}
                   aria-current={activo ? 'page' : undefined}
-                  className="group relative inline-block py-1 texto--1 font-medium tracking-wide text-crema-100/75 transition-colors duration-200 hover:text-crema-100"
+                  /* Versalitas espaciadas y, para la página actual, una línea
+                     de oro debajo: el sistema marca el activo con esa regla y
+                     no cambiando el color de la letra. */
+                  className="group relative inline-block py-1 texto--1 font-medium uppercase espaciado-amplio text-nacar-200/80 transition-colors duration-200 hover:text-crema-100"
                 >
                   {link.label}
                   <span
-                    className={`absolute bottom-0 left-0 h-px bg-dorado-400 transition-all duration-300 ease-out ${
+                    className={`absolute -bottom-0.5 left-0 h-px bg-dorado-400 transition-all duration-300 ease-out ${
                       activo ? 'w-full' : 'w-0 group-hover:w-full'
                     }`}
                   />
@@ -92,7 +98,7 @@ export default function Navbar() {
       >
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-crema-100/50 backdrop-blur-sm transition-opacity duration-300 ease-out ${
+          className={`absolute inset-0 bg-tinta-950/70 backdrop-blur-sm transition-opacity duration-300 ease-out ${
             abierto ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={() => setAbierto(false)}
@@ -101,7 +107,7 @@ export default function Navbar() {
 
         {/* Panel del menú */}
         <div
-          className={`linea-oro relative mx-auto mt-2 w-[calc(100%-2.5rem)] max-w-sm border superficie p-3 transition-all duration-300 ease-out ${
+          className={`tarjeta relative mx-auto mt-2 w-[calc(100%-2.5rem)] max-w-sm p-3 transition-all duration-300 ease-out ${
             abierto
               ? 'translate-y-0 opacity-100 scale-100'
               : '-translate-y-3 opacity-0 scale-95'
@@ -114,10 +120,10 @@ export default function Navbar() {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`block px-4 py-3 texto--1 uppercase espaciado-medio transition-colors duration-300 ${
+                  className={`block rounded-[var(--radius-suave)] px-4 py-3 texto--1 uppercase espaciado-amplio transition-colors duration-300 ${
                     activo
-                      ? 'bg-tinta-850 text-dorado-300'
-                      : 'text-crema-100/90 hover:bg-tinta-850'
+                      ? 'bg-tinta-900 text-dorado-300'
+                      : 'text-nacar-100/90 hover:bg-tinta-900'
                   }`}
                   style={{ transitionDelay: abierto ? `${i * 50}ms` : '0ms' }}
                 >

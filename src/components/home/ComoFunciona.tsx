@@ -28,7 +28,7 @@ export default function ComoFunciona() {
   return (
     <Section id="como-funciona" className="bg-tinta-900">
       <SectionHeading
-        eyebrow="Simple"
+        eyebrow="Proceso simple"
         title="Cómo reservar"
         subtitle="Cuatro pasos, menos de un minuto. Sin ida y vuelta por mensajes."
       />
@@ -45,18 +45,25 @@ export default function ComoFunciona() {
             className="anim-entrada group relative bg-tinta-900 py-6 sm:px-6 sm:py-8"
             style={{ animationDelay: `${i * 90}ms` }}
           >
+            {/* El número va de marca de agua detrás del contenido: ordena la
+                secuencia sin competir con el título, que es lo que se lee. */}
             <span
               aria-hidden="true"
-              className="font-display texto-3 leading-none text-dorado-300"
+              className="pointer-events-none absolute right-2 top-0 select-none font-display text-[5rem] leading-none text-crema-100/[0.06] sm:right-4 sm:text-[6.5rem]"
             >
               0{i + 1}
             </span>
 
-            <Icono size={19} strokeWidth={1.3} className="mt-4 text-dorado-300" aria-hidden="true" />
+            <Icono
+              size={22}
+              strokeWidth={1.3}
+              className="relative text-rosa-300 transition-transform duration-500 ease-out group-hover:-translate-y-0.5"
+              aria-hidden="true"
+            />
 
-            <div className="mt-4 min-w-0">
-              <h3 className="texto-1 text-crema-100">{titulo}</h3>
-              <p className="mt-2 texto--1 leading-relaxed text-crema-100/70">{texto}</p>
+            <div className="relative mt-5 min-w-0">
+              <h3 className="font-display texto-2 text-crema-100">{titulo}</h3>
+              <p className="mt-2 texto-0 leading-relaxed text-nacar-200/80">{texto}</p>
             </div>
           </li>
         ))}

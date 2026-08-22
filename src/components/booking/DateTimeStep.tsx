@@ -104,7 +104,7 @@ export default function DateTimeStep({
       <div>
         <div className="mb-5 flex items-baseline justify-between gap-3">
           <h3 className="texto--1 uppercase espaciado-medio text-crema-100">Elige el día</h3>
-          <span className="texto--1 capitalize text-crema-100/55">{rangoMeses}</span>
+          <span className="texto--1 capitalize text-nacar-300">{rangoMeses}</span>
         </div>
 
         {/* Cabecera fija de días: ancla la lectura de ambas semanas. */}
@@ -161,7 +161,7 @@ export default function DateTimeStep({
           ))}
         </div>
 
-        <p className="mt-4 texto--1 text-crema-100/55">
+        <p className="mt-4 texto--1 text-nacar-300">
           {fecha ? (
             <span className="capitalize text-crema-100/90">
               {format(fecha, "EEEE d 'de' MMMM", { locale: es })}
@@ -179,7 +179,7 @@ export default function DateTimeStep({
           ) : disponibles.length === 0 ? (
             <div className="flex flex-col items-center py-12 text-center">
               <CalendarX2 size={24} strokeWidth={1.2} className="mb-4 text-crema-100/40" aria-hidden="true" />
-              <p className="texto--1 text-crema-100/70">
+              <p className="texto--1 text-nacar-200/80">
                 No quedan horarios para este día. Prueba con otra fecha.
               </p>
             </div>

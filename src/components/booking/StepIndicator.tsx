@@ -35,7 +35,7 @@ export default function StepIndicator({ actual }: { actual: number }) {
               </span>
               <span
                 className={`text-center texto--1 leading-tight transition-colors duration-300 ${
-                  activo ? 'font-medium text-crema-100' : 'text-crema-100/55'
+                  activo ? 'font-medium text-crema-100' : 'text-nacar-300'
                 }`}
               >
                 {paso.label}

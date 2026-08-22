@@ -29,14 +29,14 @@ function StatCard({ icono: Icono, label, valor, nota, loading }: { icono: typeof
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta-850">
           <Icono size={15} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
         </span>
-        <p className="texto--1 text-crema-100/55">{label}</p>
+        <p className="texto--1 text-nacar-300">{label}</p>
       </div>
       {loading ? (
         <Skeleton className="mt-2 h-7 w-20" />
       ) : (
         <>
           <p className="mt-2 font-display texto-2 leading-tight text-crema-100">{valor}</p>
-          {nota && <p className="mt-1 texto--2 text-crema-100/55">{nota}</p>}
+          {nota && <p className="mt-1 texto--2 text-nacar-300">{nota}</p>}
         </>
       )}
     </div>
@@ -148,7 +148,7 @@ export default function AdminPage() {
           </div>
           <button
             onClick={salir}
-            className="inline-flex items-center gap-2 border border-dorado-400/40 px-4 py-2 texto--1 font-medium text-crema-100/75 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95"
+            className="inline-flex items-center gap-2 border border-dorado-400/40 px-4 py-2 texto--1 font-medium text-nacar-200/85 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95"
           >
             <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
             Salir
@@ -221,7 +221,7 @@ export default function AdminPage() {
                 const height = maxRevenue > 0 ? (Number(dia.total) / maxRevenue) * 100 : 0;
                 return (
                   <div key={dia.date} className="flex flex-1 flex-col items-center gap-1">
-                    <span className="texto--2 text-crema-100/55">{formatPrice(Number(dia.total))}</span>
+                    <span className="texto--2 text-nacar-300">{formatPrice(Number(dia.total))}</span>
                     <div
                       className="w-full bg-dorado-400 transition-all duration-500"
                       style={{ height: `${Math.max(height, 4)}%` }}
@@ -248,7 +248,7 @@ export default function AdminPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="texto-0 font-medium text-crema-100 truncate">{s.name}</p>
-                    <p className="texto--1 text-crema-100/55">{s.count} citas · {formatPrice(Number(s.revenue))}</p>
+                    <p className="texto--1 text-nacar-300">{s.count} citas · {formatPrice(Number(s.revenue))}</p>
                   </div>
                 </div>
               ))}
@@ -259,7 +259,7 @@ export default function AdminPage() {
         {/* Filtros */}
         <div className="mb-6 grid gap-3 linea-oro border superficie p-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">Fecha</span>
+            <span className="mb-1.5 block texto--1 font-medium text-nacar-200/85">Fecha</span>
             <span className="relative block">
               <CalendarDays
                 size={16}
@@ -277,7 +277,7 @@ export default function AdminPage() {
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">Buscar</span>
+            <span className="mb-1.5 block texto--1 font-medium text-nacar-200/85">Buscar</span>
             <span className="relative block">
               <Search
                 size={16}
@@ -320,7 +320,7 @@ export default function AdminPage() {
           ) : visibles.length === 0 ? (
             <div className="flex flex-col items-center px-5 py-14 text-center">
               <Inbox size={26} strokeWidth={1.3} className="mb-3 text-crema-100/40" aria-hidden="true" />
-              <p className="texto--1 text-crema-100/70">
+              <p className="texto--1 text-nacar-200/80">
                 {busqueda ? 'Ninguna cita coincide con la búsqueda.' : 'No hay citas para esta fecha.'}
               </p>
             </div>

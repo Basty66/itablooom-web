@@ -47,7 +47,7 @@ function Estado({
         <Icono size={36} strokeWidth={1.3} className="text-crema-100" aria-hidden="true" />
       </span>
       <h1 className="texto-4 text-crema-100">{titulo}</h1>
-      <p className="mx-auto mt-3 max-w-md text-crema-100/70">{texto}</p>
+      <p className="mx-auto mt-3 max-w-md text-nacar-200/80">{texto}</p>
     </div>
   );
 }
@@ -199,7 +199,7 @@ export default function ConfirmationPage() {
                   <Icono size={18} strokeWidth={1.5} className="text-crema-100/90" aria-hidden="true" />
                 </span>
                 <div className="min-w-0">
-                  <dt className="texto--1 text-crema-100/55">{label}</dt>
+                  <dt className="texto--1 text-nacar-300">{label}</dt>
                   <dd className="texto-0 font-medium capitalize text-crema-100">{valor}</dd>
                 </div>
               </div>
@@ -219,7 +219,7 @@ export default function ConfirmationPage() {
             */}
             <dl className="space-y-2.5 texto--1">
               <div className="flex justify-between gap-4">
-                <dt className="text-crema-100/70">
+                <dt className="text-nacar-200/80">
                   {saldoPendiente > 0 ? 'Abonaste' : 'Pagaste'}
                 </dt>
                 <dd className="font-medium text-crema-100">{formatPrice(pagado)}</dd>
@@ -228,25 +228,25 @@ export default function ConfirmationPage() {
               {saldoPendiente > 0 && (
                 <>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-crema-100/70">Saldo a pagar en el local</dt>
+                    <dt className="text-nacar-200/80">Saldo a pagar en el local</dt>
                     <dd className="font-medium text-crema-100">{formatPrice(saldoPendiente)}</dd>
                   </div>
                   <div className="linea-oro flex justify-between gap-4 border-t pt-2.5">
-                    <dt className="text-crema-100/55">Valor del servicio</dt>
-                    <dd className="text-crema-100/55">{formatPrice(totalServicio)}</dd>
+                    <dt className="text-nacar-300">Valor del servicio</dt>
+                    <dd className="text-nacar-300">{formatPrice(totalServicio)}</dd>
                   </div>
                 </>
               )}
 
               {saldoPendiente === 0 && (
-                <p className="text-crema-100/55">Tu servicio queda pagado por completo.</p>
+                <p className="text-nacar-300">Tu servicio queda pagado por completo.</p>
               )}
             </dl>
           </div>
 
           <div className="mt-7 linea-oro border-t p-0 pt-6">
             <h3 className="mb-3 texto-0 font-medium text-crema-100">Antes de tu cita</h3>
-            <ul className="space-y-2 texto--1 text-crema-100/70">
+            <ul className="space-y-2 texto--1 text-nacar-200/80">
               {[
                 'Llega 5 minutos antes para acomodarte con calma.',
                 'Si es depilación láser, ven con la zona rasurada y sin exposición solar reciente.',
@@ -262,7 +262,7 @@ export default function ConfirmationPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-4 flex items-center gap-2 texto--1 text-crema-100/55">
+            <p className="mt-4 flex items-center gap-2 texto--1 text-nacar-300">
               <MapPin size={14} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
               Santiago, Chile
             </p>

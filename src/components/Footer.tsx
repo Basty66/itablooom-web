@@ -71,7 +71,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-crema-100/15 text-crema-100/70 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-dorado-300 active:scale-95"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/80 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-dorado-300 active:scale-95"
                 >
                   {icono}
                 </a>
@@ -98,7 +98,7 @@ export default function Footer() {
                   {/* inline-block + py-1 lleva el área táctil al mínimo de 24px (WCAG 2.2). */}
                   <Link
                     to={item.to}
-                    className="inline-block py-1 texto--1 text-crema-100/70 transition-colors duration-200 hover:text-crema-100"
+                    className="inline-block py-1 texto--1 text-nacar-200/80 transition-colors duration-200 hover:text-crema-100"
                   >
                     {item.label}
                   </Link>

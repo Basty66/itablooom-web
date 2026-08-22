@@ -41,13 +41,10 @@ export default function SobreMi() {
           rectángulo leía como foto de catálogo.
         */}
         <div className="lg:col-span-4">
-          <figure className="mx-auto max-w-[15rem] text-center lg:mx-0 lg:max-w-none">
-            <div className="relative mx-auto aspect-square w-full max-w-[15rem]">
-              {/* Aro desplazado: el mismo recurso de línea fina, en círculo. */}
-              <div
-                aria-hidden="true"
-                className="linea-rosa absolute inset-0 scale-105 rounded-full border"
-              />
+          <figure className="mx-auto max-w-[16rem] text-center lg:mx-0 lg:max-w-none">
+            {/* Aro discontinuo de oro alrededor del retrato: enmarca sin
+                encerrar, y el aire entre línea y foto es parte del gesto. */}
+            <div className="anillo-retrato relative mx-auto aspect-square w-full max-w-[16rem] rounded-full">
               <img
                 src="/images/g-ignacia.jpg"
                 alt={`${NOMBRE}, especialista de Goddess Studio`}
@@ -60,8 +57,8 @@ export default function SobreMi() {
             </div>
 
             <figcaption className="mt-6">
-              <p className="font-display texto-2 leading-tight text-crema-100">{NOMBRE}</p>
-              <p className="mt-1.5 texto--2 uppercase espaciado-medio text-rosa-300">
+              <p className="font-display texto-3 text-crema-100">{NOMBRE}</p>
+              <p className="mt-2 texto--2 uppercase espaciado-amplio text-rosa-300">
                 Especialista en uñas, pestañas y cejas
               </p>
             </figcaption>
@@ -72,12 +69,12 @@ export default function SobreMi() {
           <SectionHeading
             align="left"
             tono="rosa"
-        eyebrow="Sobre mí"
+            eyebrow="Fundadora & artista"
             title="Mi historia"
             subtitle={`Llevo más de cinco años dedicada a las uñas, pestañas y cejas. Empecé atendiendo a amigas en mi casa y hoy tengo mi propio espacio en ${CIUDAD}, donde recibo a cada clienta con hora reservada.`}
           />
 
-          <p className="mt-4 max-w-xl texto--1 text-crema-100/70 sm:texto-0">
+          <p className="mt-4 max-w-xl texto--1 text-nacar-200/80 sm:texto-0">
             Me gusta que salgas sintiéndote regia, pero también que el resultado te dure. Por eso
             trabajo con productos de calidad y me tomo el tiempo de explicarte cómo cuidar tu
             trabajo en casa.
@@ -95,7 +92,7 @@ export default function SobreMi() {
                 </span>
                 <div>
                   <h3 className="texto-0 font-medium text-crema-100">{titulo}</h3>
-                  <p className="mt-0.5 texto--1 text-crema-100/70">{texto}</p>
+                  <p className="mt-0.5 texto--1 text-nacar-200/80">{texto}</p>
                 </div>
               </li>
             ))}

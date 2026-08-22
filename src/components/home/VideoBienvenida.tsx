@@ -35,13 +35,13 @@ export default function VideoBienvenida() {
     <Section className="fondo-rosado">
       <SectionHeading
         tono="rosa"
-        eyebrow="Conócenos"
-        title="Un minuto en el estudio"
+        eyebrow="Conoce el espacio"
+        title="Un ambiente pensado para ti"
         subtitle="Así trabajamos, así te vas a sentir."
       />
 
       <div className="mx-auto mt-12 max-w-3xl">
-        <div className="group relative overflow-hidden rounded-[var(--radius-medio)] bg-tinta-900 sombra-sutil transition-shadow duration-500 hover:sombra-hover">
+        <div className="group relative overflow-hidden rounded-[var(--radius-foto)] bg-tinta-900 sombra-sutil transition-shadow duration-500 hover:sombra-hover">
           <video
             ref={ref}
             className="aspect-video w-full object-cover"

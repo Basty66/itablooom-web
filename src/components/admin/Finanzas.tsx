@@ -40,7 +40,7 @@ export default function Finanzas({
 
   return (
     <section className="linea-oro mb-8 border-y py-5">
-      <h2 className="mb-5 texto--1 uppercase espaciado-medio text-tinta-900">
+      <h2 className="mb-5 texto--1 uppercase espaciado-medio text-crema-100">
         Cómo entró la plata este mes
       </h2>
 
@@ -50,11 +50,11 @@ export default function Finanzas({
           return (
             <div key={label}>
               <div className="flex items-baseline justify-between gap-3">
-                <dt className="texto--1 text-tinta-700">
+                <dt className="texto--1 text-nacar-200/85">
                   {label}
-                  <span className="ml-2 texto--2 text-tinta-400">{nota}</span>
+                  <span className="ml-2 texto--2 text-nacar-300">{nota}</span>
                 </dt>
-                <dd className="texto-0 tabular-nums text-tinta-900">{formatPrice(monto)}</dd>
+                <dd className="texto-0 tabular-nums text-crema-100">{formatPrice(monto)}</dd>
               </div>
               {/* Barra proporcional: se lee de un vistazo sin leer los números. */}
               <div className="mt-1.5 h-px w-full bg-dorado-400/20">
@@ -70,21 +70,21 @@ export default function Finanzas({
       </dl>
 
       <div className="linea-oro mt-5 flex items-baseline justify-between gap-3 border-t pt-4">
-        <span className="texto--1 text-tinta-600">Total cobrado</span>
-        <span className="texto-0 tabular-nums text-tinta-900">{formatPrice(total)}</span>
+        <span className="texto--1 text-nacar-200/80">Total cobrado</span>
+        <span className="texto-0 tabular-nums text-crema-100">{formatPrice(total)}</span>
       </div>
 
       {gastos > 0 && (
         <div className="mt-2 flex items-baseline justify-between gap-3">
-          <span className="texto--1 text-tinta-600">Gastos del mes</span>
-          <span className="texto-0 tabular-nums text-tinta-600">− {formatPrice(gastos)}</span>
+          <span className="texto--1 text-nacar-200/80">Gastos del mes</span>
+          <span className="texto-0 tabular-nums text-nacar-200/80">− {formatPrice(gastos)}</span>
         </div>
       )}
 
       {/* Lo que queda: el número por el que se mide si el mes cerró bien. */}
       <div className="linea-oro mt-3 flex items-baseline justify-between gap-3 border-t pt-4">
-        <span className="texto--1 uppercase espaciado-medio text-tinta-900">Te queda</span>
-        <span className="font-display texto-3 tabular-nums text-tinta-900">
+        <span className="texto--1 uppercase espaciado-medio text-crema-100">Te queda</span>
+        <span className="font-display texto-3 tabular-nums text-crema-100">
           {formatPrice(total - gastos)}
         </span>
       </div>
@@ -92,15 +92,15 @@ export default function Finanzas({
       {porCobrar > 0 && (
         <>
           <div className="mt-3 flex items-baseline justify-between gap-3">
-            <span className="texto--1 text-tinta-600">Falta cobrar en el local</span>
-            <span className="texto-0 tabular-nums text-tinta-600">{formatPrice(porCobrar)}</span>
+            <span className="texto--1 text-nacar-200/80">Falta cobrar en el local</span>
+            <span className="texto-0 tabular-nums text-nacar-200/80">{formatPrice(porCobrar)}</span>
           </div>
           <div className="linea-oro mt-3 flex items-baseline justify-between gap-3 border-t pt-3">
-            <span className="texto--1 text-tinta-500">
+            <span className="texto--1 text-nacar-300">
               Total agendado
-              <span className="ml-2 texto--2 text-tinta-400">si todas pagan completo</span>
+              <span className="ml-2 texto--2 text-nacar-300">si todas pagan completo</span>
             </span>
-            <span className="texto-0 tabular-nums text-tinta-500">
+            <span className="texto-0 tabular-nums text-nacar-300">
               {formatPrice(total + porCobrar)}
             </span>
           </div>
@@ -108,7 +108,7 @@ export default function Finanzas({
       )}
 
       {n(datos.no_shows) > 0 && (
-        <p className="mt-1.5 texto--1 text-tinta-500">
+        <p className="mt-1.5 texto--1 text-nacar-300">
           {n(datos.no_shows)} {n(datos.no_shows) === 1 ? 'clienta no asistió' : 'clientas no asistieron'} este
           mes; su abono quedó como ingreso.
         </p>

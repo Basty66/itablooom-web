@@ -112,7 +112,7 @@ export default function ReschedulePage() {
         <Container className="max-w-lg text-center">
           <AlertCircle size={40} strokeWidth={1.3} className="mx-auto mb-4 text-dorado-300" />
           <h1 className="texto-3 text-crema-100">Link inválido</h1>
-          <p className="mt-3 texto-0 text-crema-100/70">Pide a Goddess Studio el link correcto para reagendar.</p>
+          <p className="mt-3 texto-0 text-nacar-200/80">Pide a Goddess Studio el link correcto para reagendar.</p>
         </Container>
       </div>
     );
@@ -124,10 +124,10 @@ export default function ReschedulePage() {
         <Container className="max-w-lg text-center">
           <CheckCircle2 size={48} strokeWidth={1.3} className="mx-auto mb-5 text-emerald-500" />
           <h1 className="texto-3 text-crema-100">¡Reagendada!</h1>
-          <p className="mt-3 texto-0 text-crema-100/70">
+          <p className="mt-3 texto-0 text-nacar-200/80">
             Tu nueva cita es el <strong>{format(fecha!, "EEEE d 'de' MMMM", { locale: es })}</strong> a las <strong>{hora}</strong>.
           </p>
-          <p className="mt-2 texto--1 text-crema-100/55">Te esperamos. Si necesitás algo más, escribinos por WhatsApp.</p>
+          <p className="mt-2 texto--1 text-nacar-300">Te esperamos. Si necesitás algo más, escribinos por WhatsApp.</p>
         </Container>
       </div>
     );
@@ -153,16 +153,16 @@ export default function ReschedulePage() {
           <div className="rounded-3xl border border-crema-100/10 superficie p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
             <div className="space-y-4">
               <label className="block">
-                <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">ID de la reserva</span>
+                <span className="mb-1.5 block texto--1 font-medium text-nacar-200/85">ID de la reserva</span>
                 <input
                   type="text"
                   value={bookingId || ''}
                   disabled
-                  className="w-full rounded-xl border border-crema-100/15 bg-tinta-900/5 px-4 py-3 texto-0 text-crema-100/55"
+                  className="w-full rounded-xl border border-crema-100/15 bg-tinta-900/5 px-4 py-3 texto-0 text-nacar-300"
                 />
               </label>
               <label className="block">
-                <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">Tu email</span>
+                <span className="mb-1.5 block texto--1 font-medium text-nacar-200/85">Tu email</span>
                 <input
                   type="email"
                   value={email}
@@ -179,7 +179,7 @@ export default function ReschedulePage() {
                 Verificar reserva
               </button>
             </div>
-            <p className="mt-4 texto--1 text-center text-crema-100/55">
+            <p className="mt-4 texto--1 text-center text-nacar-300">
               ¿No encontrás tu reserva?{' '}
               <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-dorado-300 underline">Escribinos</a>
             </p>
@@ -188,11 +188,11 @@ export default function ReschedulePage() {
           <>
             {/* Resumen de la cita actual */}
             <div className="mb-6 rounded-2xl border border-crema-100/10 superficie px-4 py-3 text-center">
-              <p className="texto--1 text-crema-100/55">Tu cita actual</p>
+              <p className="texto--1 text-nacar-300">Tu cita actual</p>
               <p className="mt-1 texto-0 font-medium text-crema-100">
                 {booking.service_name} · {booking.booking_time ? String(booking.booking_time).slice(0, 5) : ''}
               </p>
-              <p className="texto--1 text-crema-100/55">
+              <p className="texto--1 text-nacar-300">
                 {booking.booking_date
                   ? format(new Date(String(booking.booking_date).split('T')[0] + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })
                   : ''}
@@ -226,7 +226,7 @@ export default function ReschedulePage() {
                     );
                   })}
                 </div>
-                <p className="mt-2 texto--1 text-crema-100/55">Solo podés reagendar con 24h de anticipación.</p>
+                <p className="mt-2 texto--1 text-nacar-300">Solo podés reagendar con 24h de anticipación.</p>
               </div>
 
               {/* Slots */}
@@ -237,9 +237,9 @@ export default function ReschedulePage() {
                     Elegí la hora
                   </h3>
                   {cargandoSlots ? (
-                    <div className="py-8 text-center texto--1 text-crema-100/55">Cargando horarios…</div>
+                    <div className="py-8 text-center texto--1 text-nacar-300">Cargando horarios…</div>
                   ) : slots.filter((s) => s.available).length === 0 ? (
-                    <div className="py-8 text-center texto--1 text-crema-100/55">No hay horarios disponibles para este día.</div>
+                    <div className="py-8 text-center texto--1 text-nacar-300">No hay horarios disponibles para este día.</div>
                   ) : (
                     <div className="grid grid-cols-3 gap-1.5">
                       {slots.filter((s) => s.available).map((slot) => (

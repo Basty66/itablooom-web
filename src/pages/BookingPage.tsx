@@ -155,11 +155,11 @@ export default function BookingPage() {
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
               <span className="texto--1 font-medium text-crema-100">{service.name}</span>
               <span className="hidden text-tinta-300 sm:inline">·</span>
-              <span className="texto--1 text-crema-100/55">{formatDuration(service.duration_minutes)}</span>
+              <span className="texto--1 text-nacar-300">{formatDuration(service.duration_minutes)}</span>
               {fecha && (
                 <>
                   <span className="hidden text-tinta-300 sm:inline">·</span>
-                  <span className="flex items-center gap-1 texto--1 text-crema-100/55">
+                  <span className="flex items-center gap-1 texto--1 text-nacar-300">
                     <CalendarDays size={12} strokeWidth={1.5} />
                     {format(fecha, "EEE d MMM", { locale: es })}
                   </span>
@@ -168,7 +168,7 @@ export default function BookingPage() {
               {hora && (
                 <>
                   <span className="hidden text-tinta-300 sm:inline">·</span>
-                  <span className="flex items-center gap-1 texto--1 text-crema-100/55">
+                  <span className="flex items-center gap-1 texto--1 text-nacar-300">
                     <Clock3 size={12} strokeWidth={1.5} />
                     {hora}
                   </span>
@@ -237,7 +237,7 @@ export default function BookingPage() {
               <button
                 type="button"
                 onClick={volver}
-                className="inline-flex items-center gap-1.5 rounded-full border border-crema-100/20 px-5 py-3 texto--1 font-medium text-crema-100/75 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-crema-100 active:scale-95"
+                className="inline-flex items-center gap-1.5 rounded-full border border-crema-100/20 px-5 py-3 texto--1 font-medium text-nacar-200/85 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-crema-100 active:scale-95"
               >
                 <ChevronLeft size={16} strokeWidth={1.5} aria-hidden="true" />
                 Atrás

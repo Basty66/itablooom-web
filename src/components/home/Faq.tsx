@@ -38,7 +38,7 @@ export default function Faq() {
     <Section id="faq" className="bg-tinta-900">
       <SectionHeading
         eyebrow="Dudas frecuentes"
-        title="Antes de reservar"
+        title="Preguntas y respuestas"
         subtitle="Lo que más nos preguntan, respondido de una vez."
       />
 
@@ -75,7 +75,7 @@ export default function Faq() {
                 }`}
               >
                 <div className="overflow-hidden">
-                  <p className="max-w-2xl pb-6 pr-10 texto--1 text-crema-100/70">{respuesta}</p>
+                  <p className="max-w-2xl pb-6 pr-10 texto--1 text-nacar-200/80">{respuesta}</p>
                 </div>
               </div>
             </div>

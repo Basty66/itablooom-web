@@ -49,16 +49,16 @@ export default function Bloqueos({ fecha }: { fecha: string }) {
   }
 
   const INPUT =
-    'border-0 border-b border-dorado-400/40 bg-transparent py-2 texto--1 text-tinta-900 ' +
-    'transition-colors duration-300 focus:border-tinta-900 focus:outline-none';
+    'border-0 border-b border-dorado-400/40 bg-transparent py-2 texto--1 text-crema-100 ' +
+    'transition-colors duration-300 focus:border-dorado-400 focus:outline-none';
 
   return (
     <section className="linea-oro mb-8 border-y py-5">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="texto--1 uppercase espaciado-medio text-tinta-900">Horarios bloqueados</h2>
+        <h2 className="texto--1 uppercase espaciado-medio text-crema-100">Horarios bloqueados</h2>
         <button
           onClick={() => setAbierto(!abierto)}
-          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-dorado-700 transition-colors duration-300 hover:text-tinta-900"
+          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-dorado-300 transition-colors duration-300 hover:text-crema-100"
         >
           {abierto ? <X size={14} strokeWidth={1.5} /> : <Plus size={14} strokeWidth={1.5} />}
           {abierto ? 'Cancelar' : 'Bloquear'}
@@ -68,7 +68,7 @@ export default function Bloqueos({ fecha }: { fecha: string }) {
       {abierto && (
         <div className="anim-entrada mb-5 grid gap-4 sm:grid-cols-4 sm:items-end">
           <label className="block">
-            <span className="mb-1 block texto--2 uppercase espaciado-medio text-tinta-500">Desde</span>
+            <span className="mb-1 block texto--2 uppercase espaciado-medio text-nacar-300">Desde</span>
             <input
               type="time"
               value={form.timeStart}
@@ -77,7 +77,7 @@ export default function Bloqueos({ fecha }: { fecha: string }) {
             />
           </label>
           <label className="block">
-            <span className="mb-1 block texto--2 uppercase espaciado-medio text-tinta-500">Hasta</span>
+            <span className="mb-1 block texto--2 uppercase espaciado-medio text-nacar-300">Hasta</span>
             <input
               type="time"
               value={form.timeEnd}
@@ -86,13 +86,13 @@ export default function Bloqueos({ fecha }: { fecha: string }) {
             />
           </label>
           <label className="block sm:col-span-1">
-            <span className="mb-1 block texto--2 uppercase espaciado-medio text-tinta-500">Motivo</span>
+            <span className="mb-1 block texto--2 uppercase espaciado-medio text-nacar-300">Motivo</span>
             <input
               type="text"
               value={form.reason}
               onChange={(e) => setForm({ ...form, reason: e.target.value })}
               placeholder="Almuerzo, trámite…"
-              className={`${INPUT} w-full placeholder:text-tinta-400`}
+              className={`${INPUT} w-full placeholder:text-nacar-300`}
             />
           </label>
           <button
@@ -106,16 +106,16 @@ export default function Bloqueos({ fecha }: { fecha: string }) {
       )}
 
       {error && (
-        <p role="alert" className="mb-4 texto--1 text-tinta-800">
+        <p role="alert" className="mb-4 texto--1 text-nacar-100">
           {error}
         </p>
       )}
 
       {cargando ? (
-        <p className="texto--1 text-tinta-400">Cargando…</p>
+        <p className="texto--1 text-nacar-300">Cargando…</p>
       ) : bloqueos.length === 0 ? (
-        <p className="flex items-center gap-2 texto--1 text-tinta-500">
-          <CalendarOff size={14} strokeWidth={1.5} className="text-tinta-400" aria-hidden="true" />
+        <p className="flex items-center gap-2 texto--1 text-nacar-300">
+          <CalendarOff size={14} strokeWidth={1.5} className="text-nacar-300" aria-hidden="true" />
           Sin bloqueos para este día.
         </p>
       ) : (
@@ -123,16 +123,16 @@ export default function Bloqueos({ fecha }: { fecha: string }) {
           {bloqueos.map((b) => (
             <li
               key={b.id}
-              className="linea-oro flex items-center gap-3 border px-3 py-1.5 texto--1 text-tinta-800"
+              className="linea-oro flex items-center gap-3 border px-3 py-1.5 texto--1 text-nacar-100"
             >
               <span className="tabular-nums">
                 {String(b.time_start).slice(0, 5)} — {String(b.time_end).slice(0, 5)}
               </span>
-              {b.reason && <span className="text-tinta-500">{b.reason}</span>}
+              {b.reason && <span className="text-nacar-300">{b.reason}</span>}
               <button
                 onClick={() => quitar(b.id)}
                 aria-label={`Quitar bloqueo de ${String(b.time_start).slice(0, 5)}`}
-                className="text-tinta-400 transition-colors duration-200 hover:text-tinta-900"
+                className="text-nacar-300 transition-colors duration-200 hover:text-crema-100"
               >
                 <X size={13} strokeWidth={2} aria-hidden="true" />
               </button>

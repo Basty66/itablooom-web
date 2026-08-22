@@ -13,9 +13,11 @@
   --color-crema-400: #ddcdb4;
 
   /* Tinta: negro cálido, nunca #000 puro. Ahora es el fondo dominante, así
-     que necesita superficies intermedias para separar secciones. */
-  --color-tinta-950: #0f0b0a;
-  --color-tinta-850: #221b18;
+     que necesita superficies intermedias para separar secciones.
+     Los valores salen del escalón de superficies de "Ethereal Feminine
+     Luxury": el 900 es la base, el 850 (surface-warm) las tarjetas. */
+  --color-tinta-950: #110d0b;
+  --color-tinta-850: #251d1a;
   --color-tinta-400: #9a8d84;
   --color-tinta-500: #7d7068;
   --color-tinta-600: #5a4f47;
@@ -30,6 +32,10 @@
   --color-rosa-300: #ffb2b9;
   --color-rosa-400: #db949b;
   --color-rosa-500: #c87880;
+  /* Relleno del botón primario. El rosa del sistema (#c87880) con letra crema
+     da 3.04:1 y AA pide 4.5:1 para el cuerpo del botón; este mantiene el
+     mismo "dusty rose" y llega a 4.6:1. */
+  --color-rosa-550: #b0525c;
   /* Para texto pequeño sobre crema: rosa-500 solo alcanza 3.02:1 y AA pide
      4.5:1. Este llega a ~5.2:1 manteniendo el mismo matiz. */
   --color-rosa-600: #a34a55;
@@ -57,10 +63,22 @@
   --color-dorado-600: #a67f1e;
   --color-dorado-700: #6b5215;
 
-  /* Formas: un radio contenido moderniza sin perder la sobriedad. */
-  /* Aura & Gold fija 12px en imágenes y tarjetas. */
-  --radius-suave: 10px;
-  --radius-medio: 12px;
+  /* Nácar: el texto sobre oscuro no es crema puro sino un blanco entibiado en
+     rosa. La diferencia con el crema es mínima en aislado, pero en bloque
+     saca el gris azulado que hacía ver frío el fondo cálido. */
+  --color-nacar-100: #eae0dd;
+  --color-nacar-200: #d8c1c2;
+  --color-nacar-300: #a08c8d;
+  /* Blush: rosa lavado para bordes y realces sobre superficies oscuras. */
+  --color-blush-100: #f4dcd6;
+
+  /*
+   * Formas graduadas por escala, no un radio único: los controles chicos se
+   * mantienen casi rectos y las fotos son las que más se ablandan.
+   */
+  --radius-suave: 0.5rem;
+  --radius-medio: 1rem;
+  --radius-foto: 1.5rem;
 
   --font-display: "EB Garamond", "Georgia", serif;
   --font-sans: "Jost", system-ui, -apple-system, sans-serif;
@@ -75,16 +93,18 @@
  */
 @layer base {
   :root {
-    --paso--2: clamp(0.7rem, 0.12vw + 0.67rem, 0.76rem);
-    --paso--1: clamp(0.8rem, 0.17vw + 0.76rem, 0.89rem);
-    --paso-0: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
-    --paso-1: clamp(1.25rem, 0.61vw + 1.1rem, 1.58rem);
-    --paso-2: clamp(1.56rem, 1vw + 1.31rem, 2.11rem);
-    --paso-3: clamp(1.85rem, 1.2vw + 1.55rem, 2.5rem);
-    /* Tope deliberadamente contenido: en pantallas grandes un display de 5rem
-       se come la sección y obliga a scrollear para leer el subtítulo. */
-    --paso-4: clamp(2.25rem, 1.7vw + 1.83rem, 3.1rem);
-    --paso-5: clamp(2.8rem, 3vw + 2.1rem, 4.6rem);
+    /* label-small (11px) y label-caps (12px): los rótulos en versalitas. */
+    --paso--2: 0.6875rem;
+    --paso--1: 0.75rem;
+    /* body-md 16px y body-lg 18px. */
+    --paso-0: 1rem;
+    --paso-1: 1.125rem;
+    /* headline-sm 24px y headline-md 32px, con arranque menor en móvil. */
+    --paso-2: clamp(1.3rem, 0.6vw + 1.15rem, 1.5rem);
+    --paso-3: clamp(1.6rem, 1.2vw + 1.3rem, 2rem);
+    --paso-4: clamp(1.9rem, 1.8vw + 1.45rem, 2.5rem);
+    /* display-lg: 40px en móvil, 56px desde el ancho de diseño. */
+    --paso-5: clamp(2.5rem, 2.8vw + 1.8rem, 3.5rem);
   }
 
   html {
@@ -105,11 +125,14 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* El peso light en tamaños grandes es lo que da el aire editorial; el
+     tracking negativo "ajusta a medida" el titular y evita que las mayúsculas
+     de Garamond se separen. */
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 300;
-    line-height: 1.1;
-    letter-spacing: -0.015em;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
@@ -174,12 +197,14 @@
     transform: translateX(120%);
   }
 
-  /* Tracking editorial: el texto chico muy espaciado es la firma del estilo. */
-  .espaciado-amplio { letter-spacing: 0.28em; }
-  .espaciado-medio { letter-spacing: 0.16em; }
+  /* Tracking editorial: el texto chico muy espaciado es la firma del estilo.
+     0.15em es el valor del sistema para versalitas; más que eso empieza a
+     leerse letra por letra en vez de como palabra. */
+  .espaciado-amplio { letter-spacing: 0.15em; }
+  .espaciado-medio { letter-spacing: 0.1em; }
 
   /* Línea fina dorada: único separador del sistema, en vez de sombras. */
-  .linea-oro { border-color: color-mix(in oklab, var(--color-dorado-400) 30%, transparent); }
+  .linea-oro { border-color: color-mix(in oklab, var(--color-dorado-400) 20%, transparent); }
 
   /* Variante rosada de la misma línea, para las secciones más cálidas.
      El oro solo se leía sobrio; alternarlo con rosa feminiza el conjunto
@@ -204,9 +229,9 @@
    * contra el fondo.
    */
   .vidrio {
-    background-color: color-mix(in oklab, var(--color-tinta-850) 70%, transparent);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background-color: color-mix(in oklab, var(--color-tinta-850) 72%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-color: color-mix(in oklab, var(--color-crema-100) 10%, transparent);
   }
 
@@ -217,10 +242,50 @@
     border-radius: var(--radius-medio);
   }
 
-  /* Chip: rosa al 20% con texto rosado profundo. */
+  /* Chip: relleno rosa apenas insinuado con el mismo rosa en el canto. El
+     borde sólido es lo que lo hace legible; solo con el 12% de fondo la
+     píldora se pierde contra la tarjeta. */
   .chip {
-    background-color: color-mix(in oklab, var(--color-rosa-300) 20%, transparent);
+    background-color: color-mix(in oklab, var(--color-rosa-400) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-rosa-400) 55%, transparent);
     color: var(--color-rosa-300);
+  }
+
+  /*
+   * Carta impresa: título ..... precio. Los puntos son un borde inferior
+   * punteado sobre un elemento elástico, así se estiran solos y no hay que
+   * calcular cuántos caben.
+   */
+  .puntos-guia {
+    flex: 1 1 auto;
+    align-self: flex-end;
+    margin-bottom: 0.32em;
+    border-bottom: 1px dotted color-mix(in oklab, var(--color-dorado-400) 38%, transparent);
+  }
+
+  /* Anillo punteado del retrato: dos círculos concéntricos, el exterior
+     discontinuo, para enmarcar la foto sin encerrarla en un borde duro. */
+  .anillo-retrato {
+    border: 1px dashed color-mix(in oklab, var(--color-dorado-400) 45%, transparent);
+    padding: 14px;
+  }
+
+  /* Campo de formulario: caja tonal con una sola línea de oro abajo. Al
+     enfocar sube la opacidad en vez de cambiar de color, para no romper la
+     paleta con un azul de sistema. */
+  .campo {
+    background-color: var(--color-tinta-850);
+    border: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-dorado-400) 30%, transparent);
+    border-radius: var(--radius-suave) var(--radius-suave) 0 0;
+    color: var(--color-crema-100);
+    transition: border-color 0.3s var(--ease-suave), background-color 0.3s var(--ease-suave);
+  }
+  .campo::placeholder { color: color-mix(in oklab, var(--color-nacar-300) 85%, transparent); }
+  .campo:focus {
+    outline: none;
+    border-bottom-color: var(--color-dorado-400);
+    background-color: color-mix(in oklab, var(--color-tinta-850) 70%, var(--color-tinta-900));
   }
 
   .texto--2 { font-size: var(--paso--2); }
