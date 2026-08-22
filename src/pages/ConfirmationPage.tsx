@@ -11,7 +11,7 @@ import { getBookingById, checkPaymentStatus } from '../lib/api';
 import { formatPrice } from '../lib/format';
 import Button from '../components/ui/Button';
 import { Container } from '../components/ui/Section';
-import { linkWhatsApp } from '../lib/contacto';
+import { linkWhatsApp, CIUDAD } from '../lib/contacto';
 
 const WHATSAPP = linkWhatsApp('Hola! Acabo de agendar una cita');
 
@@ -40,11 +40,13 @@ function Estado({
   return (
     <div className="text-center">
       <span
-        className={`anim-velo mx-auto mb-6 flex h-16 w-16 items-center justify-center border border-dorado-400/50 ${
-          tono === 'exito' ? 'superficie' : 'bg-tinta-850'
+        className={`anim-velo mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border ${
+          tono === 'exito'
+            ? 'border-rosa-300/40 bg-rosa-300/10 text-rosa-300'
+            : 'border-dorado-400/40 bg-tinta-850 text-dorado-300'
         }`}
       >
-        <Icono size={36} strokeWidth={1.3} className="text-crema-100" aria-hidden="true" />
+        <Icono size={32} strokeWidth={1.3} aria-hidden="true" />
       </span>
       <h1 className="texto-4 text-crema-100">{titulo}</h1>
       <p className="mx-auto mt-3 max-w-md text-nacar-200/80">{texto}</p>
@@ -68,7 +70,7 @@ function Acciones({ bookingId, email }: { bookingId?: string; email?: string }) 
       </Button>
       <Button href={WHATSAPP} variant="secondary" size="md">
         <MessageCircle size={17} strokeWidth={1.5} />
-        Escribinos por WhatsApp
+        Escríbenos por WhatsApp
       </Button>
     </div>
   );
@@ -171,7 +173,7 @@ export default function ConfirmationPage() {
           texto="Ya reservamos tu horario. Te esperamos el día de tu sesión."
         />
 
-        <div className="mt-10 linea-oro border superficie p-6 sm:p-8">
+        <div className="mt-10 rounded-2xl border border-crema-100/5 bg-tinta-880 p-6 sm:p-8">
           <h2 className="texto-2 mb-6 text-crema-100">Detalle de tu reserva</h2>
 
           <dl className="space-y-5">
@@ -195,7 +197,7 @@ export default function ConfirmationPage() {
               },
             ].map(({ icono: Icono, label, valor }) => (
               <div key={label} className="flex items-start gap-4">
-                <span className="linea-oro flex h-11 w-11 shrink-0 items-center justify-center border">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-dorado-400/20 bg-tinta-860">
                   <Icono size={18} strokeWidth={1.5} className="text-crema-100/90" aria-hidden="true" />
                 </span>
                 <div className="min-w-0">
@@ -247,11 +249,16 @@ export default function ConfirmationPage() {
           <div className="mt-7 linea-oro border-t p-0 pt-6">
             <h3 className="mb-3 texto-0 font-medium text-crema-100">Antes de tu cita</h3>
             <ul className="space-y-2 texto--1 text-nacar-200/80">
+              {/*
+                Estas indicaciones eran del rubro anterior: hablaban de
+                depilación láser y de tratamientos faciales, que el estudio no
+                ofrece. Ahora corresponden a uñas, pestañas y cejas.
+              */}
               {[
                 'Llega 5 minutos antes para acomodarte con calma.',
-                'Si es depilación láser, ven con la zona rasurada y sin exposición solar reciente.',
-                'Para tratamientos faciales, preferentemente sin maquillaje.',
-                'Si necesitás reagendar, hacelo con 24h de anticipación desde el link de tu confirmación.',
+                'Si vienes por pestañas, llega sin maquillaje en los ojos y sin máscara de pestañas.',
+                'Si traes esmaltado o uñas de otro lugar, avísanos al reservar: el retiro toma tiempo extra.',
+                'Si necesitas reagendar, hazlo con 24 horas de anticipación desde el link de tu confirmación.',
               ].map((linea) => (
                 <li key={linea} className="flex items-start gap-2.5">
                   <span
@@ -264,7 +271,7 @@ export default function ConfirmationPage() {
             </ul>
             <p className="mt-4 flex items-center gap-2 texto--1 text-nacar-300">
               <MapPin size={14} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
-              Santiago, Chile
+              {CIUDAD}, Chile
             </p>
           </div>
         </div>

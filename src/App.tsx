@@ -25,7 +25,7 @@ function NotFound() {
       <p className="mt-3 texto-1 text-nacar-200/80">Esta página no existe</p>
       <Link
         to="/"
-        className="mt-8 inline-flex items-center bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95"
+        className="brillo brillo-hover mt-8 inline-flex items-center rounded-[var(--radius-suave)] bg-rosa-300 px-7 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 hover:bg-rosa-200 active:scale-[0.98]"
       >
         Volver al inicio
       </Link>
@@ -45,10 +45,10 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
       return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
           <p className="texto-3 font-display text-crema-100">Algo salió mal</p>
-          <p className="mt-3 texto-0 text-nacar-200/80">Intentá recargar la página.</p>
+          <p className="mt-3 texto-0 text-nacar-200/80">Intenta recargar la página.</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-8 inline-flex items-center bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95"
+            className="brillo brillo-hover mt-8 inline-flex items-center rounded-[var(--radius-suave)] bg-rosa-300 px-7 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 hover:bg-rosa-200 active:scale-[0.98]"
           >
             Recargar
           </button>

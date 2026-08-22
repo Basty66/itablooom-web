@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   CreditCard, Loader2, AlertCircle, Sparkles, Clock3, UserRound, ChevronRight, ChevronUp,
@@ -103,8 +103,6 @@ export default function BookingPage() {
     : !listo.datos ? { texto: 'Completa tus datos', ir: 'datos' }
     : null;
 
-  const formRef = useRef<HTMLFormElement>(null);
-
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
@@ -160,7 +158,7 @@ export default function BookingPage() {
           </h1>
         </header>
 
-        <form ref={formRef} onSubmit={onSubmit}>
+        <form onSubmit={onSubmit}>
           <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
             {/* Columna del flujo */}
             <div className="min-w-0 flex-1 space-y-4">

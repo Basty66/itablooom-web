@@ -127,7 +127,7 @@ export default function ReschedulePage() {
           <p className="mt-3 texto-0 text-nacar-200/80">
             Tu nueva cita es el <strong>{format(fecha!, "EEEE d 'de' MMMM", { locale: es })}</strong> a las <strong>{hora}</strong>.
           </p>
-          <p className="mt-2 texto--1 text-nacar-300">Te esperamos. Si necesitás algo más, escribinos por WhatsApp.</p>
+          <p className="mt-2 texto--1 text-nacar-300">Te esperamos. Si necesitas algo más, escríbenos por WhatsApp.</p>
         </Container>
       </div>
     );
@@ -144,13 +144,13 @@ export default function ReschedulePage() {
         </header>
 
         {error && (
-          <div className="mb-6 linea-oro border px-4 py-3 texto--1 text-crema-100/90">
+          <div className="mb-6 rounded-[var(--radius-suave)] border border-dorado-400/30 bg-tinta-850 px-4 py-3 texto--1 text-crema-100/90">
             {error}
           </div>
         )}
 
         {!verificado ? (
-          <div className="rounded-3xl border border-crema-100/10 superficie p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
+          <div className="rounded-2xl border border-crema-100/5 bg-tinta-880 p-5 sm:p-7">
             <div className="space-y-4">
               <label className="block">
                 <span className="mb-1.5 block texto--1 font-medium text-nacar-200/85">ID de la reserva</span>
@@ -168,26 +168,26 @@ export default function ReschedulePage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="maria@ejemplo.cl"
-                  className="w-full rounded-xl border border-crema-100/15 superficie px-4 py-3 texto-0 text-crema-100 placeholder:text-nacar-300 transition-colors focus:border-dorado-500 focus:outline-none"
+                  className="campo w-full px-4 py-3 texto-0"
                 />
               </label>
               <button
                 onClick={verificar}
                 disabled={!email}
-                className="w-full bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95 disabled:opacity-40"
+                className="brillo brillo-hover w-full rounded-[var(--radius-suave)] bg-rosa-300 px-7 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 hover:bg-rosa-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
               >
                 Verificar reserva
               </button>
             </div>
             <p className="mt-4 texto--1 text-center text-nacar-300">
               ¿No encontrás tu reserva?{' '}
-              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-dorado-300 underline">Escribinos</a>
+              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-dorado-300 underline">Escríbenos</a>
             </p>
           </div>
         ) : (
           <>
             {/* Resumen de la cita actual */}
-            <div className="mb-6 rounded-2xl border border-crema-100/10 superficie px-4 py-3 text-center">
+            <div className="mb-6 rounded-2xl border border-crema-100/5 bg-tinta-880 px-4 py-3 text-center">
               <p className="texto--1 text-nacar-300">Tu cita actual</p>
               <p className="mt-1 texto-0 font-medium text-crema-100">
                 {booking.service_name} · {booking.booking_time ? String(booking.booking_time).slice(0, 5) : ''}
@@ -199,7 +199,7 @@ export default function ReschedulePage() {
               </p>
             </div>
 
-            <div className="rounded-3xl border border-crema-100/10 superficie p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
+            <div className="rounded-2xl border border-crema-100/5 bg-tinta-880 p-5 sm:p-7">
               {/* Calendario */}
               <div className="mb-6">
                 <h3 className="mb-3 flex items-center gap-2 texto-1 text-crema-100">
@@ -226,7 +226,7 @@ export default function ReschedulePage() {
                     );
                   })}
                 </div>
-                <p className="mt-2 texto--1 text-nacar-300">Solo podés reagendar con 24h de anticipación.</p>
+                <p className="mt-2 texto--1 text-nacar-300">Solo puedes reagendar con 24 horas de anticipación.</p>
               </div>
 
               {/* Slots */}
@@ -267,7 +267,7 @@ export default function ReschedulePage() {
                   <button
                     onClick={reagendar}
                     disabled={enviando}
-                    className="w-full bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95 disabled:opacity-40"
+                    className="brillo brillo-hover w-full rounded-[var(--radius-suave)] bg-rosa-300 px-7 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 hover:bg-rosa-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
                   >
                     {enviando ? (
                       <span className="inline-flex items-center gap-2">
