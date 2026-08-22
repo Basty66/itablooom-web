@@ -74,7 +74,7 @@ export default function HomePage() {
           <div className="mt-14 text-center">
             <Link
               to="/servicios"
-              className="group inline-flex items-center gap-3 texto--1 font-medium uppercase espaciado-amplio text-dorado-300 transition-colors duration-300 hover:text-dorado-200"
+              className="group -my-3 inline-flex items-center gap-3 py-3 texto--1 font-medium uppercase espaciado-amplio text-dorado-300 transition-colors duration-300 hover:text-dorado-200"
             >
               Ver menú completo
               <ArrowRight

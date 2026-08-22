@@ -66,7 +66,9 @@ export default function Reels() {
           href={INSTAGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 texto--1 uppercase espaciado-medio text-rosa-300 transition-colors duration-300 hover:text-crema-100"
+          /* py-3 con -my-3 lleva el alto táctil a 44px sin correr el enlace
+             de su sitio: el texto queda donde estaba y el dedo acierta. */
+          className="group -my-3 inline-flex items-center gap-2 py-3 texto--1 uppercase espaciado-medio text-rosa-300 transition-colors duration-300 hover:text-crema-100"
         >
           @{INSTAGRAM_USUARIO}
           <ArrowRight

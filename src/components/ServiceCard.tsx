@@ -64,7 +64,7 @@ export default function ServiceCard({
           <Link
             to={`/agendar?service=${service.id}`}
             aria-label={`Reservar ${service.name}`}
-            className="relative texto--1 uppercase espaciado-medio text-crema-100 transition-colors duration-300 hover:text-dorado-300"
+            className="relative -my-3 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-colors duration-300 hover:text-dorado-300"
           >
             Reservar
             {/* Subrayado que se extiende al pasar el cursor. */}
