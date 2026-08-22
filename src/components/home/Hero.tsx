@@ -26,7 +26,7 @@ export default function Hero() {
      */
     <section className="fondo-rosado relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-center [@media(max-height:520px)]:min-h-0">
       <Container className="relative w-full">
-        <div className="grid items-center gap-8 py-10 sm:gap-10 md:py-14 lg:grid-cols-12 lg:gap-16 lg:py-12 [@media(min-width:700px)_and_(max-height:520px)]:grid-cols-12 [@media(min-width:700px)_and_(max-height:520px)]:gap-10 [@media(min-width:700px)_and_(max-height:520px)]:py-6">
+        <div className="grid items-center gap-8 py-10 sm:gap-10 md:py-14 lg:grid-cols-12 lg:gap-16 lg:py-12 [@media(min-width:700px)_and_(max-height:520px)]:grid-cols-12 [@media(min-width:700px)_and_(max-height:520px)]:gap-10 [@media(min-width:700px)_and_(max-height:520px)]:py-4">
           <div className="lg:col-span-6 [@media(min-width:700px)_and_(max-height:520px)]:col-span-6">
             {/* Línea corta al costado del rótulo: el gesto de apertura del
                 diseño, más elegante que una regla debajo. */}
@@ -42,14 +42,14 @@ export default function Hero() {
               className="anim-entrada mt-5 flex flex-col gap-1 leading-[0.9] text-crema-100 sm:mt-8 [@media(min-width:700px)_and_(max-height:520px)]:mt-4"
               style={{ animationDelay: '180ms' }}
             >
-              <span className="texto-5 [@media(min-width:700px)_and_(max-height:520px)]:text-[2.6rem]">Goddess</span>
+              <span className="texto-5 [@media(min-width:700px)_and_(max-height:520px)]:text-[2.2rem]">Goddess</span>
               {/* El desplazamiento a la derecha es del diseño: rompe la
                   alineación y hace que el nombre respire. */}
-              <span className="ml-8 texto-4 italic text-rosa-300 sm:ml-12 [@media(min-width:700px)_and_(max-height:520px)]:text-[2rem]">Studio</span>
+              <span className="ml-8 texto-4 italic text-rosa-300 sm:ml-12 [@media(min-width:700px)_and_(max-height:520px)]:text-[1.7rem]">Studio</span>
             </h1>
 
             <p
-              className="anim-entrada mt-5 max-w-md text-nacar-200/80 sm:mt-7 [@media(min-width:700px)_and_(max-height:520px)]:mt-3"
+              className="anim-entrada mt-5 max-w-md text-nacar-200/80 sm:mt-7 [@media(min-width:700px)_and_(max-height:520px)]:hidden"
               style={{ animationDelay: '260ms' }}
             >
               Esmaltado permanente, extensión de pestañas y diseño de cejas en {CIUDAD}.
@@ -57,7 +57,7 @@ export default function Hero() {
             </p>
 
             <div
-              className="anim-entrada mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row [@media(min-width:700px)_and_(max-height:520px)]:mt-5"
+              className="anim-entrada mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row [@media(min-width:700px)_and_(max-height:520px)]:mt-4"
               style={{ animationDelay: '340ms' }}
             >
               <Button to="/agendar" size="lg" variant="primary">
