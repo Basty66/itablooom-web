@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, Link } from 'react
 import { Component, useEffect, type ReactNode } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import BotonWhatsApp from './components/ui/BotonWhatsApp';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import BookingPage from './pages/BookingPage';
@@ -87,6 +88,8 @@ export default function App() {
           </main>
 
           <Footer />
+
+          <BotonWhatsApp />
         </div>
       </ErrorBoundary>
     </Router>

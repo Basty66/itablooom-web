@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import Revelar from './Revelar';
 
 /**
  * Ancho de lectura consistente en todo el sitio: 1200px de caja, 20px de
@@ -21,7 +22,11 @@ export function Section({ children, className = '', id, espaciado = 'normal' }: 
   const alto = espaciado === 'amplio' ? 'ritmo md:py-32' : 'ritmo';
   return (
     <section id={id} className={`${alto} ${className}`}>
-      <Container>{children}</Container>
+      {/* Cada sección se revela al entrar en pantalla, en vez de animarse
+          toda junta al cargar la página. */}
+      <Container>
+        <Revelar>{children}</Revelar>
+      </Container>
     </section>
   );
 }
