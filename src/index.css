@@ -154,10 +154,16 @@
   }
 
   /* Un solo anillo de foco para todo el sitio, visible sobre crema y sobre tinta. */
+  /*
+   * Anillo de foco único para todo el sitio. Va en el oro claro y a 2px: el
+   * dorado-500 a 1px se perdía sobre el fondo oscuro, justo para quien
+   * navega con teclado y no tiene otra pista de dónde está parado.
+   * `border-radius: 0` se quita para que el anillo siga la forma del control
+   * en vez de recuadrar en ángulo recto un botón redondeado.
+   */
   :focus-visible {
-    outline: 1px solid var(--color-dorado-500);
-    outline-offset: 4px;
-    border-radius: 0;
+    outline: 2px solid var(--color-dorado-300);
+    outline-offset: 3px;
   }
 
   ::selection {
