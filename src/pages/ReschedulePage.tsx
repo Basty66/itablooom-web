@@ -158,7 +158,7 @@ export default function ReschedulePage() {
                   type="text"
                   value={bookingId || ''}
                   disabled
-                  className="w-full rounded-xl border border-crema-100/15 bg-tinta-900/5 px-4 py-3 texto-0 text-nacar-300"
+                  className="w-full rounded-[var(--radius-suave)] border border-crema-100/15 bg-tinta-900/5 px-4 py-3 texto-0 text-nacar-300"
                 />
               </label>
               <label className="block">
@@ -214,14 +214,18 @@ export default function ReschedulePage() {
                         key={dia.toISOString()}
                         type="button"
                         onClick={() => { setFecha(dia); setHora(''); }}
-                        className={`flex flex-col items-center rounded-xl py-2 transition-all duration-200 ${
+                        /* Mismo lenguaje que el agendador: la selección va
+                           en rosa y el radio es el de los controles (8px).
+                           Acá marcaba en oro y con 12px, así que reagendar
+                           parecía otra aplicación. */
+                        className={`flex flex-col items-center rounded-[var(--radius-suave)] py-2 transition-all duration-200 ${
                           activo
-                            ? 'bg-dorado-400 text-tinta-900'
-                            : 'text-crema-100/90 hover:bg-tinta-850 active:scale-95'
+                            ? 'bg-rosa-300 font-medium text-vino-900'
+                            : 'text-nacar-200/85 hover:bg-tinta-840 hover:text-crema-100 active:scale-95'
                         }`}
                       >
                         <span className="texto--2 capitalize opacity-60">{format(dia, 'EEE', { locale: es }).slice(0, 3)}</span>
-                        <span className="text-sm font-medium tabular-nums">{format(dia, 'd')}</span>
+                        <span className="texto-0 tabular-nums">{format(dia, 'd')}</span>
                       </button>
                     );
                   })}
@@ -234,7 +238,7 @@ export default function ReschedulePage() {
                 <div className="anim-entrada">
                   <h3 className="mb-3 flex items-center gap-2 texto-1 text-crema-100">
                     <Clock3 size={17} strokeWidth={1.5} className="text-dorado-300" />
-                    Elegí la hora
+                    Elige la hora
                   </h3>
                   {cargandoSlots ? (
                     <div className="py-8 text-center texto--1 text-nacar-300">Cargando horarios…</div>
@@ -247,10 +251,10 @@ export default function ReschedulePage() {
                           key={slot.time}
                           type="button"
                           onClick={() => setHora(slot.time)}
-                          className={`rounded-xl py-2.5 texto--1 font-medium tabular-nums transition-all duration-200 ${
+                          className={`rounded-[var(--radius-suave)] border py-2.5 texto-0 tabular-nums transition-all duration-200 ${
                             hora === slot.time
-                              ? 'bg-dorado-400 text-tinta-900'
-                              : 'bg-tinta-850 text-crema-100/90 hover:bg-dorado-200 active:scale-95'
+                              ? 'border-rosa-300 bg-rosa-300/10 font-medium text-rosa-300'
+                              : 'border-dorado-400/10 bg-tinta-880 text-nacar-200/85 hover:border-dorado-400/30 hover:bg-tinta-840 hover:text-crema-100 active:scale-95'
                           }`}
                         >
                           {slot.time}
