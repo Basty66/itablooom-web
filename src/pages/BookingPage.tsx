@@ -158,8 +158,12 @@ export default function BookingPage() {
                   )}
                   <span
                     aria-current={activo ? 'step' : undefined}
+                    /* Los pasos que faltan van igual de legibles que los ya
+                       hechos: lo que distingue al actual es el rosa, no que
+                       los otros estén desvanecidos. Al 50% quedaban en
+                       2.37:1 y no se alcanzaban a leer. */
                     className={`texto--1 uppercase espaciado-amplio transition-colors duration-300 ${
-                      activo ? 'text-rosa-300' : hecho ? 'text-nacar-300' : 'text-nacar-300/50'
+                      activo ? 'text-rosa-300' : 'text-nacar-300'
                     }`}
                   >
                     {activo && <span className="mr-2 tabular-nums">0{n}</span>}

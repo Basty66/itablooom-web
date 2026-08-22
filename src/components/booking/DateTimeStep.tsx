@@ -140,8 +140,11 @@ export default function DateTimeStep({
                     aria-pressed={!!activo}
                     aria-label={format(dia, "EEEE d 'de' MMMM", { locale: es })}
                     className={`relative flex aspect-square flex-col items-center justify-center rounded-[var(--radius-suave)] transition-all duration-300 ease-out ${
+                      /* El domingo queda apagado pero visible: al 25% el
+                         número desaparecía y el calendario parecía tener
+                         huecos en vez de días cerrados. */
                       domingo
-                        ? 'cursor-not-allowed text-nacar-300/25'
+                        ? 'cursor-not-allowed text-nacar-300/55'
                         : activo
                           ? 'bg-rosa-300 font-medium text-vino-900'
                           : 'text-nacar-200/85 hover:bg-tinta-840 hover:text-crema-100'

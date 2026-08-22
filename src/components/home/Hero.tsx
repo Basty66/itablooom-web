@@ -13,9 +13,15 @@ import { RUBRO, CIUDAD } from '../../lib/contacto';
  */
 export default function Hero() {
   return (
-    <section className="fondo-rosado relative lg:[@media(min-height:720px)]:min-h-[90svh] lg:flex lg:items-center">
+    /*
+     * Una pantalla exacta, descontando la barra superior (que es sticky y sí
+     * ocupa alto). Antes la foto usaba proporción fija: apilada bajo el texto
+     * en móvil, el hero medía más de un viewport y obligaba a scrollear antes
+     * de terminar de leer el titular.
+     */
+    <section className="fondo-rosado relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-center">
       <Container className="relative w-full">
-        <div className="grid items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-16 lg:pb-40 lg:pt-12">
+        <div className="grid items-center gap-8 py-10 sm:gap-10 md:py-14 lg:grid-cols-12 lg:gap-16 lg:py-12">
           <div className="lg:col-span-6">
             {/* Línea corta al costado del rótulo: el gesto de apertura del
                 diseño, más elegante que una regla debajo. */}
@@ -28,7 +34,7 @@ export default function Hero() {
             </div>
 
             <h1
-              className="anim-entrada mt-8 flex flex-col gap-1 leading-[0.9] text-crema-100"
+              className="anim-entrada mt-5 flex flex-col gap-1 leading-[0.9] text-crema-100 sm:mt-8"
               style={{ animationDelay: '180ms' }}
             >
               <span className="texto-5">Goddess</span>
@@ -38,7 +44,7 @@ export default function Hero() {
             </h1>
 
             <p
-              className="anim-entrada mt-8 max-w-md text-nacar-200/80"
+              className="anim-entrada mt-5 max-w-md text-nacar-200/80 sm:mt-7"
               style={{ animationDelay: '260ms' }}
             >
               Esmaltado permanente, extensión de pestañas y diseño de cejas en {CIUDAD}.
@@ -46,7 +52,7 @@ export default function Hero() {
             </p>
 
             <div
-              className="anim-entrada mt-10 flex flex-col gap-3 sm:flex-row"
+              className="anim-entrada mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row"
               style={{ animationDelay: '340ms' }}
             >
               <Button to="/agendar" size="lg" variant="primary">
@@ -58,7 +64,7 @@ export default function Hero() {
             </div>
 
             <p
-              className="anim-entrada mt-8 texto--1 text-nacar-300"
+              className="anim-entrada mt-5 texto--1 text-nacar-300 sm:mt-7"
               style={{ animationDelay: '400ms' }}
             >
               Reserva con un abono · Pago seguro con Mercado Pago
@@ -75,7 +81,10 @@ export default function Hero() {
                 decoding="async"
                 width={900}
                 height={1100}
-                className="aspect-[4/3] w-full rounded-[var(--radius-foto)] object-cover sm:aspect-[3/4] lg:aspect-[4/5]"
+                /* Alto atado al viewport, no a una proporción: así la foto
+                   crece con la pantalla pero nunca empuja el hero más allá
+                   de una pantalla. */
+                className="h-[30svh] w-full rounded-[var(--radius-foto)] object-cover sm:h-[36svh] lg:h-[min(64svh,600px)]"
               />
               {/* Marco desplazado: profundidad con una línea, no con sombra. */}
               <div

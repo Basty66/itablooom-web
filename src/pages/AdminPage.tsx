@@ -66,6 +66,7 @@ function TarjetaMetrica({
   nota,
   loading,
   destacada,
+  textual,
   children,
 }: {
   icono: typeof TrendingUp;
@@ -75,11 +76,17 @@ function TarjetaMetrica({
   loading?: boolean;
   /** La tarjeta destacada usa el rosa de relleno en vez del gris tonal. */
   destacada?: boolean;
+  /**
+   * El valor es un nombre y no una cifra. Va bastante más chico: un título de
+   * servicio en tamaño display ocupa cuatro líneas y desborda la tarjeta,
+   * mientras que "$10.000" cabe holgado en una.
+   */
+  textual?: boolean;
   children?: React.ReactNode;
 }) {
   return (
     <div
-      className={`group relative overflow-hidden rounded-2xl p-6 transition-transform duration-500 hover:-translate-y-1 ${
+      className={`group relative min-w-0 overflow-hidden rounded-2xl p-6 transition-transform duration-500 hover:-translate-y-1 ${
         destacada ? 'bg-rosa-500/12' : 'bg-tinta-870'
       }`}
     >
@@ -104,7 +111,9 @@ function TarjetaMetrica({
       ) : (
         <div className="relative mt-6">
           <p
-            className={`font-display leading-none ${destacada ? 'texto-4 text-rosa-300' : 'texto-4 text-crema-100'}`}
+            className={`font-display break-words ${
+              textual ? 'line-clamp-2 texto-2 leading-snug' : 'texto-4 leading-none'
+            } ${destacada ? 'text-rosa-300' : 'text-crema-100'}`}
           >
             {valor}
           </p>
@@ -396,6 +405,7 @@ export default function AdminPage() {
                   }
                   loading={cargandoStats}
                   destacada
+                  textual
                 />
               </div>
 

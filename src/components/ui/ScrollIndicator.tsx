@@ -27,9 +27,10 @@ export default function ScrollIndicator({ destino }: { destino: string }) {
       type="button"
       onClick={bajar}
       aria-label="Ver cómo reservar"
-      /* Mismas condiciones que el hero a pantalla completa: sin altura
-         suficiente el indicador se montaría sobre el texto. */
-      className={`group absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 transition-opacity duration-500 ease-out lg:[@media(min-height:720px)]:flex ${
+      /* Ahora el hero mide una pantalla en todos los tamaños, así que la
+         invitación a bajar también corresponde en móvil. Solo se oculta si
+         la altura es tan baja que el indicador se montaría sobre el texto. */
+      className={`group absolute bottom-5 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 transition-opacity duration-500 ease-out sm:bottom-8 [@media(min-height:600px)]:flex ${
         visible ? 'opacity-100' : 'pointer-events-none opacity-0'
       }`}
     >
