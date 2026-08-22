@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { SearchX, Clock3 } from 'lucide-react';
+import { SearchX, Clock3, ChevronRight } from 'lucide-react';
 import type { Service } from '../types';
 import { getServices } from '../lib/api';
 import { CATEGORIAS_GODDESS } from '../lib/categorias';
@@ -21,14 +21,21 @@ const RUBROS = CATEGORIAS_GODDESS.filter((c) => c.id !== 'all');
 function TarjetaServicio({ service, prioritaria }: { service: Service; prioritaria: boolean }) {
   return (
     /*
-     * Dos formas según el ancho. En móvil la tarjeta es una fila: foto chica a
-     * la izquierda y los datos a la derecha. Con la foto arriba a tamaño
-     * completo cada tarjeta medía 526px y el catálogo se iba a casi seis
-     * pantallas de scroll, con la mayoría del tráfico entrando por teléfono.
-     * Desde sm recupera la tarjeta vertical, donde el espacio sobra.
+     * Dos formas según el ancho. En móvil es una fila corta y toda la tarjeta
+     * es el enlace: el dedo acierta en cualquier parte y no hace falta apuntar
+     * a un botón chico. Desde sm recupera la tarjeta vertical con foto grande,
+     * donde el espacio sobra y la foto vende.
+     *
+     * Con la foto arriba a tamaño completo cada tarjeta medía 526px y el
+     * catálogo se iba a casi seis pantallas, con la mayoría del tráfico
+     * entrando por teléfono.
      */
-    <article className="group flex overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 transition-all duration-500 ease-out hover:border-dorado-400/30 sm:h-full sm:flex-col sm:hover:-translate-y-2">
-      <div className="relative w-[38%] shrink-0 sm:w-full">
+    <Link
+      to={`/agendar?service=${service.id}`}
+      aria-label={`Reservar ${service.name}`}
+      className="group flex overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 transition-all duration-500 ease-out hover:border-dorado-400/30 active:scale-[0.99] sm:h-full sm:flex-col sm:active:scale-100 sm:hover:-translate-y-2"
+    >
+      <div className="relative w-[34%] shrink-0 sm:w-full">
         {/* En móvil la foto llena la columna (sin proporción propia, que
             recalcularía el ancho desde el alto y la desbordaría); desde sm
             recupera el cuadrado con esquinas redondeadas. */}
@@ -44,38 +51,49 @@ function TarjetaServicio({ service, prioritaria }: { service: Service; prioritar
         </span>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-6">
+      <div className="flex min-w-0 flex-1 flex-col justify-center p-4 sm:justify-start sm:p-6">
         <span className="chip mb-2 w-fit rounded-full px-2.5 py-0.5 texto--2 uppercase espaciado-medio sm:hidden">
           {etiquetaCategoria(service.category)}
         </span>
 
-        <div className="flex items-baseline justify-between gap-3">
-          <h3 className="font-display texto-2 text-crema-100">{service.name}</h3>
-          <span className="shrink-0 font-display texto-2 text-dorado-400">
+        <h3 className="font-display texto-2 text-crema-100 sm:pr-2">{service.name}</h3>
+
+        {/* Duración y precio en una sola línea: en la fila de móvil cada
+            renglón extra se paga en altura. Desde sm el precio sube junto al
+            nombre, que es la lectura de catálogo. */}
+        <p className="mt-1.5 flex items-center gap-2 texto--1 sm:mt-2">
+          <span className="flex items-center gap-1.5 texto--2 uppercase espaciado-medio text-nacar-300">
+            <Clock3 size={13} strokeWidth={1.5} aria-hidden="true" />
+            {formatDuration(service.duration_minutes)}
+          </span>
+          <span aria-hidden="true" className="h-3 w-px bg-dorado-400/25" />
+          <span className="font-display texto-1 text-dorado-400 sm:texto-2">
             {formatPrice(service.price)}
           </span>
-        </div>
-
-        <p className="mt-1.5 flex items-center gap-1.5 texto--2 uppercase espaciado-medio text-nacar-300 sm:mt-2">
-          <Clock3 size={13} strokeWidth={1.5} aria-hidden="true" />
-          {formatDuration(service.duration_minutes)}
         </p>
 
-        {/* La descripción completa solo desde sm: en la fila de móvil dos
-            líneas alcanzan para decidir y el resto está en el agendador. */}
-        <p className="mt-2 line-clamp-2 texto--1 leading-relaxed text-nacar-200/80 sm:mt-4 sm:line-clamp-none sm:texto-0">
+        {/* La descripción solo desde sm: en la fila alarga la tarjeta sin
+            aportar a la decisión, y el detalle completo está en el agendador. */}
+        <p className="mt-4 hidden texto-0 leading-relaxed text-nacar-200/80 sm:block">
           {service.description}
         </p>
 
-        <Link
-          to={`/agendar?service=${service.id}`}
-          aria-label={`Reservar ${service.name}`}
-          className="brillo brillo-hover mt-3 flex w-full items-center justify-center rounded-[var(--radius-suave)] bg-rosa-300 py-2.5 texto--2 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 ease-out hover:bg-rosa-200 active:scale-[0.98] sm:mt-6 sm:py-3.5 sm:texto--1"
-        >
+        {/* Falso botón: el enlace es la tarjeta entera, así que este es solo
+            el remate visual y no un control anidado. */}
+        <span className="brillo brillo-hover mt-6 hidden w-full items-center justify-center rounded-[var(--radius-suave)] bg-rosa-300 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 ease-out group-hover:bg-rosa-200 sm:flex">
           Reservar
-        </Link>
+        </span>
       </div>
-    </article>
+
+      {/* En móvil el remate es una flecha: dice "esto se toca" sin ocupar
+          una fila completa de botón. */}
+      <span
+        aria-hidden="true"
+        className="flex items-center pr-3 text-nacar-300 transition-transform duration-300 group-active:translate-x-0.5 sm:hidden"
+      >
+        <ChevronRight size={18} strokeWidth={1.5} />
+      </span>
+    </Link>
   );
 }
 
@@ -132,7 +150,32 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <Container className="pb-24">
+      {/*
+        Atajos a cada rubro, pegados bajo la barra superior. Con el catálogo
+        agrupado, llegar a "Cejas" desde arriba costaba recorrer todo lo
+        anterior; acá se salta directo. Solo en móvil: en escritorio los tres
+        rubros ya se abarcan con la vista.
+      */}
+      {!cargando && porRubro.length > 1 && (
+        <nav
+          aria-label="Ir a un rubro"
+          className="vidrio sticky top-[4.5rem] z-30 border-y sm:hidden"
+        >
+          <div className="flex gap-2 overflow-x-auto px-5 py-3 [scrollbar-width:none]">
+            {porRubro.map((rubro) => (
+              <a
+                key={rubro.id}
+                href={`#rubro-${rubro.id}`}
+                className="shrink-0 rounded-full border border-crema-100/12 px-4 py-1.5 texto--2 uppercase espaciado-medio text-nacar-200/85 transition-colors duration-300 hover:border-rosa-300 hover:text-rosa-300"
+              >
+                {rubro.label}
+              </a>
+            ))}
+          </div>
+        </nav>
+      )}
+
+      <Container className="pb-24 pt-6 sm:pt-0">
         {cargando && (
           <div className="grid gap-4 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -163,7 +206,7 @@ export default function ServicesPage() {
 
         <div className="space-y-14 sm:space-y-20">
           {porRubro.map((rubro, i) => (
-            <section key={rubro.id} className="space-y-6 sm:space-y-10">
+            <section id={`rubro-${rubro.id}`} key={rubro.id} className="scroll-mt-28 space-y-6 sm:space-y-10">
               {/* Encabezado de rubro: número, nombre y una regla que se estira
                   hasta el borde, rematada por un punto. */}
               <div className="flex items-center gap-5">
