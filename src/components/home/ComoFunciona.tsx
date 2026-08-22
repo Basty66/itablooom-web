@@ -34,36 +34,38 @@ export default function ComoFunciona() {
       />
 
       {/*
-        Móvil: fila compacta (icono a la izquierda, texto a la derecha), que
-        ocupa la mitad de alto que la tarjeta vertical. Desde sm recupera el
-        formato de tarjeta con el número grande de fondo.
+        Dos columnas en móvil: los cuatro pasos apilados ocupaban 1,3 pantallas
+        para explicar algo que se entiende de un vistazo. Cada celda queda con
+        el texto justo y desde md vuelven a una fila de cuatro.
       */}
-      <ol className="mt-12 grid gap-px overflow-hidden sm:mt-16 md:grid-cols-2 lg:grid-cols-4">
+      <ol className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:mt-16 sm:gap-6 md:grid-cols-4">
         {PASOS.map(({ icono: Icono, titulo, texto }, i) => (
           <li
             key={titulo}
-            className="anim-entrada group relative bg-tinta-900 py-6 sm:px-6 sm:py-8"
+            className="anim-entrada group relative min-w-0"
             style={{ animationDelay: `${i * 90}ms` }}
           >
             {/* El número va de marca de agua detrás del contenido: ordena la
                 secuencia sin competir con el título, que es lo que se lee. */}
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute right-2 top-0 select-none font-display text-[5rem] leading-none text-crema-100/10 sm:right-4 sm:text-[6.5rem]"
+              className="pointer-events-none absolute -top-2 right-0 select-none font-display text-[3.5rem] leading-none text-crema-100/10 sm:right-2 sm:text-[6.5rem]"
             >
               0{i + 1}
             </span>
 
             <Icono
-              size={22}
+              size={20}
               strokeWidth={1.3}
-              className="relative text-rosa-300 transition-transform duration-500 ease-out group-hover:-translate-y-0.5"
+              className="relative text-rosa-300 transition-transform duration-500 ease-out group-hover:-translate-y-0.5 sm:size-[22px]"
               aria-hidden="true"
             />
 
-            <div className="relative mt-5 min-w-0">
-              <h3 className="font-display texto-2 text-crema-100">{titulo}</h3>
-              <p className="mt-2 texto-0 leading-relaxed text-nacar-200/80">{texto}</p>
+            <div className="relative mt-4 min-w-0 sm:mt-5">
+              <h3 className="font-display texto-1 text-crema-100 sm:texto-2">{titulo}</h3>
+              <p className="mt-1.5 texto--1 leading-relaxed text-nacar-200/80 sm:mt-2 sm:texto-0">
+                {texto}
+              </p>
             </div>
           </li>
         ))}

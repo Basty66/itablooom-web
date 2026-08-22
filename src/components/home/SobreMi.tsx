@@ -34,17 +34,19 @@ const PILARES = [
 export default function SobreMi() {
   return (
     <Section id="sobre-mi" className="fondo-rosado">
-      <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
+      <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-16">
         {/*
           Columna de identidad: retrato circular con el nombre debajo. El
           círculo lee como perfil —quién te va a atender— mientras que el
           rectángulo leía como foto de catálogo.
         */}
         <div className="lg:col-span-4">
-          <figure className="mx-auto max-w-[16rem] text-center lg:mx-0 lg:max-w-none">
+          <figure className="mx-auto max-w-[11rem] text-center sm:max-w-[16rem] lg:mx-0 lg:max-w-none">
             {/* Aro discontinuo de oro alrededor del retrato: enmarca sin
-                encerrar, y el aire entre línea y foto es parte del gesto. */}
-            <div className="anillo-retrato relative mx-auto aspect-square w-full max-w-[16rem] rounded-full">
+                encerrar, y el aire entre línea y foto es parte del gesto.
+                En móvil el retrato baja a 11rem: a 16rem se comía media
+                pantalla antes de que empezara la historia. */}
+            <div className="anillo-retrato relative mx-auto aspect-square w-full max-w-[11rem] rounded-full sm:max-w-[16rem]">
               <img
                 src="/images/g-ignacia.jpg"
                 alt={`${NOMBRE}, especialista de Goddess Studio`}
@@ -56,8 +58,8 @@ export default function SobreMi() {
               />
             </div>
 
-            <figcaption className="mt-6">
-              <p className="font-display texto-3 text-crema-100">{NOMBRE}</p>
+            <figcaption className="mt-4 sm:mt-6">
+              <p className="font-display texto-2 text-crema-100 sm:texto-3">{NOMBRE}</p>
               <p className="mt-2 texto--2 uppercase espaciado-amplio text-rosa-300">
                 Especialista en uñas, pestañas y cejas
               </p>
@@ -74,13 +76,13 @@ export default function SobreMi() {
             subtitle={`Llevo más de cinco años dedicada a las uñas, pestañas y cejas. Empecé atendiendo a amigas en mi casa y hoy tengo mi propio espacio en ${CIUDAD}, donde recibo a cada clienta con hora reservada.`}
           />
 
-          <p className="mt-4 max-w-xl texto--1 text-nacar-200/80 sm:texto-0">
+          <p className="mt-3 max-w-xl texto--1 text-nacar-200/80 sm:mt-4 sm:texto-0">
             Me gusta que salgas sintiéndote regia, pero también que el resultado te dure. Por eso
             trabajo con productos de calidad y me tomo el tiempo de explicarte cómo cuidar tu
             trabajo en casa.
           </p>
 
-          <ul className="mt-6 space-y-3 sm:mt-8 sm:space-y-4">
+          <ul className="mt-5 space-y-3 sm:mt-8 sm:space-y-4">
             {PILARES.map(({ icono: Icono, titulo, texto }, i) => (
               <li
                 key={titulo}
@@ -98,7 +100,7 @@ export default function SobreMi() {
             ))}
           </ul>
 
-          <div className="mt-7 sm:mt-9">
+          <div className="mt-6 sm:mt-9">
             <Button to="/agendar" size="md" variant="primary">
               Reservar mi hora
             </Button>

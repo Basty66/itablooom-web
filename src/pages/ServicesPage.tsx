@@ -101,6 +101,7 @@ export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(false);
+  const [rubroActivo, setRubroActivo] = useState<string>('all');
 
   useEffect(() => {
     cargar();
@@ -124,6 +125,18 @@ export default function ServicesPage() {
     ...rubro,
     items: services.filter((s) => s.category === rubro.id),
   })).filter((r) => r.items.length > 0);
+
+  const visibles = rubroActivo === 'all' ? porRubro : porRubro.filter((r) => r.id === rubroActivo);
+
+  /*
+   * Los filtros llevan el número de servicios de cada rubro: antes eran
+   * enlaces que solo hacían scroll, así que parecían filtrar sin filtrar y no
+   * indicaban dónde estaba parada la clienta.
+   */
+  const filtros = [
+    { id: 'all', label: 'Todos', total: services.length },
+    ...porRubro.map((r) => ({ id: r.id, label: r.label, total: r.items.length })),
+  ];
 
   return (
     <div className="min-h-screen bg-tinta-900">
@@ -151,28 +164,41 @@ export default function ServicesPage() {
       </section>
 
       {/*
-        Atajos a cada rubro, pegados bajo la barra superior. Con el catálogo
-        agrupado, llegar a "Cejas" desde arriba costaba recorrer todo lo
-        anterior; acá se salta directo. Solo en móvil: en escritorio los tres
-        rubros ya se abarcan con la vista.
+        Filtro por rubro, pegado bajo la barra superior en móvil. El activo va
+        en rosa sólido y cada opción lleva su cuenta, así se sabe qué se está
+        viendo y cuánto hay antes de tocar.
       */}
       {!cargando && porRubro.length > 1 && (
-        <nav
-          aria-label="Ir a un rubro"
-          className="vidrio sticky top-[4.5rem] z-30 border-y sm:hidden"
-        >
-          <div className="flex gap-2 overflow-x-auto px-5 py-3 [scrollbar-width:none]">
-            {porRubro.map((rubro) => (
-              <a
-                key={rubro.id}
-                href={`#rubro-${rubro.id}`}
-                className="shrink-0 rounded-full border border-crema-100/12 px-4 py-1.5 texto--2 uppercase espaciado-medio text-nacar-200/85 transition-colors duration-300 hover:border-rosa-300 hover:text-rosa-300"
-              >
-                {rubro.label}
-              </a>
-            ))}
+        <div className="vidrio sticky top-[4.5rem] z-30 border-y sm:static sm:border-0 sm:bg-transparent sm:backdrop-blur-none">
+          <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6">
+            <div
+              role="tablist"
+              aria-label="Filtrar por rubro"
+              className="flex gap-2 overflow-x-auto py-3 [scrollbar-width:none] sm:justify-center sm:gap-3 sm:py-0 sm:pb-10"
+            >
+              {filtros.map(({ id, label, total }) => {
+                const activo = rubroActivo === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activo}
+                    onClick={() => setRubroActivo(id)}
+                    className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 texto--2 uppercase espaciado-medio transition-all duration-300 ease-out active:scale-95 sm:px-5 sm:py-2.5 ${
+                      activo
+                        ? 'bg-rosa-300 text-vino-900'
+                        : 'border border-crema-100/12 text-nacar-200/85 hover:border-rosa-300/50 hover:text-crema-100'
+                    }`}
+                  >
+                    {label}
+                    <span className={activo ? 'text-vino-900/60' : 'text-nacar-300'}>{total}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </nav>
+        </div>
       )}
 
       <Container className="pb-24 pt-6 sm:pt-0">
@@ -205,11 +231,13 @@ export default function ServicesPage() {
         )}
 
         <div className="space-y-14 sm:space-y-20">
-          {porRubro.map((rubro, i) => (
+          {visibles.map((rubro, i) => (
             <section id={`rubro-${rubro.id}`} key={rubro.id} className="scroll-mt-28 space-y-6 sm:space-y-10">
               {/* Encabezado de rubro: número, nombre y una regla que se estira
-                  hasta el borde, rematada por un punto. */}
-              <div className="flex items-center gap-5">
+                  hasta el borde, rematada por un punto. Con un rubro filtrado
+                  el nombre ya está en el filtro activo, así que numerarlo
+                  aparte solo repite. */}
+              <div className={`items-center gap-5 ${rubroActivo === 'all' ? 'flex' : 'hidden'}`}>
                 <span className="texto--1 uppercase espaciado-amplio tabular-nums text-rosa-300">
                   0{i + 1}
                 </span>
