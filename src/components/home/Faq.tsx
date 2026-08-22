@@ -55,7 +55,7 @@ export default function Faq() {
                   aria-controls={`faq-panel-${i}`}
                   className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-dorado-300"
                 >
-                  <span className="texto-0 font-medium text-crema-100">{pregunta}</span>
+                  <span className="font-display texto-1 text-crema-100">{pregunta}</span>
                   <Plus
                     size={19}
                     strokeWidth={1.5}
@@ -75,7 +75,13 @@ export default function Faq() {
                 }`}
               >
                 <div className="overflow-hidden">
-                  <p className="max-w-2xl pb-6 pr-10 texto--1 text-nacar-200/80">{respuesta}</p>
+                  {/* 12px y 672px de ancho daban 112 caracteres por línea,
+                      muy por encima de los 60-75 en que la vista salta de
+                      renglón sin perderse. Va al cuerpo del sistema y con el
+                      ancho de lectura acotado. */}
+                  <p className="max-w-[46ch] pb-6 pr-10 texto-0 leading-relaxed text-nacar-200/80">
+                    {respuesta}
+                  </p>
                 </div>
               </div>
             </div>

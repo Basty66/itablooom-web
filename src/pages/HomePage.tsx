@@ -105,7 +105,9 @@ export default function HomePage() {
             ¿Lista para tu próxima
             <span className="italic text-rosa-600"> sesión?</span>
           </h2>
-          <p className="mx-auto mt-4 texto-1 text-tinta-600">
+          {/* Sin tope de ancho la línea llegaba a 128 caracteres: el ojo
+              pierde el renglón al volver a la izquierda. */}
+          <p className="mx-auto mt-4 max-w-[42ch] texto-1 text-tinta-600">
             Elige tu tratamiento y asegura tu horario en menos de un minuto.
           </p>
           {/* Acá el secundario del sistema (oro sobre oscuro) no sirve: sobre

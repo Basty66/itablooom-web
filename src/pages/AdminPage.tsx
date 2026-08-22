@@ -343,7 +343,9 @@ export default function AdminPage() {
           </nav>
         </header>
 
-        <main className="px-5 py-8 sm:px-6 md:py-10">
+        {/* Tope de ancho: sin él, en un monitor grande las tarjetas de
+            métrica y la agenda se estiran hasta perder el ritmo de lectura. */}
+        <main className="mx-auto max-w-[1400px] px-5 py-8 sm:px-6 md:py-10">
           {seccion === 'resumen' && (
             <>
               <div className="mb-8 flex flex-wrap items-end justify-between gap-4">

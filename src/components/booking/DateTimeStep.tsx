@@ -77,7 +77,10 @@ export default function DateTimeStep({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        {/* Tres columnas desde lg: con dos, veinte horarios hacían diez filas
+            y la sección se estiraba casi una pantalla completa en escritorio,
+            donde el ancho sobraba. */}
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
           {lista.map((slot) => {
             const activo = hora === slot.time;
             return (

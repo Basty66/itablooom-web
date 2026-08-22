@@ -76,7 +76,7 @@ export default function SobreMi() {
             subtitle={`Llevo más de cinco años dedicada a las uñas, pestañas y cejas. Empecé atendiendo a amigas en mi casa y hoy tengo mi propio espacio en ${CIUDAD}, donde recibo a cada clienta con hora reservada.`}
           />
 
-          <p className="mt-3 max-w-xl texto--1 text-nacar-200/80 sm:mt-4 sm:texto-0">
+          <p className="mt-3 max-w-[58ch] texto--1 leading-relaxed text-nacar-200/80 sm:mt-4 sm:texto-0">
             Me gusta que salgas sintiéndote regia, pero también que el resultado te dure. Por eso
             trabajo con productos de calidad y me tomo el tiempo de explicarte cómo cuidar tu
             trabajo en casa.
