@@ -79,18 +79,22 @@ export default function Hero() {
           {/* La foto entra completa y contenida, no como fondo difuminado. */}
           <div className="anim-velo lg:col-span-6 [@media(min-width:700px)_and_(max-height:520px)]:col-span-6" style={{ animationDelay: '300ms' }}>
             <div className="relative mx-auto max-w-sm lg:max-w-none">
-              <img
-                src="/images/g-hero.jpg"
-                alt="Sesión de extensión de pestañas en Goddess Studio"
-                fetchPriority="high"
-                decoding="async"
-                width={900}
-                height={1100}
-                /* Alto atado al viewport, no a una proporción: así la foto
-                   crece con la pantalla pero nunca empuja el hero más allá
-                   de una pantalla. */
-                className="h-[30svh] w-full rounded-[var(--radius-foto)] object-cover sm:h-[36svh] lg:h-[min(64svh,600px)] [@media(min-width:700px)_and_(max-height:520px)]:h-[62svh]"
-              />
+              {/* El recorte vive en el contenedor porque la foto se acerca:
+                  sin él, la deriva se desborda del radio. */}
+              <div className="overflow-hidden rounded-[var(--radius-foto)]">
+                <img
+                  src="/images/g-hero.jpg"
+                  alt="Sesión de extensión de pestañas en Goddess Studio"
+                  fetchPriority="high"
+                  decoding="async"
+                  width={900}
+                  height={1100}
+                  /* Alto atado al viewport, no a una proporción: así la foto
+                     crece con la pantalla pero nunca empuja el hero más allá
+                     de una pantalla. */
+                  className="foto-estudio deriva h-[30svh] w-full object-cover sm:h-[36svh] lg:h-[min(64svh,600px)] [@media(min-width:700px)_and_(max-height:520px)]:h-[62svh]"
+                />
+              </div>
               {/* Marco desplazado: profundidad con una línea, no con sombra. */}
               <div
                 aria-hidden="true"

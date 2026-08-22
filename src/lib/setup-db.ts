@@ -67,15 +67,22 @@ async function setupDatabase() {
     `;
     console.log('✓ Blocked times table created');
 
+    /*
+     * Las claves de `category` siguen siendo facial/laser/course porque así
+     * quedó la columna del proyecto anterior; hoy representan uñas, pestañas
+     * y cejas. Al renombrarlas hay que actualizar también `lib/categorias.ts`
+     * y `ui/ServiceVisual.tsx`, que las traducen a las etiquetas visibles.
+     */
     const existingServices = await sql`SELECT COUNT(*) as count FROM services`;
     if ((existingServices[0] as any).count === 0) {
       await sql`
         INSERT INTO services (name, description, duration_minutes, price, deposit_amount, category)
         VALUES 
-          ('Limpieza Profunda', 'Limpieza facial profunda con extracción de impurezas, mascarilla hidratante y masaje relajante.', 60, 27500, 10000, 'facial'),
-          ('Microneedling', 'Tratamiento de microneedling para renovación celular, cicatrices de acné y rejuvenecimiento.', 90, 45000, 15000, 'facial'),
-          ('Depilación Láser', 'Depilación láser definitiva. Zonas: axilas, bigote, cejas, piernas, brazos.', 30, 15000, 5000, 'laser'),
-          ('Curso Esmaltado Permanente', 'Curso presencial de esmaltado permanente. Incluye materiales y certificado.', 240, 85000, 30000, 'course')
+          ('Esmaltado Permanente', 'Manicure completa con esmaltado permanente de larga duración. Incluye limado, cutículas y elección de color.', 90, 18000, 5000, 'facial'),
+          ('Uñas Acrílicas con Diseño', 'Extensión en acrílico con la forma y largo que prefieras, más diseño personalizado a elección.', 150, 32000, 5000, 'facial'),
+          ('Extensión de Pestañas Pelo a Pelo', 'Aplicación pelo a pelo para un efecto natural. Se coloca una extensión por cada pestaña propia.', 120, 25000, 5000, 'laser'),
+          ('Lifting de Pestañas', 'Curvatura y tinte de tus pestañas naturales. Sin extensiones y con una duración de hasta ocho semanas.', 60, 20000, 5000, 'laser'),
+          ('Diseño y Laminado de Cejas', 'Diseño según la forma de tu rostro, con laminado para fijar y dar volumen. Incluye perfilado y tinte.', 60, 16000, 5000, 'course')
       `;
       console.log('✓ Default services inserted');
     } else {

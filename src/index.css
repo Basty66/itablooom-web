@@ -321,6 +321,29 @@
     animation: velo 1.2s var(--ease-suave) both;
   }
 
+  /*
+   * Retrato de estudio: blanco y negro con una pizca de sepia. El gris puro
+   * se va al azul y sobre este fondo de umber cálido se ve como una foto
+   * pegada encima; el sepia bajo la integra. Al quitarle el color, el rosa y
+   * el oro de la marca quedan como los únicos tonos de la pantalla.
+   */
+  .foto-estudio {
+    filter: grayscale(1) sepia(0.18) contrast(1.06) brightness(0.97);
+  }
+
+  /*
+   * Deriva lentísima sobre la foto fija: seis por ciento de acercamiento en
+   * casi medio minuto, ida y vuelta. Da sensación de vida sin pesar un byte
+   * más, que es lo que costaría poner un video de fondo.
+   */
+  .deriva {
+    animation: deriva 28s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .deriva { animation: none; }
+  }
+
   /* Grano sutil: rompe el plano del crema y da textura de papel. */
   .textura-papel {
     position: relative;
@@ -358,6 +381,15 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes deriva {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.06) translate3d(0, -1.5%, 0);
   }
 }
 
