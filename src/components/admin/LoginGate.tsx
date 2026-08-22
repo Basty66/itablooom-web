@@ -27,12 +27,16 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
   return (
     <div className="flex min-h-[70vh] items-center bg-tinta-900 py-16">
       <Container className="max-w-md">
-        <div className="linea-oro border bg-tinta-850 p-8">
-          <span className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border border-dorado-400/50">
-            <Lock size={22} strokeWidth={1.5} className="text-crema-100" aria-hidden="true" />
+        <div className="relative overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-870 p-8">
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-rosa-300/50 to-transparent"
+          />
+          <span className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-dorado-400/40 bg-tinta-860">
+            <Lock size={22} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
           </span>
 
-          <h1 className="text-center texto-2 text-crema-100">Panel de administración</h1>
+          <h1 className="text-center font-display texto-3 text-crema-100">Panel del estudio</h1>
           <p className="mt-2 text-center texto--1 text-nacar-200/80">
             Esta sección contiene datos de tus clientas.
           </p>
@@ -40,7 +44,9 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
           <form onSubmit={onSubmit} className="mt-8" autoComplete="off">
             <input type="text" name="username" autoComplete="username" className="sr-only" tabIndex={-1} aria-hidden="true" />
             <label className="block">
-              <span className="mb-1.5 block texto--1 font-medium text-nacar-200/85">Contraseña</span>
+              <span className="mb-2 block texto--1 font-medium uppercase espaciado-medio text-nacar-200/85">
+                Contraseña
+              </span>
               <input
                 type="password"
                 required
@@ -48,7 +54,7 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border-0 border-b border-dorado-400/40 bg-transparent px-0 py-3 texto-0 text-crema-100 transition-colors duration-300 hover:border-dorado-500 focus:border-dorado-400 focus:outline-none"
+                className="campo w-full px-3 py-3 texto-0"
                 placeholder="••••••••"
               />
             </label>
@@ -66,7 +72,7 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
             <button
               type="submit"
               disabled={enviando || password.length === 0}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-tinta-900 px-6 py-3 texto-0 font-medium text-crema-100 transition-all duration-200 ease-out hover:bg-tinta-800 active:scale-95 disabled:pointer-events-none disabled:opacity-40"
+              className="brillo brillo-hover mt-6 flex w-full items-center justify-center gap-2 rounded-[var(--radius-suave)] bg-rosa-300 px-6 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 ease-out hover:bg-rosa-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
             >
               {enviando ? (
                 <>

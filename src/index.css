@@ -15,8 +15,16 @@
   /* Tinta: negro cálido, nunca #000 puro. Ahora es el fondo dominante, así
      que necesita superficies intermedias para separar secciones.
      Los valores salen del escalón de superficies de "Ethereal Feminine
-     Luxury": el 900 es la base, el 850 (surface-warm) las tarjetas. */
+     Luxury": el 900 es la base, el 850 (surface-warm) las tarjetas.
+     Los tres intermedios (880/870/860) son el escalón de contenedores que
+     usan las pantallas de panel para apilar tarjeta sobre tarjeta sin
+     recurrir a sombras. */
   --color-tinta-950: #110d0b;
+  --color-tinta-880: #1f1b18;
+  --color-tinta-870: #231f1c;
+  --color-tinta-860: #2e2927;
+  --color-tinta-840: #393431;
+  --color-tinta-820: #3d3836;
   --color-tinta-850: #251d1a;
   --color-tinta-400: #9a8d84;
   --color-tinta-500: #7d7068;
@@ -32,10 +40,11 @@
   --color-rosa-300: #ffb2b9;
   --color-rosa-400: #db949b;
   --color-rosa-500: #c87880;
-  /* Relleno del botón primario. El rosa del sistema (#c87880) con letra crema
-     da 3.04:1 y AA pide 4.5:1 para el cuerpo del botón; este mantiene el
-     mismo "dusty rose" y llega a 4.6:1. */
   --color-rosa-550: #b0525c;
+  /* Vino profundo: el color de la letra sobre el rosa claro. Es la pareja que
+     el sistema define para el relleno primario y mide 7.71:1, bastante mejor
+     que poner crema sobre un rosa oscurecido (4.63:1). */
+  --color-vino-900: #561d25;
   /* Para texto pequeño sobre crema: rosa-500 solo alcanza 3.02:1 y AA pide
      4.5:1. Este llega a ~5.2:1 manteniendo el mismo matiz. */
   --color-rosa-600: #a34a55;

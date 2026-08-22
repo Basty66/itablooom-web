@@ -39,8 +39,8 @@ export default function Finanzas({
   ];
 
   return (
-    <section className="linea-oro mb-8 border-y py-5">
-      <h2 className="mb-5 texto--1 uppercase espaciado-medio text-crema-100">
+    <section className="mb-6 rounded-2xl bg-tinta-870 p-6">
+      <h2 className="mb-5 font-display texto-2 text-crema-100">
         Cómo entró la plata este mes
       </h2>
 

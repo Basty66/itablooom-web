@@ -11,14 +11,14 @@ type Size = 'sm' | 'md' | 'lg';
  */
 const VARIANTES: Record<Variant, string> = {
   /*
-   * El rosa es el acento principal del diseño y el oro queda para detalles.
-   * El relleno es el rosa medio, no el claro: el #ffb2b9 es un color de
-   * *texto* sobre oscuro, y como fondo obligaba a poner tinta encima, que se
-   * leía como advertencia. Con el rosa medio el texto va en crema.
+   * Relleno rosa claro con la letra en vino: es la pareja que define el
+   * sistema y mide 7.71:1. Antes usaba un rosa oscurecido con letra crema
+   * porque el rosa claro parecía necesitar texto oscuro "de advertencia";
+   * el vino resuelve eso y además contrasta casi el doble.
    */
   primary:
-    'brillo bg-rosa-550 text-crema-100 sombra-sutil ' +
-    'brillo-hover hover:sombra-hover hover:-translate-y-0.5',
+    'brillo bg-rosa-300 text-vino-900 sombra-sutil ' +
+    'brillo-hover hover:bg-rosa-200 hover:sombra-hover hover:-translate-y-0.5',
   /* Secundario del sistema: fantasma con canto y letra de oro. */
   secondary:
     'border border-dorado-400/55 text-dorado-300 ' +

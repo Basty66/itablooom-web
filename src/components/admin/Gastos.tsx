@@ -51,14 +51,14 @@ export default function Gastos({ gastos, onCambio }: { gastos: Gasto[]; onCambio
     onCambio();
   }
 
-  const INPUT =
-    'w-full border-0 border-b border-dorado-400/40 bg-transparent py-2 texto--1 text-crema-100 ' +
-    'placeholder:text-nacar-300 transition-colors duration-300 focus:border-dorado-400 focus:outline-none';
+  // Campo tonal del sistema: sobre la tarjeta, el input transparente se
+  // confundía con el fondo y no se veía dónde había que escribir.
+  const INPUT = 'campo w-full px-3 py-2.5 texto--1';
 
   return (
-    <section className="linea-oro mb-8 border-y py-5">
+    <section className="mb-6 rounded-2xl bg-tinta-870 p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="texto--1 uppercase espaciado-medio text-crema-100">Gastos del mes</h2>
+        <h2 className="font-display texto-2 text-crema-100">Gastos del mes</h2>
         <button
           onClick={() => setAbierto(!abierto)}
           className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-dorado-300 transition-colors duration-300 hover:text-crema-100"
