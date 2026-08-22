@@ -82,7 +82,7 @@ export default function Navbar() {
             aria-expanded={abierto}
             aria-controls="menu-movil"
             aria-label={abierto ? 'Cerrar menú' : 'Abrir menú'}
-            className="p-2 text-crema-100/90 transition-colors duration-200 hover:bg-crema-100/5 md:hidden"
+            className="-mr-2 flex h-11 w-11 items-center justify-center rounded-[var(--radius-suave)] text-crema-100/90 transition-colors duration-200 hover:bg-crema-100/5 md:hidden"
           >
             {abierto ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
           </button>

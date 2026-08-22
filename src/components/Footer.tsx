@@ -50,7 +50,7 @@ export default function Footer() {
               <span className="font-display texto-2 font-medium text-crema-100">Goddess</span>
               <span className="texto--1 uppercase tracking-[0.25em] text-rosa-300">Studio</span>
             </div>
-            <p className="mt-4 max-w-sm texto--1 text-nacar-200/80">
+            <p className="mt-4 max-w-sm texto-0 leading-relaxed text-nacar-200/80">
               Esmaltado permanente, uñas acrílicas, extensión de pestañas y diseño de cejas.
               Atención personalizada con hora reservada.
             </p>
@@ -75,7 +75,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/80 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-dorado-300 active:scale-95"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/80 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-dorado-300 active:scale-95"
                 >
                   {icono}
                 </a>
@@ -86,7 +86,7 @@ export default function Footer() {
               href={linkWhatsApp()}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-block py-1 texto--1 text-nacar-200/80 transition-colors duration-200 hover:text-dorado-300"
+              className="mt-2 inline-block py-2.5 texto-0 text-nacar-200/80 transition-colors duration-200 hover:text-dorado-300"
             >
               {WHATSAPP_VISIBLE}
             </a>
@@ -99,10 +99,11 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {NAVEGACION.map((item) => (
                 <li key={item.to}>
-                  {/* inline-block + py-1 lleva el área táctil al mínimo de 24px (WCAG 2.2). */}
+                  {/* El relleno vertical lleva el alto táctil a 44px. WCAG
+                      pide 24, pero para el dedo ese mínimo se falla seguido. */}
                   <Link
                     to={item.to}
-                    className="inline-block py-1 texto--1 text-nacar-200/80 transition-colors duration-200 hover:text-crema-100"
+                    className="inline-block py-2.5 texto-0 text-nacar-200/80 transition-colors duration-200 hover:text-crema-100"
                   >
                     {item.label}
                   </Link>
@@ -118,9 +119,9 @@ export default function Footer() {
             <dl className="space-y-2.5">
               {HORARIOS.map(([dia, horas]) => (
                 <div key={dia} className="flex items-baseline justify-between gap-4">
-                  <dt className="texto--1 text-nacar-200/80">{dia}</dt>
+                  <dt className="texto-0 text-nacar-200/80">{dia}</dt>
                   <dd
-                    className={`texto--1 ${
+                    className={`texto-0 ${
                       horas === 'Cerrado' ? 'text-nacar-300' : 'text-crema-100'
                     }`}
                   >
@@ -129,7 +130,7 @@ export default function Footer() {
                 </div>
               ))}
             </dl>
-            <p className="mt-5 flex items-center gap-2 texto--1 text-nacar-200/80">
+            <p className="mt-5 flex items-center gap-2 texto-0 text-nacar-200/80">
               <MapPin size={15} strokeWidth={1.5} aria-hidden="true" className="text-dorado-300" />
               Melipilla, Chile
             </p>
