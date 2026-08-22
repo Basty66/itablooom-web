@@ -56,9 +56,12 @@ export default function ServicesPage() {
               role="tab"
               aria-selected={activa}
               onClick={() => setCategoria(cat.id)}
-              className={`rounded-full px-6 py-2.5 texto--1 font-medium transition-all duration-200 ease-out active:scale-95 ${
+              /* El activo va en el rosa del primario, no en oro sólido: el
+                 sistema reserva el oro para líneas finas y rótulos, y una
+                 píldora dorada llena metía demasiado metal en la pantalla. */
+              className={`rounded-full px-6 py-2.5 texto--1 font-medium uppercase espaciado-medio transition-all duration-200 ease-out active:scale-95 ${
                 activa
-                  ? 'bg-dorado-400 text-tinta-900 shadow-sm'
+                  ? 'bg-rosa-550 text-crema-100 sombra-sutil'
                   : 'border border-crema-100/15 text-nacar-200/80 hover:border-dorado-400 hover:text-crema-100'
               }`}
             >
@@ -93,7 +96,7 @@ export default function ServicesPage() {
 
       {!cargando && !error && visibles.length === 0 && (
         <div className="mt-8 flex flex-col items-center py-16 text-center">
-          <SearchX size={30} strokeWidth={1.3} className="mb-4 text-crema-100/40" aria-hidden="true" />
+          <SearchX size={30} strokeWidth={1.3} className="mb-4 text-nacar-300" aria-hidden="true" />
           <p className="text-nacar-200/80">No hay tratamientos en esta categoría.</p>
         </div>
       )}

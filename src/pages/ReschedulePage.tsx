@@ -168,7 +168,7 @@ export default function ReschedulePage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="maria@ejemplo.cl"
-                  className="w-full rounded-xl border border-crema-100/15 superficie px-4 py-3 texto-0 text-crema-100 placeholder:text-crema-100/40 transition-colors focus:border-dorado-500 focus:outline-none"
+                  className="w-full rounded-xl border border-crema-100/15 superficie px-4 py-3 texto-0 text-crema-100 placeholder:text-nacar-300 transition-colors focus:border-dorado-500 focus:outline-none"
                 />
               </label>
               <button

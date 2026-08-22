@@ -66,7 +66,7 @@ export default function DateTimeStep({
         <div className="mb-4 flex items-baseline gap-3">
           <h4 className="texto--1 uppercase espaciado-medio text-crema-100">{titulo}</h4>
           <span className="linea-oro flex-1 border-t" aria-hidden="true" />
-          <span className="texto--1 text-crema-100/40">
+          <span className="texto--1 text-nacar-300">
             {libres > 0 ? `${libres} libre${libres > 1 ? 's' : ''}` : 'sin cupos'}
           </span>
         </div>
@@ -113,7 +113,7 @@ export default function DateTimeStep({
             <span
               key={i}
               aria-hidden="true"
-              className="text-center texto--2 uppercase espaciado-medio text-crema-100/40"
+              className="text-center texto--2 uppercase espaciado-medio text-nacar-300"
             >
               {d}
             </span>
@@ -138,7 +138,7 @@ export default function DateTimeStep({
                     aria-label={format(dia, "EEEE d 'de' MMMM", { locale: es })}
                     className={`flex aspect-square flex-col items-center justify-center border transition-all duration-300 ease-out ${
                       domingo
-                        ? 'cursor-not-allowed border-transparent text-crema-100/40/40'
+                        ? 'cursor-not-allowed border-transparent text-nacar-300/40'
                         : activo
                           ? 'border-tinta-900 bg-dorado-400 text-tinta-900'
                           : 'border-transparent text-crema-100/90 hover:border-dorado-400/50'
@@ -178,7 +178,7 @@ export default function DateTimeStep({
             <TimeSlotSkeleton />
           ) : disponibles.length === 0 ? (
             <div className="flex flex-col items-center py-12 text-center">
-              <CalendarX2 size={24} strokeWidth={1.2} className="mb-4 text-crema-100/40" aria-hidden="true" />
+              <CalendarX2 size={24} strokeWidth={1.2} className="mb-4 text-nacar-300" aria-hidden="true" />
               <p className="texto--1 text-nacar-200/80">
                 No quedan horarios para este día. Prueba con otra fecha.
               </p>

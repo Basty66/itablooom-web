@@ -226,7 +226,7 @@ export default function AdminPage() {
                       className="w-full bg-dorado-400 transition-all duration-500"
                       style={{ height: `${Math.max(height, 4)}%` }}
                     />
-                    <span className="texto--2 text-crema-100/40">
+                    <span className="texto--2 text-nacar-300">
                       {format(parseBookingDate(dia.date) || new Date(), 'EEE', { locale: es })}
                     </span>
                   </div>
@@ -265,7 +265,7 @@ export default function AdminPage() {
                 size={16}
                 strokeWidth={1.5}
                 aria-hidden="true"
-                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-crema-100/40"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-nacar-300"
               />
               <input
                 type="date"
@@ -283,14 +283,14 @@ export default function AdminPage() {
                 size={16}
                 strokeWidth={1.5}
                 aria-hidden="true"
-                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-crema-100/40"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-nacar-300"
               />
               <input
                 type="search"
                 placeholder="Nombre o correo…"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                className="w-full rounded-xl border border-crema-100/15 superficie py-2.5 pl-11 pr-4 texto--1 text-crema-100 placeholder:text-crema-100/40 transition-colors duration-200 focus:border-dorado-500 focus:outline-none"
+                className="w-full rounded-xl border border-crema-100/15 superficie py-2.5 pl-11 pr-4 texto--1 text-crema-100 placeholder:text-nacar-300 transition-colors duration-200 focus:border-dorado-500 focus:outline-none"
               />
             </span>
           </label>
@@ -319,7 +319,7 @@ export default function AdminPage() {
             </div>
           ) : visibles.length === 0 ? (
             <div className="flex flex-col items-center px-5 py-14 text-center">
-              <Inbox size={26} strokeWidth={1.3} className="mb-3 text-crema-100/40" aria-hidden="true" />
+              <Inbox size={26} strokeWidth={1.3} className="mb-3 text-nacar-300" aria-hidden="true" />
               <p className="texto--1 text-nacar-200/80">
                 {busqueda ? 'Ninguna cita coincide con la búsqueda.' : 'No hay citas para esta fecha.'}
               </p>

@@ -28,7 +28,7 @@ export default function StepIndicator({ actual }: { actual: number }) {
                     ? 'border-tinta-900 bg-dorado-400 text-tinta-900'
                     : activo
                       ? 'border-tinta-900 text-crema-100'
-                      : 'border-dorado-400/35 text-crema-100/40'
+                      : 'border-dorado-400/35 text-nacar-300'
                 }`}
               >
                 {completado ? <Check size={15} strokeWidth={2} aria-hidden="true" /> : paso.num}

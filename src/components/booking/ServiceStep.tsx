@@ -104,7 +104,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
               </span>
               <span
                 className={`mt-1 block texto--2 uppercase espaciado-medio transition-colors duration-300 ${
-                  activo ? 'text-crema-100' : 'text-crema-100/40'
+                  activo ? 'text-crema-100' : 'text-nacar-300'
                 }`}
               >
                 {activo ? 'Elegido' : 'Elegir'}

@@ -49,7 +49,7 @@ export default function ComoFunciona() {
                 secuencia sin competir con el título, que es lo que se lee. */}
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute right-2 top-0 select-none font-display text-[5rem] leading-none text-crema-100/[0.06] sm:right-4 sm:text-[6.5rem]"
+              className="pointer-events-none absolute right-2 top-0 select-none font-display text-[5rem] leading-none text-crema-100/10 sm:right-4 sm:text-[6.5rem]"
             >
               0{i + 1}
             </span>
