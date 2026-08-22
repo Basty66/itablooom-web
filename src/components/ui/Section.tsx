@@ -29,6 +29,8 @@ interface HeadingProps {
   subtitle?: string;
   as?: 'h1' | 'h2';
   align?: 'left' | 'center';
+  /** El rosa marca las secciones cálidas; el oro, las de negocio. */
+  tono?: 'oro' | 'rosa';
 }
 
 export function SectionHeading({
@@ -37,19 +39,20 @@ export function SectionHeading({
   subtitle,
   as: Tag = 'h2',
   align = 'center',
+  tono = 'oro',
 }: HeadingProps) {
   const centrado = align === 'center';
   return (
     <div className={`max-w-2xl ${centrado ? 'mx-auto text-center' : 'text-left'}`}>
       {eyebrow && (
-        <p className="texto--1 uppercase espaciado-amplio text-dorado-700">{eyebrow}</p>
+        <p className={`texto--1 uppercase espaciado-amplio ${tono === 'rosa' ? 'text-rosa-600' : 'text-dorado-700'}`}>{eyebrow}</p>
       )}
 
       {/* Regla fina bajo el rótulo: el separador del sistema, en vez de peso. */}
       {eyebrow && (
         <div
           aria-hidden="true"
-          className={`linea-oro mb-7 mt-5 w-12 border-t ${centrado ? 'mx-auto' : ''}`}
+          className={`${tono === 'rosa' ? 'linea-rosa' : 'linea-oro'} mb-7 mt-5 w-12 border-t ${centrado ? 'mx-auto' : ''}`}
         />
       )}
 

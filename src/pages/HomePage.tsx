@@ -4,6 +4,8 @@ import type { Service } from '../types';
 import { getServices } from '../lib/api';
 import Hero from '../components/home/Hero';
 import ComoFunciona from '../components/home/ComoFunciona';
+import VideoBienvenida from '../components/home/VideoBienvenida';
+import Reels from '../components/home/Reels';
 import SobreMi from '../components/home/SobreMi';
 import Faq from '../components/home/Faq';
 import ServiceCard from '../components/ServiceCard';
@@ -30,6 +32,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <VideoBienvenida />
       <ComoFunciona />
 
       <Section className="bg-crema-100">
@@ -72,6 +75,8 @@ export default function HomePage() {
           </div>
         )}
       </Section>
+
+      <Reels />
 
       <SobreMi />
 

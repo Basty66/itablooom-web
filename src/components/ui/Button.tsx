@@ -5,15 +5,21 @@ type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';
 
 /*
- * Sin sombras ni degradados: en este sistema el peso lo dan el contraste y el
- * espacio, no la profundidad falsa. Esquinas rectas —el pill redondeado leía
- * más "app" que "estudio de belleza"— y línea fina como recurso principal.
+ * El canto vivo se veía editorial pero rígido: un radio contenido moderniza
+ * sin volver a las cajas del sistema anterior. La sombra solo aparece en
+ * hover, para que el botón se despegue al tocarlo y no antes.
  */
 const VARIANTES: Record<Variant, string> = {
-  primary: 'bg-tinta-900 text-crema-100 hover:bg-tinta-800',
-  secondary: 'bg-dorado-400 text-tinta-900 hover:bg-dorado-300',
-  outline: 'border border-dorado-400/45 text-tinta-900 hover:border-dorado-500 hover:bg-dorado-100/40',
-  ghost: 'text-tinta-700 hover:text-tinta-900',
+  primary:
+    'brillo bg-tinta-900 text-crema-100 sombra-sutil ' +
+    'hover:bg-tinta-800 hover:sombra-hover hover:-translate-y-0.5',
+  secondary:
+    'brillo bg-rosa-300 text-tinta-900 sombra-sutil ' +
+    'hover:bg-rosa-200 hover:sombra-hover hover:-translate-y-0.5',
+  outline:
+    'border border-rosa-400/50 text-tinta-900 ' +
+    'hover:border-rosa-500 hover:bg-rosa-100/50 hover:-translate-y-0.5',
+  ghost: 'text-tinta-700 hover:text-tinta-900 hover:bg-dorado-100/50',
 };
 
 /** Botones anchos y bajos: el aire horizontal es parte del gesto editorial. */
@@ -24,9 +30,10 @@ const TAMANOS: Record<Size, string> = {
 };
 
 const BASE =
+  'relative overflow-hidden rounded-[var(--radius-suave)] ' +
   'inline-flex items-center justify-center texto--1 font-medium uppercase espaciado-medio ' +
-  'transition-all duration-300 ease-out active:scale-[0.98] ' +
-  'disabled:opacity-40 disabled:pointer-events-none';
+  'transition-all duration-300 ease-out active:scale-[0.98] active:translate-y-0 ' +
+  'disabled:opacity-40 disabled:pointer-events-none disabled:hover:translate-y-0';
 
 interface BaseProps {
   variant?: Variant;

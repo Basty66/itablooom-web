@@ -13,7 +13,7 @@ import { RUBRO, CIUDAD } from '../../lib/contacto';
  */
 export default function Hero() {
   return (
-    <section className="relative bg-crema-100 lg:[@media(min-height:720px)]:min-h-[calc(100svh-4.5rem)] lg:flex lg:items-center">
+    <section className="fondo-rosado relative lg:[@media(min-height:720px)]:min-h-[calc(100svh-4.5rem)] lg:flex lg:items-center">
       <Container className="relative w-full">
         <div className="grid items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-16 lg:pb-40 lg:pt-12">
           <div className="lg:col-span-7">
@@ -27,7 +27,7 @@ export default function Hero() {
             {/* Regla fina: separa el rótulo del titular sin ocupar espacio. */}
             <div
               aria-hidden="true"
-              className="anim-entrada linea-oro mt-6 w-16 border-t"
+              className="anim-entrada linea-rosa mt-6 w-16 border-t"
               style={{ animationDelay: '120ms' }}
             />
 
@@ -36,7 +36,7 @@ export default function Hero() {
               style={{ animationDelay: '180ms' }}
             >
               <span className="block">Goddess</span>
-              <span className="mt-1 block italic text-dorado-600">Studio</span>
+              <span className="mt-1 block italic text-rosa-600">Studio</span>
             </h1>
 
             <p
@@ -77,12 +77,12 @@ export default function Hero() {
                 decoding="async"
                 width={900}
                 height={1100}
-                className="aspect-[4/5] w-full object-cover"
+                className="aspect-[4/3] w-full rounded-[var(--radius-medio)] object-cover sm:aspect-[4/5]"
               />
               {/* Marco desplazado: profundidad con una línea, no con sombra. */}
               <div
                 aria-hidden="true"
-                className="linea-oro pointer-events-none absolute -bottom-4 -right-4 h-full w-full border"
+                className="linea-oro pointer-events-none absolute inset-0 h-full w-full rounded-[var(--radius-medio)] border sm:-bottom-4 sm:-right-4 sm:inset-auto"
               />
             </div>
           </div>

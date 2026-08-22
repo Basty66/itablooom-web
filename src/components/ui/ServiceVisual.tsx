@@ -49,7 +49,7 @@ export default function ServiceVisual({ categoria, imagen, nombre, prioritaria =
   // Retrato 4/5 en escritorio; en móvil eso alarga demasiado la columna, así
   // que ahí va cuadrado: más contenido sin perder el aire.
   return (
-    <div className="relative aspect-square overflow-hidden bg-crema-200 sm:aspect-[4/5]">
+    <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-medio)] bg-crema-200 sm:aspect-square">
       {imagen && !fallo ? (
         <>
           <img

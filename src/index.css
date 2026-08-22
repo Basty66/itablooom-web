@@ -54,6 +54,10 @@
   --color-dorado-600: #a67f1e;
   --color-dorado-700: #6b5215;
 
+  /* Formas: un radio contenido moderniza sin perder la sobriedad. */
+  --radius-suave: 10px;
+  --radius-medio: 14px;
+
   --font-display: "Cormorant Garamond", "Georgia", serif;
   --font-sans: "Jost", system-ui, -apple-system, sans-serif;
 
@@ -119,7 +123,7 @@
   }
 
   ::selection {
-    background-color: var(--color-dorado-200);
+    background-color: var(--color-rosa-200);
     color: var(--color-tinta-900);
   }
 
@@ -140,12 +144,47 @@
 }
 
 @layer utilities {
+  /* Sombra apenas perceptible, solo para despegar del fondo en hover.
+     Nada de las sombras densas del sistema anterior. */
+  .sombra-sutil {
+    box-shadow: 0 1px 2px rgba(20, 16, 14, 0.04), 0 8px 24px -16px rgba(20, 16, 14, 0.18);
+  }
+  .sombra-hover {
+    box-shadow: 0 2px 4px rgba(20, 16, 14, 0.06), 0 16px 40px -20px rgba(20, 16, 14, 0.28);
+  }
+
+  /* Brillo que recorre el botón al pasar el cursor. */
+  .brillo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+    transform: translateX(-120%);
+    transition: transform 0.7s var(--ease-suave);
+    pointer-events: none;
+  }
+  .brillo:hover::after {
+    transform: translateX(120%);
+  }
+
   /* Tracking editorial: el texto chico muy espaciado es la firma del estilo. */
   .espaciado-amplio { letter-spacing: 0.28em; }
   .espaciado-medio { letter-spacing: 0.16em; }
 
   /* Línea fina dorada: único separador del sistema, en vez de sombras. */
   .linea-oro { border-color: color-mix(in oklab, var(--color-dorado-400) 35%, transparent); }
+
+  /* Variante rosada de la misma línea, para las secciones más cálidas.
+     El oro solo se leía sobrio; alternarlo con rosa feminiza el conjunto
+     sin perder el aire de marca cara. */
+  .linea-rosa { border-color: color-mix(in oklab, var(--color-rosa-400) 40%, transparent); }
+
+  /* Fondo apenas teñido: rompe el crema plano en las secciones cálidas. */
+  .fondo-rosado {
+    background-image: linear-gradient(180deg,
+      color-mix(in oklab, var(--color-rosa-100) 55%, transparent) 0%,
+      var(--color-crema-100) 60%);
+  }
 
   .texto--2 { font-size: var(--paso--2); }
   .texto--1 { font-size: var(--paso--1); }

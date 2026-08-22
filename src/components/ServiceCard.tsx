@@ -27,7 +27,7 @@ export default function ServiceCard({
 }: Props) {
   return (
     <article
-      className={`anim-entrada group flex flex-col ${className}`}
+      className={`anim-entrada group flex flex-col transition-transform duration-500 ease-out hover:-translate-y-1 ${className}`}
       style={{ animationDelay: `${delay}ms` }}
     >
       <ServiceVisual

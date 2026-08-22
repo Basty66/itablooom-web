@@ -33,7 +33,7 @@ const PILARES = [
 
 export default function SobreMi() {
   return (
-    <Section id="sobre-mi" className="bg-crema-100">
+    <Section id="sobre-mi" className="fondo-rosado">
       <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-14">
         {/* La foto va primero en móvil: pone rostro antes que texto. */}
         <div className="lg:col-span-5">
@@ -41,7 +41,7 @@ export default function SobreMi() {
             {/* Marco dorado desplazado: da profundidad sin recargar. */}
             <div
               aria-hidden="true"
-              className="linea-oro absolute -bottom-4 -right-4 h-full w-full border"
+              className="linea-oro absolute inset-0 h-full w-full rounded-[var(--radius-medio)] border sm:-bottom-4 sm:-right-4 sm:inset-auto"
             />
             <img
               src="/images/g-ignacia.jpg"
@@ -52,7 +52,7 @@ export default function SobreMi() {
               height={1100}
               /* En móvil un 4/5 se comía media pantalla: ahí va apaisada y
                  recupera el retrato vertical recién en escritorio. */
-              className="relative aspect-[3/2] w-full object-cover object-top sm:aspect-[4/3] lg:aspect-[4/5]"
+              className="relative aspect-[3/2] w-full rounded-[var(--radius-medio)] object-cover object-top sm:aspect-[4/3] lg:aspect-[4/5]"
             />
           </div>
         </div>
@@ -60,7 +60,8 @@ export default function SobreMi() {
         <div className="lg:col-span-7">
           <SectionHeading
             align="left"
-            eyebrow="Sobre mí"
+            tono="rosa"
+        eyebrow="Sobre mí"
             title={`Hola, soy ${NOMBRE}`}
             subtitle={`Llevo más de cinco años dedicada a las uñas, pestañas y cejas. Empecé atendiendo a amigas en mi casa y hoy tengo mi propio espacio en ${CIUDAD}, donde recibo a cada clienta con hora reservada.`}
           />
@@ -78,8 +79,8 @@ export default function SobreMi() {
                 className="anim-entrada flex items-start gap-3 sm:gap-4"
                 style={{ animationDelay: `${i * 80}ms` }}
               >
-                <span className="linea-oro flex h-10 w-10 shrink-0 items-center justify-center border">
-                  <Icono size={17} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
+                <span className="linea-rosa flex h-10 w-10 shrink-0 items-center justify-center rounded-full border">
+                  <Icono size={17} strokeWidth={1.5} className="text-rosa-600" aria-hidden="true" />
                 </span>
                 <div>
                   <h3 className="texto-0 font-medium text-tinta-900">{titulo}</h3>
