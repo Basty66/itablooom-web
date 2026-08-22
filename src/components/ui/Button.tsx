@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { ReactNode, ButtonHTMLAttributes } from 'react';
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'lujo';
 type Size = 'sm' | 'md' | 'lg';
 
 /*
@@ -12,21 +12,27 @@ type Size = 'sm' | 'md' | 'lg';
 const VARIANTES: Record<Variant, string> = {
   primary:
     'brillo bg-dorado-400 text-tinta-900 sombra-sutil ' +
-    'hover:bg-dorado-300 hover:sombra-hover hover:-translate-y-0.5',
+    'brillo-hover hover:sombra-hover hover:-translate-y-0.5',
   secondary:
     'brillo bg-rosa-300 text-crema-100 sombra-sutil ' +
-    'hover:bg-rosa-200 hover:sombra-hover hover:-translate-y-0.5',
+    'brillo-hover hover:sombra-hover hover:-translate-y-0.5',
   outline:
     'border border-dorado-400/40 text-crema-100 ' +
     'hover:border-dorado-400 hover:bg-dorado-400/10 hover:-translate-y-0.5',
   ghost: 'text-crema-100/75 hover:text-crema-100 hover:bg-crema-100/8',
+  /* Máximo contraste sobre el fondo oscuro: se reserva para el CTA principal. */
+  lujo:
+    'brillo bg-crema-100 text-tinta-900 sombra-sutil ' +
+    'hover:bg-crema-50 hover:sombra-hover hover:-translate-y-0.5',
 };
 
 /** Botones anchos y bajos: el aire horizontal es parte del gesto editorial. */
+/* Botones anchos: el diseño usa px-12 py-4 en los principales. El ancho es
+   parte del gesto de lujo; apretados se ven de formulario. */
 const TAMANOS: Record<Size, string> = {
-  sm: 'px-5 py-2.5 gap-2',
-  md: 'px-7 py-3 gap-2.5',
-  lg: 'px-9 py-4 gap-3',
+  sm: 'px-6 py-2.5 gap-2',
+  md: 'px-8 py-3.5 gap-2.5',
+  lg: 'px-12 py-4 gap-3',
 };
 
 const BASE =

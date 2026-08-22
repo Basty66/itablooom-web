@@ -14,7 +14,8 @@ interface SectionProps {
 }
 
 export function Section({ children, className = '', id, espaciado = 'normal' }: SectionProps) {
-  const alto = espaciado === 'amplio' ? 'py-20 md:py-28' : 'py-16 md:py-24';
+  // El ritmo del sistema: 80px en móvil, 120px en escritorio.
+  const alto = espaciado === 'amplio' ? 'ritmo md:py-32' : 'ritmo';
   return (
     <section id={id} className={`${alto} ${className}`}>
       <Container>{children}</Container>

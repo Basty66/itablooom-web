@@ -13,30 +13,28 @@ import { RUBRO, CIUDAD } from '../../lib/contacto';
  */
 export default function Hero() {
   return (
-    <section className="fondo-rosado relative lg:[@media(min-height:720px)]:min-h-[calc(100svh-4.5rem)] lg:flex lg:items-center">
+    <section className="fondo-rosado relative lg:[@media(min-height:720px)]:min-h-[90svh] lg:flex lg:items-center">
       <Container className="relative w-full">
         <div className="grid items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-16 lg:pb-40 lg:pt-12">
           <div className="lg:col-span-7">
-            <p
-              className="anim-entrada texto--1 uppercase espaciado-amplio text-dorado-300"
+            {/* Línea corta al costado del rótulo: el gesto de apertura del
+                diseño, más elegante que una regla debajo. */}
+            <div
+              className="anim-entrada inline-flex items-center gap-3"
               style={{ animationDelay: '60ms' }}
             >
-              {RUBRO}
-            </p>
-
-            {/* Regla fina: separa el rótulo del titular sin ocupar espacio. */}
-            <div
-              aria-hidden="true"
-              className="anim-entrada linea-rosa mt-6 w-16 border-t"
-              style={{ animationDelay: '120ms' }}
-            />
+              <span aria-hidden="true" className="h-px w-8 bg-rosa-300" />
+              <p className="texto--1 uppercase espaciado-amplio text-rosa-300">{RUBRO}</p>
+            </div>
 
             <h1
-              className="anim-entrada mt-8 texto-5 leading-[0.95] text-crema-100"
+              className="anim-entrada mt-8 flex flex-col gap-1 leading-[0.9] text-crema-100"
               style={{ animationDelay: '180ms' }}
             >
-              <span className="block">Goddess</span>
-              <span className="mt-1 block italic text-rosa-300">Studio</span>
+              <span className="texto-5">Goddess</span>
+              {/* El desplazamiento a la derecha es del diseño: rompe la
+                  alineación y hace que el nombre respire. */}
+              <span className="ml-8 texto-4 italic text-dorado-300 sm:ml-12">Studio</span>
             </h1>
 
             <p

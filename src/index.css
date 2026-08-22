@@ -14,20 +14,20 @@
 
   /* Tinta: negro cálido, nunca #000 puro. Ahora es el fondo dominante, así
      que necesita superficies intermedias para separar secciones. */
-  --color-tinta-950: #0d0a09;
-  --color-tinta-850: #1b1614;
+  --color-tinta-950: #0f0b0a;
+  --color-tinta-850: #221b18;
   --color-tinta-400: #9a8d84;
   --color-tinta-500: #7d7068;
   --color-tinta-600: #5a4f47;
   --color-tinta-700: #3a322c;
   --color-tinta-800: #241e1a;
-  --color-tinta-900: #14100e;
+  --color-tinta-900: #171210;
 
   /* Rosado pastel: acento. */
   --color-rosa-50: #fdf4f4;
   --color-rosa-100: #fae8e9;
-  --color-rosa-200: #f4d2d5;
-  --color-rosa-300: #e9b4b9;
+  --color-rosa-200: #ffdadb;
+  --color-rosa-300: #ffb2b9;
   --color-rosa-400: #db949b;
   --color-rosa-500: #c87880;
   /* Para texto pequeño sobre crema: rosa-500 solo alcanza 3.02:1 y AA pide
@@ -49,8 +49,8 @@
      pequeño, donde el oro brillante no alcanza el contraste AA. */
   --color-dorado-100: #fbf1cf;
   --color-dorado-200: #f4e0a0;
-  --color-dorado-300: #e9cb6b;
-  --color-dorado-400: #d4af37;
+  --color-dorado-300: #ffe088;
+  --color-dorado-400: #e9c349;
   --color-dorado-500: #b8912a;
   /* El 500 sobre crema da 2.74:1 y el titular necesita 3:1. Este llega a
      3.4:1 sin perder el matiz dorado. */
@@ -58,10 +58,11 @@
   --color-dorado-700: #6b5215;
 
   /* Formas: un radio contenido moderniza sin perder la sobriedad. */
+  /* Aura & Gold fija 12px en imágenes y tarjetas. */
   --radius-suave: 10px;
-  --radius-medio: 14px;
+  --radius-medio: 12px;
 
-  --font-display: "Cormorant Garamond", "Georgia", serif;
+  --font-display: "EB Garamond", "Georgia", serif;
   --font-sans: "Jost", system-ui, -apple-system, sans-serif;
 
   /* Curva orgánica: arranca rápido y asienta suave. */
@@ -197,6 +198,31 @@
   /* Superficie elevada, para tarjetas y bloques sobre el fondo. */
   .superficie { background-color: var(--color-tinta-850); }
 
+  /*
+   * Glassmorphism: Aura & Gold reemplaza las sombras por vidrio y capas
+   * tonales. El borde claro al 10% define el canto, que sin él se pierde
+   * contra el fondo.
+   */
+  .vidrio {
+    background-color: color-mix(in oklab, var(--color-tinta-850) 70%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-color: color-mix(in oklab, var(--color-crema-100) 10%, transparent);
+  }
+
+  /* Tarjeta del sistema: superficie con canto de oro apenas visible. */
+  .tarjeta {
+    background-color: var(--color-tinta-850);
+    border: 1px solid color-mix(in oklab, var(--color-dorado-400) 15%, transparent);
+    border-radius: var(--radius-medio);
+  }
+
+  /* Chip: rosa al 20% con texto rosado profundo. */
+  .chip {
+    background-color: color-mix(in oklab, var(--color-rosa-300) 20%, transparent);
+    color: var(--color-rosa-300);
+  }
+
   .texto--2 { font-size: var(--paso--2); }
   .texto--1 { font-size: var(--paso--1); }
   .texto-0 { font-size: var(--paso-0); }
@@ -227,6 +253,21 @@
     opacity: 0.035;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+}
+
+/* Aura & Gold: 120px entre secciones en escritorio, 80px en móvil. */
+@layer utilities {
+  .ritmo { padding-block: 80px; }
+  @media (min-width: 768px) {
+    .ritmo { padding-block: 120px; }
+  }
+}
+
+/* El diseño resuelve el hover con brillo, no con cambio de color: mantiene
+   la identidad del oro y funciona igual en todas las variantes. */
+@layer utilities {
+  .brillo-hover { transition: filter 0.3s var(--ease-suave); }
+  .brillo-hover:hover { filter: brightness(1.1); }
 }
 
 @keyframes entrada {
