@@ -34,35 +34,46 @@ const PILARES = [
 export default function SobreMi() {
   return (
     <Section id="sobre-mi" className="fondo-rosado">
-      <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-14">
-        {/* La foto va primero en móvil: pone rostro antes que texto. */}
-        <div className="lg:col-span-5">
-          <div className="relative mx-auto max-w-sm lg:max-w-none">
-            {/* Marco dorado desplazado: da profundidad sin recargar. */}
-            <div
-              aria-hidden="true"
-              className="linea-oro absolute inset-0 h-full w-full rounded-[var(--radius-medio)] border sm:-bottom-4 sm:-right-4 sm:inset-auto"
-            />
-            <img
-              src="/images/g-ignacia.jpg"
-              alt={`${NOMBRE}, especialista de Goddess Studio, trabajando en una sesión`}
-              loading="lazy"
-              decoding="async"
-              width={900}
-              height={1100}
-              /* En móvil un 4/5 se comía media pantalla: ahí va apaisada y
-                 recupera el retrato vertical recién en escritorio. */
-              className="relative aspect-[3/2] w-full rounded-[var(--radius-medio)] object-cover object-top sm:aspect-[4/3] lg:aspect-[4/5]"
-            />
-          </div>
+      <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
+        {/*
+          Columna de identidad: retrato circular con el nombre debajo. El
+          círculo lee como perfil —quién te va a atender— mientras que el
+          rectángulo leía como foto de catálogo.
+        */}
+        <div className="lg:col-span-4">
+          <figure className="mx-auto max-w-[15rem] text-center lg:mx-0 lg:max-w-none">
+            <div className="relative mx-auto aspect-square w-full max-w-[15rem]">
+              {/* Aro desplazado: el mismo recurso de línea fina, en círculo. */}
+              <div
+                aria-hidden="true"
+                className="linea-rosa absolute inset-0 scale-105 rounded-full border"
+              />
+              <img
+                src="/images/g-ignacia.jpg"
+                alt={`${NOMBRE}, especialista de Goddess Studio`}
+                loading="lazy"
+                decoding="async"
+                width={600}
+                height={600}
+                className="relative h-full w-full rounded-full object-cover object-top"
+              />
+            </div>
+
+            <figcaption className="mt-6">
+              <p className="font-display texto-2 leading-tight text-tinta-900">{NOMBRE}</p>
+              <p className="mt-1.5 texto--2 uppercase espaciado-medio text-rosa-600">
+                Especialista en uñas, pestañas y cejas
+              </p>
+            </figcaption>
+          </figure>
         </div>
 
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-8">
           <SectionHeading
             align="left"
             tono="rosa"
         eyebrow="Sobre mí"
-            title={`Hola, soy ${NOMBRE}`}
+            title="Mi historia"
             subtitle={`Llevo más de cinco años dedicada a las uñas, pestañas y cejas. Empecé atendiendo a amigas en mi casa y hoy tengo mi propio espacio en ${CIUDAD}, donde recibo a cada clienta con hora reservada.`}
           />
 
