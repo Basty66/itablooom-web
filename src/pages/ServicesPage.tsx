@@ -29,16 +29,16 @@ function TarjetaServicio({ service, prioritaria }: { service: Service; prioritar
      */
     <article className="group flex overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 transition-all duration-500 ease-out hover:border-dorado-400/30 sm:h-full sm:flex-col sm:hover:-translate-y-2">
       <div className="relative w-[38%] shrink-0 sm:w-full">
-        {/* En móvil la miniatura llena el alto de la fila; el componente trae
-            su propia proporción, así que acá se recorta con object-cover. */}
-        <div className="h-full [&_div]:h-full [&_div]:rounded-none sm:[&_div]:rounded-[var(--radius-foto)] [&_img]:h-full">
-          <ServiceVisual
-            categoria={service.category}
-            imagen={service.image_url}
-            nombre={service.name}
-            prioritaria={prioritaria}
-          />
-        </div>
+        {/* En móvil la foto llena la columna (sin proporción propia, que
+            recalcularía el ancho desde el alto y la desbordaría); desde sm
+            recupera el cuadrado con esquinas redondeadas. */}
+        <ServiceVisual
+          forma="h-full w-full sm:aspect-square sm:h-auto sm:rounded-[var(--radius-foto)]"
+          categoria={service.category}
+          imagen={service.image_url}
+          nombre={service.name}
+          prioritaria={prioritaria}
+        />
         <span className="chip absolute right-2 top-2 hidden rounded-full px-3 py-1 texto--2 uppercase espaciado-medio backdrop-blur-md sm:right-4 sm:top-4 sm:inline-block">
           {etiquetaCategoria(service.category)}
         </span>

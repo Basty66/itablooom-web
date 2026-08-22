@@ -7,18 +7,21 @@ export function Skeleton({ className = '' }: { className?: string }) {
   return <div className={`animate-pulse rounded-lg bg-crema-100/10 ${className}`} />;
 }
 
+/**
+ * Sigue las dos formas de la tarjeta real: fila con la foto al costado en
+ * móvil y columna desde sm. Con la forma antigua (siempre foto arriba en
+ * 16/9) el contenido saltaba de sitio al terminar de cargar.
+ */
 export function ServiceCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-crema-100/10 superficie">
-      <Skeleton className="aspect-[16/9] rounded-none" />
-      <div className="space-y-3 p-6">
+    <div className="flex h-[240px] overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 sm:h-auto sm:flex-col">
+      <Skeleton className="w-[38%] shrink-0 rounded-none sm:aspect-square sm:w-full" />
+      <div className="flex flex-1 flex-col gap-3 p-4 sm:p-6">
+        <Skeleton className="h-4 w-20 rounded-full" />
         <Skeleton className="h-5 w-2/3" />
+        <Skeleton className="h-3 w-16" />
         <Skeleton className="h-3 w-full" />
-        <Skeleton className="h-3 w-4/5" />
-        <div className="flex items-center justify-between pt-4">
-          <Skeleton className="h-8 w-24" />
-          <Skeleton className="h-10 w-28 rounded-full" />
-        </div>
+        <Skeleton className="mt-auto h-10 w-full" />
       </div>
     </div>
   );

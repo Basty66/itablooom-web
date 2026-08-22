@@ -38,9 +38,24 @@ interface Props {
   nombre?: string;
   /** La primera tarjeta visible carga con prioridad; el resto en diferido. */
   prioritaria?: boolean;
+  /**
+   * Reemplaza la proporción y el radio por defecto. Existe porque el catálogo
+   * en móvil necesita que la foto llene una columna de alto fijo: forzarle la
+   * altura desde fuera dejaba el `aspect-ratio` activo, que recalculaba el
+   * ancho a partir de ese alto y desbordaba la imagen fuera de la tarjeta.
+   */
+  forma?: string;
 }
 
-export default function ServiceVisual({ categoria, imagen, nombre, prioritaria = false }: Props) {
+const FORMA_POR_DEFECTO = 'aspect-[4/3] rounded-[var(--radius-foto)] sm:aspect-square';
+
+export default function ServiceVisual({
+  categoria,
+  imagen,
+  nombre,
+  prioritaria = false,
+  forma = FORMA_POR_DEFECTO,
+}: Props) {
   const [fallo, setFallo] = useState(false);
   const { icono: Icono } = ESTILOS[categoria] ?? RESPALDO;
 
@@ -49,7 +64,7 @@ export default function ServiceVisual({ categoria, imagen, nombre, prioritaria =
   // Retrato 4/5 en escritorio; en móvil eso alarga demasiado la columna, así
   // que ahí va cuadrado: más contenido sin perder el aire.
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-foto)] bg-tinta-850 sm:aspect-square">
+    <div className={`relative overflow-hidden bg-tinta-850 ${forma}`}>
       {imagen && !fallo ? (
         <>
           <img
