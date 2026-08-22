@@ -38,15 +38,19 @@ const HORARIOS = [
 
 export default function Footer() {
   return (
-    <footer className="textura-papel relative border-t border-dorado-400/15 bg-dorado-400 text-tinta-900">
+    /* El fondo era `bg-dorado-400`: oro sólido bajo un contenido escrito
+       entero para fondo oscuro (crema, dorado-300, bordes claros), así que el
+       pie entero quedaba en 1.5:1. Va al escalón más profundo de la escala,
+       que además lo separa del cuerpo de la página. */
+    <footer className="textura-papel relative border-t border-dorado-400/15 bg-tinta-950 text-nacar-200">
       <Container className="relative py-16">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-5">
             <div className="flex items-baseline gap-2">
               <span className="font-display texto-2 font-medium text-crema-100">Goddess</span>
-              <span className="texto--1 uppercase tracking-[0.25em] text-dorado-300">Studio</span>
+              <span className="texto--1 uppercase tracking-[0.25em] text-rosa-300">Studio</span>
             </div>
-            <p className="mt-4 max-w-sm texto--1 text-crema-100/60">
+            <p className="mt-4 max-w-sm texto--1 text-nacar-200/80">
               Esmaltado permanente, uñas acrílicas, extensión de pestañas y diseño de cejas.
               Atención personalizada con hora reservada.
             </p>
@@ -82,7 +86,7 @@ export default function Footer() {
               href={linkWhatsApp()}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-block py-1 texto--1 text-crema-100/60 transition-colors duration-200 hover:text-dorado-300"
+              className="mt-3 inline-block py-1 texto--1 text-nacar-200/80 transition-colors duration-200 hover:text-dorado-300"
             >
               {WHATSAPP_VISIBLE}
             </a>
@@ -114,10 +118,10 @@ export default function Footer() {
             <dl className="space-y-2.5">
               {HORARIOS.map(([dia, horas]) => (
                 <div key={dia} className="flex items-baseline justify-between gap-4">
-                  <dt className="texto--1 text-crema-100/60">{dia}</dt>
+                  <dt className="texto--1 text-nacar-200/80">{dia}</dt>
                   <dd
                     className={`texto--1 ${
-                      horas === 'Cerrado' ? 'text-crema-100/35' : 'text-crema-100'
+                      horas === 'Cerrado' ? 'text-nacar-300' : 'text-crema-100'
                     }`}
                   >
                     {horas}
@@ -125,14 +129,14 @@ export default function Footer() {
                 </div>
               ))}
             </dl>
-            <p className="mt-5 flex items-center gap-2 texto--1 text-crema-100/60">
+            <p className="mt-5 flex items-center gap-2 texto--1 text-nacar-200/80">
               <MapPin size={15} strokeWidth={1.5} aria-hidden="true" className="text-dorado-300" />
               Melipilla, Chile
             </p>
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-crema-100/10 pt-8 texto--1 text-crema-100/45 sm:flex-row">
+        <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-crema-100/10 pt-8 texto--1 text-nacar-300 sm:flex-row">
           <p>© {new Date().getFullYear()} Goddess Studio</p>
           <p>Diseñado y desarrollado por BS Digital Tech</p>
         </div>
