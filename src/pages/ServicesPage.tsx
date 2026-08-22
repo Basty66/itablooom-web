@@ -35,7 +35,7 @@ export default function ServicesPage() {
     categoria === 'all' ? services : services.filter((s) => s.category === categoria);
 
   return (
-    <Section className="bg-crema-100">
+    <Section className="bg-tinta-900">
       <SectionHeading
         as="h1"
         eyebrow="Catálogo"
@@ -58,8 +58,8 @@ export default function ServicesPage() {
               onClick={() => setCategoria(cat.id)}
               className={`rounded-full px-6 py-2.5 texto--1 font-medium transition-all duration-200 ease-out active:scale-95 ${
                 activa
-                  ? 'bg-tinta-900 text-crema-100 shadow-sm'
-                  : 'border border-tinta-900/15 text-tinta-600 hover:border-dorado-400 hover:text-tinta-900'
+                  ? 'bg-dorado-400 text-tinta-900 shadow-sm'
+                  : 'border border-crema-100/15 text-crema-100/70 hover:border-dorado-400 hover:text-crema-100'
               }`}
             >
               {cat.label}
@@ -79,9 +79,9 @@ export default function ServicesPage() {
       </div>
 
       {!cargando && error && (
-        <div className="mx-auto mt-8 max-w-md rounded-2xl border border-tinta-900/10 bg-crema-50 p-10 text-center">
-          <p className="texto-1 mb-2 text-tinta-900">No pudimos cargar los tratamientos</p>
-          <p className="mb-6 texto--1 text-tinta-600">Revisa tu conexión e intentá de nuevo.</p>
+        <div className="mx-auto mt-8 max-w-md rounded-2xl border border-crema-100/12 superficie p-10 text-center">
+          <p className="texto-1 mb-2 text-crema-100">No pudimos cargar los tratamientos</p>
+          <p className="mb-6 texto--1 text-crema-100/70">Revisa tu conexión e intentá de nuevo.</p>
           <button
             onClick={cargar}
             className="rounded-full bg-tinta-900 px-6 py-2.5 texto--1 font-medium text-crema-100 transition-all duration-200 hover:bg-tinta-800 active:scale-95"
@@ -93,8 +93,8 @@ export default function ServicesPage() {
 
       {!cargando && !error && visibles.length === 0 && (
         <div className="mt-8 flex flex-col items-center py-16 text-center">
-          <SearchX size={30} strokeWidth={1.3} className="mb-4 text-tinta-400" aria-hidden="true" />
-          <p className="text-tinta-600">No hay tratamientos en esta categoría.</p>
+          <SearchX size={30} strokeWidth={1.3} className="mb-4 text-crema-100/40" aria-hidden="true" />
+          <p className="text-crema-100/70">No hay tratamientos en esta categoría.</p>
         </div>
       )}
     </Section>

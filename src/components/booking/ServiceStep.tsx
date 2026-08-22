@@ -39,7 +39,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
 
   if (services.length === 0) {
     return (
-      <p className="linea-oro border-y py-10 text-center texto--1 text-tinta-600">
+      <p className="linea-oro border-y py-10 text-center texto--1 text-crema-100/70">
         No hay servicios disponibles en este momento.
       </p>
     );
@@ -62,7 +62,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
             aria-checked={activo}
             onClick={() => onSeleccionar(service)}
             style={{ animationDelay: `${i * 60}ms` }}
-            className="anim-entrada group relative flex w-full items-center gap-4 py-5 pl-4 pr-1 text-left transition-colors duration-300 hover:bg-crema-50 sm:gap-5"
+            className="anim-entrada group relative flex w-full items-center gap-4 py-5 pl-4 pr-1 text-left transition-colors duration-300 hover:superficie sm:gap-5"
           >
             {/* Barra de selección: marca la fila sin teñir el fondo. */}
             <span
@@ -72,7 +72,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
               }`}
             />
 
-            <span className="h-24 w-20 shrink-0 overflow-hidden bg-crema-200">
+            <span className="h-24 w-20 shrink-0 overflow-hidden bg-tinta-850">
               {service.image_url && (
                 <img
                   src={service.image_url}
@@ -85,26 +85,26 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
             </span>
 
             <span className="flex min-w-0 flex-1 flex-col">
-              <span className="texto--2 uppercase espaciado-medio text-dorado-700">
+              <span className="texto--2 uppercase espaciado-medio text-dorado-300">
                 {etiquetaCategoria(service.category)}
               </span>
 
-              <span className="mt-1.5 font-display texto-1 leading-tight text-tinta-900">
+              <span className="mt-1.5 font-display texto-1 leading-tight text-crema-100">
                 {service.name}
               </span>
 
-              <span className="mt-1 texto--1 text-tinta-500">
+              <span className="mt-1 texto--1 text-crema-100/55">
                 {formatDuration(service.duration_minutes)}
               </span>
             </span>
 
             <span className="shrink-0 pl-2 text-right">
-              <span className="block texto-0 tabular-nums text-tinta-900">
+              <span className="block texto-0 tabular-nums text-crema-100">
                 {formatPrice(service.price)}
               </span>
               <span
                 className={`mt-1 block texto--2 uppercase espaciado-medio transition-colors duration-300 ${
-                  activo ? 'text-tinta-900' : 'text-tinta-400'
+                  activo ? 'text-crema-100' : 'text-crema-100/40'
                 }`}
               >
                 {activo ? 'Elegido' : 'Elegir'}

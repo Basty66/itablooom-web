@@ -26,7 +26,7 @@ const PASOS = [
 
 export default function ComoFunciona() {
   return (
-    <Section id="como-funciona" className="bg-crema-100">
+    <Section id="como-funciona" className="bg-tinta-900">
       <SectionHeading
         eyebrow="Simple"
         title="Cómo reservar"
@@ -42,7 +42,7 @@ export default function ComoFunciona() {
         {PASOS.map(({ icono: Icono, titulo, texto }, i) => (
           <li
             key={titulo}
-            className="anim-entrada group relative bg-crema-100 py-6 sm:px-6 sm:py-8"
+            className="anim-entrada group relative bg-tinta-900 py-6 sm:px-6 sm:py-8"
             style={{ animationDelay: `${i * 90}ms` }}
           >
             <span
@@ -52,11 +52,11 @@ export default function ComoFunciona() {
               0{i + 1}
             </span>
 
-            <Icono size={19} strokeWidth={1.3} className="mt-4 text-dorado-700" aria-hidden="true" />
+            <Icono size={19} strokeWidth={1.3} className="mt-4 text-dorado-300" aria-hidden="true" />
 
             <div className="mt-4 min-w-0">
-              <h3 className="texto-1 text-tinta-900">{titulo}</h3>
-              <p className="mt-2 texto--1 leading-relaxed text-tinta-600">{texto}</p>
+              <h3 className="texto-1 text-crema-100">{titulo}</h3>
+              <p className="mt-2 texto--1 leading-relaxed text-crema-100/70">{texto}</p>
             </div>
           </li>
         ))}

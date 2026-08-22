@@ -41,13 +41,13 @@ function Estado({
     <div className="text-center">
       <span
         className={`anim-velo mx-auto mb-6 flex h-16 w-16 items-center justify-center border border-dorado-400/50 ${
-          tono === 'exito' ? 'bg-crema-50' : 'bg-crema-200'
+          tono === 'exito' ? 'superficie' : 'bg-tinta-850'
         }`}
       >
-        <Icono size={36} strokeWidth={1.3} className="text-tinta-900" aria-hidden="true" />
+        <Icono size={36} strokeWidth={1.3} className="text-crema-100" aria-hidden="true" />
       </span>
-      <h1 className="texto-4 text-tinta-900">{titulo}</h1>
-      <p className="mx-auto mt-3 max-w-md text-tinta-600">{texto}</p>
+      <h1 className="texto-4 text-crema-100">{titulo}</h1>
+      <p className="mx-auto mt-3 max-w-md text-crema-100/70">{texto}</p>
     </div>
   );
 }
@@ -114,7 +114,7 @@ export default function ConfirmationPage() {
 
   if (cargando) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-crema-100">
+      <div className="flex min-h-screen items-center justify-center bg-tinta-900">
         <Loader2 size={34} strokeWidth={1.3} className="animate-spin text-dorado-500" aria-hidden="true" />
         <span className="sr-only">Cargando tu reserva…</span>
       </div>
@@ -123,7 +123,7 @@ export default function ConfirmationPage() {
 
   if (status === 'failure') {
     return (
-      <div className="flex min-h-screen items-center bg-crema-100 py-16">
+      <div className="flex min-h-screen items-center bg-tinta-900 py-16">
         <Container className="max-w-xl">
           <Estado
             icono={XCircle}
@@ -143,7 +143,7 @@ export default function ConfirmationPage() {
 
   if (!booking) {
     return (
-      <div className="flex min-h-screen items-center bg-crema-100 py-16">
+      <div className="flex min-h-screen items-center bg-tinta-900 py-16">
         <Container className="max-w-xl">
           <Estado
             icono={CheckCircle2}
@@ -163,7 +163,7 @@ export default function ConfirmationPage() {
   const saldoPendiente = booking.remaining_paid ? 0 : Math.max(totalServicio - pagado, 0);
 
   return (
-    <div className="min-h-screen bg-crema-100 py-14 md:py-20">
+    <div className="min-h-screen bg-tinta-900 py-14 md:py-20">
       <Container className="max-w-2xl">
         <Estado
           icono={CheckCircle2}
@@ -171,8 +171,8 @@ export default function ConfirmationPage() {
           texto="Ya reservamos tu horario. Te esperamos el día de tu sesión."
         />
 
-        <div className="mt-10 linea-oro border bg-crema-50 p-6 sm:p-8">
-          <h2 className="texto-2 mb-6 text-tinta-900">Detalle de tu reserva</h2>
+        <div className="mt-10 linea-oro border superficie p-6 sm:p-8">
+          <h2 className="texto-2 mb-6 text-crema-100">Detalle de tu reserva</h2>
 
           <dl className="space-y-5">
             {[
@@ -196,19 +196,19 @@ export default function ConfirmationPage() {
             ].map(({ icono: Icono, label, valor }) => (
               <div key={label} className="flex items-start gap-4">
                 <span className="linea-oro flex h-11 w-11 shrink-0 items-center justify-center border">
-                  <Icono size={18} strokeWidth={1.5} className="text-tinta-800" aria-hidden="true" />
+                  <Icono size={18} strokeWidth={1.5} className="text-crema-100/90" aria-hidden="true" />
                 </span>
                 <div className="min-w-0">
-                  <dt className="texto--1 text-tinta-500">{label}</dt>
-                  <dd className="texto-0 font-medium capitalize text-tinta-900">{valor}</dd>
+                  <dt className="texto--1 text-crema-100/55">{label}</dt>
+                  <dd className="texto-0 font-medium capitalize text-crema-100">{valor}</dd>
                 </div>
               </div>
             ))}
           </dl>
 
           <div className="mt-7 linea-oro border-t pt-6">
-            <h3 className="mb-4 flex items-center gap-2 texto-1 text-tinta-900">
-              <CreditCard size={17} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
+            <h3 className="mb-4 flex items-center gap-2 texto-1 text-crema-100">
+              <CreditCard size={17} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
               Resumen de pago
             </h3>
             {/*
@@ -219,34 +219,34 @@ export default function ConfirmationPage() {
             */}
             <dl className="space-y-2.5 texto--1">
               <div className="flex justify-between gap-4">
-                <dt className="text-tinta-600">
+                <dt className="text-crema-100/70">
                   {saldoPendiente > 0 ? 'Abonaste' : 'Pagaste'}
                 </dt>
-                <dd className="font-medium text-tinta-900">{formatPrice(pagado)}</dd>
+                <dd className="font-medium text-crema-100">{formatPrice(pagado)}</dd>
               </div>
 
               {saldoPendiente > 0 && (
                 <>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-tinta-600">Saldo a pagar en el local</dt>
-                    <dd className="font-medium text-tinta-900">{formatPrice(saldoPendiente)}</dd>
+                    <dt className="text-crema-100/70">Saldo a pagar en el local</dt>
+                    <dd className="font-medium text-crema-100">{formatPrice(saldoPendiente)}</dd>
                   </div>
                   <div className="linea-oro flex justify-between gap-4 border-t pt-2.5">
-                    <dt className="text-tinta-500">Valor del servicio</dt>
-                    <dd className="text-tinta-500">{formatPrice(totalServicio)}</dd>
+                    <dt className="text-crema-100/55">Valor del servicio</dt>
+                    <dd className="text-crema-100/55">{formatPrice(totalServicio)}</dd>
                   </div>
                 </>
               )}
 
               {saldoPendiente === 0 && (
-                <p className="text-tinta-500">Tu servicio queda pagado por completo.</p>
+                <p className="text-crema-100/55">Tu servicio queda pagado por completo.</p>
               )}
             </dl>
           </div>
 
           <div className="mt-7 linea-oro border-t p-0 pt-6">
-            <h3 className="mb-3 texto-0 font-medium text-tinta-900">Antes de tu cita</h3>
-            <ul className="space-y-2 texto--1 text-tinta-600">
+            <h3 className="mb-3 texto-0 font-medium text-crema-100">Antes de tu cita</h3>
+            <ul className="space-y-2 texto--1 text-crema-100/70">
               {[
                 'Llega 5 minutos antes para acomodarte con calma.',
                 'Si es depilación láser, ven con la zona rasurada y sin exposición solar reciente.',
@@ -262,8 +262,8 @@ export default function ConfirmationPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-4 flex items-center gap-2 texto--1 text-tinta-500">
-              <MapPin size={14} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
+            <p className="mt-4 flex items-center gap-2 texto--1 text-crema-100/55">
+              <MapPin size={14} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
               Santiago, Chile
             </p>
           </div>

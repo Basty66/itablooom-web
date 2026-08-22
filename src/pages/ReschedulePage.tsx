@@ -108,11 +108,11 @@ export default function ReschedulePage() {
 
   if (!bookingId) {
     return (
-      <div className="min-h-screen bg-crema-100 py-16">
+      <div className="min-h-screen bg-tinta-900 py-16">
         <Container className="max-w-lg text-center">
-          <AlertCircle size={40} strokeWidth={1.3} className="mx-auto mb-4 text-dorado-700" />
-          <h1 className="texto-3 text-tinta-900">Link inválido</h1>
-          <p className="mt-3 texto-0 text-tinta-600">Pide a Goddess Studio el link correcto para reagendar.</p>
+          <AlertCircle size={40} strokeWidth={1.3} className="mx-auto mb-4 text-dorado-300" />
+          <h1 className="texto-3 text-crema-100">Link inválido</h1>
+          <p className="mt-3 texto-0 text-crema-100/70">Pide a Goddess Studio el link correcto para reagendar.</p>
         </Container>
       </div>
     );
@@ -120,55 +120,55 @@ export default function ReschedulePage() {
 
   if (exito) {
     return (
-      <div className="min-h-screen bg-crema-100 py-16">
+      <div className="min-h-screen bg-tinta-900 py-16">
         <Container className="max-w-lg text-center">
           <CheckCircle2 size={48} strokeWidth={1.3} className="mx-auto mb-5 text-emerald-500" />
-          <h1 className="texto-3 text-tinta-900">¡Reagendada!</h1>
-          <p className="mt-3 texto-0 text-tinta-600">
+          <h1 className="texto-3 text-crema-100">¡Reagendada!</h1>
+          <p className="mt-3 texto-0 text-crema-100/70">
             Tu nueva cita es el <strong>{format(fecha!, "EEEE d 'de' MMMM", { locale: es })}</strong> a las <strong>{hora}</strong>.
           </p>
-          <p className="mt-2 texto--1 text-tinta-500">Te esperamos. Si necesitás algo más, escribinos por WhatsApp.</p>
+          <p className="mt-2 texto--1 text-crema-100/55">Te esperamos. Si necesitás algo más, escribinos por WhatsApp.</p>
         </Container>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-crema-100 py-10 md:py-16">
+    <div className="min-h-screen bg-tinta-900 py-10 md:py-16">
       <Container className="max-w-lg">
         <header className="mb-8 text-center">
-          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-dorado-700">Reagendar cita</p>
-          <h1 className="texto-3 text-tinta-900">
+          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-dorado-300">Reagendar cita</p>
+          <h1 className="texto-3 text-crema-100">
             {verificado ? 'Elegí tu nuevo horario' : 'Verificá tu reserva'}
           </h1>
         </header>
 
         {error && (
-          <div className="mb-6 linea-oro border px-4 py-3 texto--1 text-tinta-800">
+          <div className="mb-6 linea-oro border px-4 py-3 texto--1 text-crema-100/90">
             {error}
           </div>
         )}
 
         {!verificado ? (
-          <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
+          <div className="rounded-3xl border border-crema-100/10 superficie p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
             <div className="space-y-4">
               <label className="block">
-                <span className="mb-1.5 block texto--1 font-medium text-tinta-700">ID de la reserva</span>
+                <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">ID de la reserva</span>
                 <input
                   type="text"
                   value={bookingId || ''}
                   disabled
-                  className="w-full rounded-xl border border-tinta-900/15 bg-tinta-900/5 px-4 py-3 texto-0 text-tinta-500"
+                  className="w-full rounded-xl border border-crema-100/15 bg-tinta-900/5 px-4 py-3 texto-0 text-crema-100/55"
                 />
               </label>
               <label className="block">
-                <span className="mb-1.5 block texto--1 font-medium text-tinta-700">Tu email</span>
+                <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">Tu email</span>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="maria@ejemplo.cl"
-                  className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 px-4 py-3 texto-0 text-tinta-900 placeholder:text-tinta-400 transition-colors focus:border-dorado-500 focus:outline-none"
+                  className="w-full rounded-xl border border-crema-100/15 superficie px-4 py-3 texto-0 text-crema-100 placeholder:text-crema-100/40 transition-colors focus:border-dorado-500 focus:outline-none"
                 />
               </label>
               <button
@@ -179,31 +179,31 @@ export default function ReschedulePage() {
                 Verificar reserva
               </button>
             </div>
-            <p className="mt-4 texto--1 text-center text-tinta-500">
+            <p className="mt-4 texto--1 text-center text-crema-100/55">
               ¿No encontrás tu reserva?{' '}
-              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-dorado-700 underline">Escribinos</a>
+              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-dorado-300 underline">Escribinos</a>
             </p>
           </div>
         ) : (
           <>
             {/* Resumen de la cita actual */}
-            <div className="mb-6 rounded-2xl border border-tinta-900/8 bg-crema-50/80 px-4 py-3 text-center">
-              <p className="texto--1 text-tinta-500">Tu cita actual</p>
-              <p className="mt-1 texto-0 font-medium text-tinta-900">
+            <div className="mb-6 rounded-2xl border border-crema-100/10 superficie px-4 py-3 text-center">
+              <p className="texto--1 text-crema-100/55">Tu cita actual</p>
+              <p className="mt-1 texto-0 font-medium text-crema-100">
                 {booking.service_name} · {booking.booking_time ? String(booking.booking_time).slice(0, 5) : ''}
               </p>
-              <p className="texto--1 text-tinta-500">
+              <p className="texto--1 text-crema-100/55">
                 {booking.booking_date
                   ? format(new Date(String(booking.booking_date).split('T')[0] + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })
                   : ''}
               </p>
             </div>
 
-            <div className="rounded-3xl border border-tinta-900/8 bg-crema-50/70 p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
+            <div className="rounded-3xl border border-crema-100/10 superficie p-5 shadow-[0_20px_60px_-40px_rgba(20,16,14,0.5)] sm:p-7">
               {/* Calendario */}
               <div className="mb-6">
-                <h3 className="mb-3 flex items-center gap-2 texto-1 text-tinta-900">
-                  <CalendarDays size={17} strokeWidth={1.5} className="text-dorado-700" />
+                <h3 className="mb-3 flex items-center gap-2 texto-1 text-crema-100">
+                  <CalendarDays size={17} strokeWidth={1.5} className="text-dorado-300" />
                   Elegí el nuevo día
                 </h3>
                 <div className="grid grid-cols-7 gap-1.5">
@@ -216,8 +216,8 @@ export default function ReschedulePage() {
                         onClick={() => { setFecha(dia); setHora(''); }}
                         className={`flex flex-col items-center rounded-xl py-2 transition-all duration-200 ${
                           activo
-                            ? 'bg-tinta-900 text-crema-100'
-                            : 'text-tinta-800 hover:bg-crema-200 active:scale-95'
+                            ? 'bg-dorado-400 text-tinta-900'
+                            : 'text-crema-100/90 hover:bg-tinta-850 active:scale-95'
                         }`}
                       >
                         <span className="texto--2 capitalize opacity-60">{format(dia, 'EEE', { locale: es }).slice(0, 3)}</span>
@@ -226,20 +226,20 @@ export default function ReschedulePage() {
                     );
                   })}
                 </div>
-                <p className="mt-2 texto--1 text-tinta-500">Solo podés reagendar con 24h de anticipación.</p>
+                <p className="mt-2 texto--1 text-crema-100/55">Solo podés reagendar con 24h de anticipación.</p>
               </div>
 
               {/* Slots */}
               {fecha && (
                 <div className="anim-entrada">
-                  <h3 className="mb-3 flex items-center gap-2 texto-1 text-tinta-900">
-                    <Clock3 size={17} strokeWidth={1.5} className="text-dorado-700" />
+                  <h3 className="mb-3 flex items-center gap-2 texto-1 text-crema-100">
+                    <Clock3 size={17} strokeWidth={1.5} className="text-dorado-300" />
                     Elegí la hora
                   </h3>
                   {cargandoSlots ? (
-                    <div className="py-8 text-center texto--1 text-tinta-500">Cargando horarios…</div>
+                    <div className="py-8 text-center texto--1 text-crema-100/55">Cargando horarios…</div>
                   ) : slots.filter((s) => s.available).length === 0 ? (
-                    <div className="py-8 text-center texto--1 text-tinta-500">No hay horarios disponibles para este día.</div>
+                    <div className="py-8 text-center texto--1 text-crema-100/55">No hay horarios disponibles para este día.</div>
                   ) : (
                     <div className="grid grid-cols-3 gap-1.5">
                       {slots.filter((s) => s.available).map((slot) => (
@@ -249,8 +249,8 @@ export default function ReschedulePage() {
                           onClick={() => setHora(slot.time)}
                           className={`rounded-xl py-2.5 texto--1 font-medium tabular-nums transition-all duration-200 ${
                             hora === slot.time
-                              ? 'bg-tinta-900 text-crema-100'
-                              : 'bg-crema-200/70 text-tinta-800 hover:bg-dorado-200 active:scale-95'
+                              ? 'bg-dorado-400 text-tinta-900'
+                              : 'bg-tinta-850 text-crema-100/90 hover:bg-dorado-200 active:scale-95'
                           }`}
                         >
                           {slot.time}

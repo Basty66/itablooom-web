@@ -12,7 +12,10 @@
   --color-crema-300: #ebe0ce;
   --color-crema-400: #ddcdb4;
 
-  /* Tinta: negro cálido, nunca #000 puro (vibra sobre crema). */
+  /* Tinta: negro cálido, nunca #000 puro. Ahora es el fondo dominante, así
+     que necesita superficies intermedias para separar secciones. */
+  --color-tinta-950: #0d0a09;
+  --color-tinta-850: #1b1614;
   --color-tinta-400: #9a8d84;
   --color-tinta-500: #7d7068;
   --color-tinta-600: #5a4f47;
@@ -90,8 +93,10 @@
 
   body {
     margin: 0;
-    background-color: var(--color-crema-100);
-    color: var(--color-tinta-900);
+    /* Negro dominante: sobre este fondo el oro brillante recién funciona como
+       texto (≈8:1); sobre crema daba 1.95:1 y era ilegible. */
+    background-color: var(--color-tinta-900);
+    color: var(--color-crema-100);
     font-family: var(--font-sans);
     font-size: var(--paso-0);
     line-height: 1.65;
@@ -123,7 +128,7 @@
   }
 
   ::selection {
-    background-color: var(--color-rosa-200);
+    background-color: var(--color-dorado-400);
     color: var(--color-tinta-900);
   }
 
@@ -131,12 +136,12 @@
     width: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--color-crema-200);
+    background: var(--color-tinta-850);
   }
   ::-webkit-scrollbar-thumb {
     background: var(--color-dorado-300);
     border-radius: 999px;
-    border: 2px solid var(--color-crema-200);
+    border: 2px solid var(--color-tinta-850);
   }
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-dorado-400);
@@ -146,11 +151,12 @@
 @layer utilities {
   /* Sombra apenas perceptible, solo para despegar del fondo en hover.
      Nada de las sombras densas del sistema anterior. */
+  /* Sobre fondo oscuro una sombra no se ve: el relieve lo da un halo tenue. */
   .sombra-sutil {
-    box-shadow: 0 1px 2px rgba(20, 16, 14, 0.04), 0 8px 24px -16px rgba(20, 16, 14, 0.18);
+    box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.08), 0 12px 32px -20px rgba(0, 0, 0, 0.8);
   }
   .sombra-hover {
-    box-shadow: 0 2px 4px rgba(20, 16, 14, 0.06), 0 16px 40px -20px rgba(20, 16, 14, 0.28);
+    box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.22), 0 20px 48px -20px rgba(0, 0, 0, 0.9);
   }
 
   /* Brillo que recorre el botón al pasar el cursor. */
@@ -172,19 +178,24 @@
   .espaciado-medio { letter-spacing: 0.16em; }
 
   /* Línea fina dorada: único separador del sistema, en vez de sombras. */
-  .linea-oro { border-color: color-mix(in oklab, var(--color-dorado-400) 35%, transparent); }
+  .linea-oro { border-color: color-mix(in oklab, var(--color-dorado-400) 30%, transparent); }
 
   /* Variante rosada de la misma línea, para las secciones más cálidas.
      El oro solo se leía sobrio; alternarlo con rosa feminiza el conjunto
      sin perder el aire de marca cara. */
-  .linea-rosa { border-color: color-mix(in oklab, var(--color-rosa-400) 40%, transparent); }
+  .linea-rosa { border-color: color-mix(in oklab, var(--color-rosa-300) 35%, transparent); }
 
   /* Fondo apenas teñido: rompe el crema plano en las secciones cálidas. */
+  /* Secciones cálidas: un velo rosado casi imperceptible sobre el negro.
+     Con más opacidad el rosa se ensucia y pierde el aire premium. */
   .fondo-rosado {
     background-image: linear-gradient(180deg,
-      color-mix(in oklab, var(--color-rosa-100) 55%, transparent) 0%,
-      var(--color-crema-100) 60%);
+      color-mix(in oklab, var(--color-rosa-500) 12%, transparent) 0%,
+      var(--color-tinta-900) 55%);
   }
+
+  /* Superficie elevada, para tarjetas y bloques sobre el fondo. */
+  .superficie { background-color: var(--color-tinta-850); }
 
   .texto--2 { font-size: var(--paso--2); }
   .texto--1 { font-size: var(--paso--1); }
@@ -213,7 +224,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.02;
+    opacity: 0.035;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }

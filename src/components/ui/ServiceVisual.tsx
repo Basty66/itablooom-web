@@ -49,7 +49,7 @@ export default function ServiceVisual({ categoria, imagen, nombre, prioritaria =
   // Retrato 4/5 en escritorio; en móvil eso alarga demasiado la columna, así
   // que ahí va cuadrado: más contenido sin perder el aire.
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-medio)] bg-crema-200 sm:aspect-square">
+    <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-medio)] bg-tinta-850 sm:aspect-square">
       {imagen && !fallo ? (
         <>
           <img
@@ -63,7 +63,7 @@ export default function ServiceVisual({ categoria, imagen, nombre, prioritaria =
             className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
           />
           {/* Velo mínimo: unifica fotos de temperaturas distintas sin ensuciar. */}
-          <div aria-hidden="true" className="absolute inset-0 bg-crema-100/5" />
+          <div aria-hidden="true" className="absolute inset-0 bg-tinta-900/5" />
         </>
       ) : (
         <div className="flex h-full w-full items-center justify-center">
@@ -71,7 +71,7 @@ export default function ServiceVisual({ categoria, imagen, nombre, prioritaria =
           <Icono
             size={30}
             strokeWidth={1.25}
-            className="relative text-tinta-800 transition-transform duration-500 ease-out group-hover:scale-110"
+            className="relative text-crema-100/90 transition-transform duration-500 ease-out group-hover:scale-110"
             aria-hidden="true"
           />
         </div>

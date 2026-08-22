@@ -66,11 +66,11 @@ export default function VideoBienvenida() {
             }`}
           >
             <span className="absolute inset-0 bg-tinta-900/25 transition-colors duration-500 group-hover:bg-tinta-900/35" />
-            <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-crema-100/95 transition-transform duration-500 ease-out group-hover:scale-110 sm:h-20 sm:w-20">
+            <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-tinta-900/95 transition-transform duration-500 ease-out group-hover:scale-110 sm:h-20 sm:w-20">
               {reproduciendo ? (
-                <Pause size={22} strokeWidth={1.5} className="text-tinta-900" aria-hidden="true" />
+                <Pause size={22} strokeWidth={1.5} className="text-crema-100" aria-hidden="true" />
               ) : (
-                <Play size={22} strokeWidth={1.5} className="ml-1 text-tinta-900" aria-hidden="true" />
+                <Play size={22} strokeWidth={1.5} className="ml-1 text-crema-100" aria-hidden="true" />
               )}
             </span>
           </button>

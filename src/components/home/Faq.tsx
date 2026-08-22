@@ -35,14 +35,14 @@ export default function Faq() {
   const [abierta, setAbierta] = useState<number | null>(0);
 
   return (
-    <Section id="faq" className="bg-crema-100">
+    <Section id="faq" className="bg-tinta-900">
       <SectionHeading
         eyebrow="Dudas frecuentes"
         title="Antes de reservar"
         subtitle="Lo que más nos preguntan, respondido de una vez."
       />
 
-      <div className="mx-auto mt-14 max-w-3xl divide-y divide-tinta-900/10 border-y border-tinta-900/10">
+      <div className="mx-auto mt-14 max-w-3xl divide-y divide-tinta-900/10 border-y border-crema-100/12">
         {PREGUNTAS.map(({ pregunta, respuesta }, i) => {
           const activa = abierta === i;
           return (
@@ -53,14 +53,14 @@ export default function Faq() {
                   onClick={() => setAbierta(activa ? null : i)}
                   aria-expanded={activa}
                   aria-controls={`faq-panel-${i}`}
-                  className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-dorado-700"
+                  className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-dorado-300"
                 >
-                  <span className="texto-0 font-medium text-tinta-900">{pregunta}</span>
+                  <span className="texto-0 font-medium text-crema-100">{pregunta}</span>
                   <Plus
                     size={19}
                     strokeWidth={1.5}
                     aria-hidden="true"
-                    className={`shrink-0 text-dorado-700 transition-transform duration-300 ease-out ${
+                    className={`shrink-0 text-dorado-300 transition-transform duration-300 ease-out ${
                       activa ? 'rotate-45' : ''
                     }`}
                   />
@@ -75,7 +75,7 @@ export default function Faq() {
                 }`}
               >
                 <div className="overflow-hidden">
-                  <p className="max-w-2xl pb-6 pr-10 texto--1 text-tinta-600">{respuesta}</p>
+                  <p className="max-w-2xl pb-6 pr-10 texto--1 text-crema-100/70">{respuesta}</p>
                 </div>
               </div>
             </div>

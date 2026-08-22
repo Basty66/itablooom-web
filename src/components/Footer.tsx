@@ -38,7 +38,7 @@ const HORARIOS = [
 
 export default function Footer() {
   return (
-    <footer className="textura-papel relative border-t border-crema-300/20 bg-tinta-900 text-crema-100">
+    <footer className="textura-papel relative border-t border-dorado-400/15 bg-dorado-400 text-tinta-900">
       <Container className="relative py-16">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-5">

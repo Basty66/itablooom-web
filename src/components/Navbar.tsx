@@ -32,16 +32,16 @@ export default function Navbar() {
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ease-out ${
-        conScroll ? 'border-b border-tinta-900/8 bg-crema-100/85 backdrop-blur-md' : 'bg-transparent'
+        conScroll ? 'border-b border-crema-100/10 bg-crema-100/105 backdrop-blur-md' : 'bg-transparent'
       }`}
     >
       <nav aria-label="Principal" className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <div className="flex h-18 items-center justify-between py-4">
           <Link to="/" className="group flex items-baseline gap-2">
-            <span className="font-display texto-2 font-medium tracking-tight text-tinta-900">
+            <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
               Goddess
             </span>
-            <span className="texto--1 uppercase tracking-[0.25em] text-dorado-700 transition-colors duration-200 group-hover:text-dorado-500">
+            <span className="texto--1 uppercase tracking-[0.25em] text-dorado-300 transition-colors duration-200 group-hover:text-dorado-500">
               Studio
             </span>
           </Link>
@@ -54,7 +54,7 @@ export default function Navbar() {
                   key={link.path}
                   to={link.path}
                   aria-current={activo ? 'page' : undefined}
-                  className="group relative inline-block py-1 texto--1 font-medium tracking-wide text-tinta-700 transition-colors duration-200 hover:text-tinta-900"
+                  className="group relative inline-block py-1 texto--1 font-medium tracking-wide text-crema-100/75 transition-colors duration-200 hover:text-crema-100"
                 >
                   {link.label}
                   <span
@@ -76,7 +76,7 @@ export default function Navbar() {
             aria-expanded={abierto}
             aria-controls="menu-movil"
             aria-label={abierto ? 'Cerrar menú' : 'Abrir menú'}
-            className="p-2 text-tinta-800 transition-colors duration-200 hover:bg-tinta-900/5 md:hidden"
+            className="p-2 text-crema-100/90 transition-colors duration-200 hover:bg-crema-100/5 md:hidden"
           >
             {abierto ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
           </button>
@@ -92,7 +92,7 @@ export default function Navbar() {
       >
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-tinta-900/40 backdrop-blur-sm transition-opacity duration-300 ease-out ${
+          className={`absolute inset-0 bg-crema-100/50 backdrop-blur-sm transition-opacity duration-300 ease-out ${
             abierto ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={() => setAbierto(false)}
@@ -101,7 +101,7 @@ export default function Navbar() {
 
         {/* Panel del menú */}
         <div
-          className={`linea-oro relative mx-auto mt-2 w-[calc(100%-2.5rem)] max-w-sm border bg-crema-50 p-3 transition-all duration-300 ease-out ${
+          className={`linea-oro relative mx-auto mt-2 w-[calc(100%-2.5rem)] max-w-sm border superficie p-3 transition-all duration-300 ease-out ${
             abierto
               ? 'translate-y-0 opacity-100 scale-100'
               : '-translate-y-3 opacity-0 scale-95'
@@ -116,8 +116,8 @@ export default function Navbar() {
                   to={link.path}
                   className={`block px-4 py-3 texto--1 uppercase espaciado-medio transition-colors duration-300 ${
                     activo
-                      ? 'bg-crema-200 text-dorado-700'
-                      : 'text-tinta-800 hover:bg-crema-200'
+                      ? 'bg-tinta-850 text-dorado-300'
+                      : 'text-crema-100/90 hover:bg-tinta-850'
                   }`}
                   style={{ transitionDelay: abierto ? `${i * 50}ms` : '0ms' }}
                 >

@@ -25,17 +25,17 @@ export default function StepIndicator({ actual }: { actual: number }) {
                 aria-current={activo ? 'step' : undefined}
                 className={`flex h-9 w-9 items-center justify-center border texto--1 transition-all duration-300 ease-out ${
                   completado
-                    ? 'border-tinta-900 bg-tinta-900 text-crema-100'
+                    ? 'border-tinta-900 bg-dorado-400 text-tinta-900'
                     : activo
-                      ? 'border-tinta-900 text-tinta-900'
-                      : 'border-dorado-400/35 text-tinta-400'
+                      ? 'border-tinta-900 text-crema-100'
+                      : 'border-dorado-400/35 text-crema-100/40'
                 }`}
               >
                 {completado ? <Check size={15} strokeWidth={2} aria-hidden="true" /> : paso.num}
               </span>
               <span
                 className={`text-center texto--1 leading-tight transition-colors duration-300 ${
-                  activo ? 'font-medium text-tinta-900' : 'text-tinta-500'
+                  activo ? 'font-medium text-crema-100' : 'text-crema-100/55'
                 }`}
               >
                 {paso.label}

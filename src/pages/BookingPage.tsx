@@ -137,14 +137,14 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-crema-100 py-10 md:py-16">
+    <div className="min-h-screen bg-tinta-900 py-10 md:py-16">
       <Container className="max-w-2xl">
         <header className="mb-8 text-center">
-          <p className="texto--1 uppercase espaciado-amplio text-dorado-700">
+          <p className="texto--1 uppercase espaciado-amplio text-dorado-300">
             Reserva tu hora
           </p>
           <div aria-hidden="true" className="linea-oro mx-auto my-5 w-12 border-t" />
-          <h1 className="texto-3 leading-tight text-tinta-900">{TITULOS[paso - 1]}</h1>
+          <h1 className="texto-3 leading-tight text-crema-100">{TITULOS[paso - 1]}</h1>
         </header>
 
         <StepIndicator actual={paso} />
@@ -153,13 +153,13 @@ export default function BookingPage() {
         {service && (
           <div className="linea-oro mt-8 border-y px-1 py-4 sm:flex sm:items-center sm:justify-center sm:gap-4 sm:text-center">
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-              <span className="texto--1 font-medium text-tinta-900">{service.name}</span>
+              <span className="texto--1 font-medium text-crema-100">{service.name}</span>
               <span className="hidden text-tinta-300 sm:inline">·</span>
-              <span className="texto--1 text-tinta-500">{formatDuration(service.duration_minutes)}</span>
+              <span className="texto--1 text-crema-100/55">{formatDuration(service.duration_minutes)}</span>
               {fecha && (
                 <>
                   <span className="hidden text-tinta-300 sm:inline">·</span>
-                  <span className="flex items-center gap-1 texto--1 text-tinta-500">
+                  <span className="flex items-center gap-1 texto--1 text-crema-100/55">
                     <CalendarDays size={12} strokeWidth={1.5} />
                     {format(fecha, "EEE d MMM", { locale: es })}
                   </span>
@@ -168,14 +168,14 @@ export default function BookingPage() {
               {hora && (
                 <>
                   <span className="hidden text-tinta-300 sm:inline">·</span>
-                  <span className="flex items-center gap-1 texto--1 text-tinta-500">
+                  <span className="flex items-center gap-1 texto--1 text-crema-100/55">
                     <Clock3 size={12} strokeWidth={1.5} />
                     {hora}
                   </span>
                 </>
               )}
             </div>
-            <span className="mt-2 block text-center font-display texto-1 text-tinta-900 sm:mt-0">
+            <span className="mt-2 block text-center font-display texto-1 text-crema-100 sm:mt-0">
               {formatPrice(service.price)}
             </span>
           </div>
@@ -225,9 +225,9 @@ export default function BookingPage() {
           {error && (
             <p
               role="alert"
-              className="anim-entrada mt-4 flex items-center gap-2 linea-oro border px-4 py-3 texto--1 text-tinta-800"
+              className="anim-entrada mt-4 flex items-center gap-2 linea-oro border px-4 py-3 texto--1 text-crema-100/90"
             >
-              <AlertCircle size={16} strokeWidth={1.5} className="shrink-0 text-dorado-700" aria-hidden="true" />
+              <AlertCircle size={16} strokeWidth={1.5} className="shrink-0 text-dorado-300" aria-hidden="true" />
               {error}
             </p>
           )}
@@ -237,7 +237,7 @@ export default function BookingPage() {
               <button
                 type="button"
                 onClick={volver}
-                className="inline-flex items-center gap-1.5 rounded-full border border-tinta-900/20 px-5 py-3 texto--1 font-medium text-tinta-700 transition-all duration-200 ease-out hover:border-tinta-900 hover:text-tinta-900 active:scale-95"
+                className="inline-flex items-center gap-1.5 rounded-full border border-crema-100/20 px-5 py-3 texto--1 font-medium text-crema-100/75 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-crema-100 active:scale-95"
               >
                 <ChevronLeft size={16} strokeWidth={1.5} aria-hidden="true" />
                 Atrás

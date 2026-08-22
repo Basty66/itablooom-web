@@ -38,21 +38,21 @@ export default function ServiceCard({
       />
 
       <div className="flex flex-1 flex-col pt-5">
-        <p className="texto--1 uppercase espaciado-medio text-dorado-700">
+        <p className="texto--1 uppercase espaciado-medio text-dorado-300">
           {etiquetaCategoria(service.category)}
         </p>
 
-        <h3 className="mt-2 font-display texto-2 leading-tight text-tinta-900">{service.name}</h3>
+        <h3 className="mt-2 font-display texto-2 leading-tight text-crema-100">{service.name}</h3>
 
-        <p className="mt-2 line-clamp-2 texto--1 leading-relaxed text-tinta-600">
+        <p className="mt-2 line-clamp-2 texto--1 leading-relaxed text-crema-100/70">
           {service.description}
         </p>
 
         {/* mt-auto alinea el pie de todas las tarjetas aunque el texto varíe. */}
         <div className="linea-oro mt-5 flex items-baseline justify-between gap-4 border-t pt-4">
           <div>
-            <p className="texto-0 text-tinta-900">{formatPrice(service.price)}</p>
-            <p className="mt-0.5 texto--1 text-tinta-500">
+            <p className="texto-0 text-crema-100">{formatPrice(service.price)}</p>
+            <p className="mt-0.5 texto--1 text-crema-100/55">
               {formatDuration(service.duration_minutes)}
             </p>
           </div>
@@ -60,7 +60,7 @@ export default function ServiceCard({
           <Link
             to={`/agendar?service=${service.id}`}
             aria-label={`Reservar ${service.name}`}
-            className="relative texto--1 uppercase espaciado-medio text-tinta-900 transition-colors duration-300 hover:text-dorado-700"
+            className="relative texto--1 uppercase espaciado-medio text-crema-100 transition-colors duration-300 hover:text-dorado-300"
           >
             Reservar
             {/* Subrayado que se extiende al pasar el cursor. */}

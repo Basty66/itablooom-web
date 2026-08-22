@@ -24,19 +24,19 @@ function parseBookingDate(raw: string | Date | null | undefined): Date | null {
 
 function StatCard({ icono: Icono, label, valor, nota, loading }: { icono: typeof TrendingUp; label: string; valor: string; nota?: string; loading?: boolean }) {
   return (
-    <div className="linea-oro border bg-crema-50 p-4">
+    <div className="linea-oro border superficie p-4">
       <div className="flex items-center gap-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-crema-200">
-          <Icono size={15} strokeWidth={1.5} className="text-dorado-700" aria-hidden="true" />
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-tinta-850">
+          <Icono size={15} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
         </span>
-        <p className="texto--1 text-tinta-500">{label}</p>
+        <p className="texto--1 text-crema-100/55">{label}</p>
       </div>
       {loading ? (
         <Skeleton className="mt-2 h-7 w-20" />
       ) : (
         <>
-          <p className="mt-2 font-display texto-2 leading-tight text-tinta-900">{valor}</p>
-          {nota && <p className="mt-1 texto--2 text-tinta-500">{nota}</p>}
+          <p className="mt-2 font-display texto-2 leading-tight text-crema-100">{valor}</p>
+          {nota && <p className="mt-1 texto--2 text-crema-100/55">{nota}</p>}
         </>
       )}
     </div>
@@ -97,7 +97,7 @@ export default function AdminPage() {
 
   if (autenticado === null) {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center bg-crema-100">
+      <div className="flex min-h-[70vh] items-center justify-center bg-tinta-900">
         <Loader2 size={30} strokeWidth={1.3} className="animate-spin text-dorado-500" aria-hidden="true" />
         <span className="sr-only">Verificando sesión…</span>
       </div>
@@ -138,17 +138,17 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-crema-100 py-10 md:py-14">
+    <div className="min-h-screen bg-tinta-900 py-10 md:py-14">
       <Container>
         {/* Header */}
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="texto-3 text-tinta-900">Panel</h1>
-            <p className="mt-1 texto--1 uppercase espaciado-medio text-dorado-700">Goddess Studio</p>
+            <h1 className="texto-3 text-crema-100">Panel</h1>
+            <p className="mt-1 texto--1 uppercase espaciado-medio text-dorado-300">Goddess Studio</p>
           </div>
           <button
             onClick={salir}
-            className="inline-flex items-center gap-2 border border-dorado-400/40 px-4 py-2 texto--1 font-medium text-tinta-700 transition-all duration-200 hover:border-tinta-900 hover:text-tinta-900 active:scale-95"
+            className="inline-flex items-center gap-2 border border-dorado-400/40 px-4 py-2 texto--1 font-medium text-crema-100/75 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95"
           >
             <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
             Salir
@@ -213,20 +213,20 @@ export default function AdminPage() {
 
         {/* Gráfico semanal simple */}
         {stats && stats.ingresosSemana.length > 0 && (
-          <div className="mb-8 linea-oro border bg-crema-50 p-5">
-            <h2 className="mb-4 texto-1 text-tinta-900">Últimos 7 días</h2>
+          <div className="mb-8 linea-oro border superficie p-5">
+            <h2 className="mb-4 texto-1 text-crema-100">Últimos 7 días</h2>
             <div className="flex items-end gap-2" style={{ height: 120 }}>
               {stats.ingresosSemana.map((dia) => {
                 const maxRevenue = Math.max(...stats.ingresosSemana.map((d) => Number(d.total)));
                 const height = maxRevenue > 0 ? (Number(dia.total) / maxRevenue) * 100 : 0;
                 return (
                   <div key={dia.date} className="flex flex-1 flex-col items-center gap-1">
-                    <span className="texto--2 text-tinta-500">{formatPrice(Number(dia.total))}</span>
+                    <span className="texto--2 text-crema-100/55">{formatPrice(Number(dia.total))}</span>
                     <div
                       className="w-full bg-dorado-400 transition-all duration-500"
                       style={{ height: `${Math.max(height, 4)}%` }}
                     />
-                    <span className="texto--2 text-tinta-400">
+                    <span className="texto--2 text-crema-100/40">
                       {format(parseBookingDate(dia.date) || new Date(), 'EEE', { locale: es })}
                     </span>
                   </div>
@@ -238,17 +238,17 @@ export default function AdminPage() {
 
         {/* Servicios más pedidos */}
         {stats && stats.serviciosTop.length > 0 && (
-          <div className="mb-8 linea-oro border bg-crema-50 p-5">
-            <h2 className="mb-4 texto-1 text-tinta-900">Servicios más pedidos</h2>
+          <div className="mb-8 linea-oro border superficie p-5">
+            <h2 className="mb-4 texto-1 text-crema-100">Servicios más pedidos</h2>
             <div className="space-y-3">
               {stats.serviciosTop.map((s, i) => (
                 <div key={s.name} className="flex items-center gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-crema-200 texto--1 font-medium text-dorado-700">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-tinta-850 texto--1 font-medium text-dorado-300">
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="texto-0 font-medium text-tinta-900 truncate">{s.name}</p>
-                    <p className="texto--1 text-tinta-500">{s.count} citas · {formatPrice(Number(s.revenue))}</p>
+                    <p className="texto-0 font-medium text-crema-100 truncate">{s.name}</p>
+                    <p className="texto--1 text-crema-100/55">{s.count} citas · {formatPrice(Number(s.revenue))}</p>
                   </div>
                 </div>
               ))}
@@ -257,56 +257,56 @@ export default function AdminPage() {
         )}
 
         {/* Filtros */}
-        <div className="mb-6 grid gap-3 linea-oro border bg-crema-50 p-4 sm:grid-cols-2">
+        <div className="mb-6 grid gap-3 linea-oro border superficie p-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-1.5 block texto--1 font-medium text-tinta-700">Fecha</span>
+            <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">Fecha</span>
             <span className="relative block">
               <CalendarDays
                 size={16}
                 strokeWidth={1.5}
                 aria-hidden="true"
-                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-tinta-400"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-crema-100/40"
               />
               <input
                 type="date"
                 value={fecha}
                 onChange={(e) => setFecha(e.target.value)}
-                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 py-2.5 pl-11 pr-4 texto--1 text-tinta-900 transition-colors duration-200 focus:border-dorado-500 focus:outline-none"
+                className="w-full rounded-xl border border-crema-100/15 superficie py-2.5 pl-11 pr-4 texto--1 text-crema-100 transition-colors duration-200 focus:border-dorado-500 focus:outline-none"
               />
             </span>
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block texto--1 font-medium text-tinta-700">Buscar</span>
+            <span className="mb-1.5 block texto--1 font-medium text-crema-100/75">Buscar</span>
             <span className="relative block">
               <Search
                 size={16}
                 strokeWidth={1.5}
                 aria-hidden="true"
-                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-tinta-400"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-crema-100/40"
               />
               <input
                 type="search"
                 placeholder="Nombre o correo…"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                className="w-full rounded-xl border border-tinta-900/15 bg-crema-50 py-2.5 pl-11 pr-4 texto--1 text-tinta-900 placeholder:text-tinta-400 transition-colors duration-200 focus:border-dorado-500 focus:outline-none"
+                className="w-full rounded-xl border border-crema-100/15 superficie py-2.5 pl-11 pr-4 texto--1 text-crema-100 placeholder:text-crema-100/40 transition-colors duration-200 focus:border-dorado-500 focus:outline-none"
               />
             </span>
           </label>
         </div>
 
         {/* Lista de citas del día */}
-        <div className="linea-oro overflow-hidden border bg-crema-50">
+        <div className="linea-oro overflow-hidden border superficie">
           <div className="linea-oro border-b px-5 py-4">
-            <h2 className="texto-1 capitalize text-tinta-900">
+            <h2 className="texto-1 capitalize text-crema-100">
               {format(parseBookingDate(fecha) || new Date(), "EEEE d 'de' MMMM, yyyy", { locale: es })}
             </h2>
           </div>
 
           {error && (
-            <p role="alert" className="flex items-center gap-2 bg-crema-200 px-5 py-3 texto--1 text-tinta-800">
-              <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-dorado-700" aria-hidden="true" />
+            <p role="alert" className="flex items-center gap-2 bg-tinta-850 px-5 py-3 texto--1 text-crema-100/90">
+              <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-dorado-300" aria-hidden="true" />
               {error}
             </p>
           )}
@@ -319,13 +319,13 @@ export default function AdminPage() {
             </div>
           ) : visibles.length === 0 ? (
             <div className="flex flex-col items-center px-5 py-14 text-center">
-              <Inbox size={26} strokeWidth={1.3} className="mb-3 text-tinta-400" aria-hidden="true" />
-              <p className="texto--1 text-tinta-600">
+              <Inbox size={26} strokeWidth={1.3} className="mb-3 text-crema-100/40" aria-hidden="true" />
+              <p className="texto--1 text-crema-100/70">
                 {busqueda ? 'Ninguna cita coincide con la búsqueda.' : 'No hay citas para esta fecha.'}
               </p>
             </div>
           ) : (
-            <ul className="divide-y divide-tinta-900/8">
+            <ul className="divide-y divide-crema-100/10">
               {visibles.map((b) => (
                 <CitaFila
                   key={b.id}

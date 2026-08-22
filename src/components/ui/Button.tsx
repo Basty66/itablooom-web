@@ -11,15 +11,15 @@ type Size = 'sm' | 'md' | 'lg';
  */
 const VARIANTES: Record<Variant, string> = {
   primary:
-    'brillo bg-tinta-900 text-crema-100 sombra-sutil ' +
-    'hover:bg-tinta-800 hover:sombra-hover hover:-translate-y-0.5',
+    'brillo bg-dorado-400 text-tinta-900 sombra-sutil ' +
+    'hover:bg-dorado-300 hover:sombra-hover hover:-translate-y-0.5',
   secondary:
-    'brillo bg-rosa-300 text-tinta-900 sombra-sutil ' +
+    'brillo bg-rosa-300 text-crema-100 sombra-sutil ' +
     'hover:bg-rosa-200 hover:sombra-hover hover:-translate-y-0.5',
   outline:
-    'border border-rosa-400/50 text-tinta-900 ' +
-    'hover:border-rosa-500 hover:bg-rosa-100/50 hover:-translate-y-0.5',
-  ghost: 'text-tinta-700 hover:text-tinta-900 hover:bg-dorado-100/50',
+    'border border-dorado-400/40 text-crema-100 ' +
+    'hover:border-dorado-400 hover:bg-dorado-400/10 hover:-translate-y-0.5',
+  ghost: 'text-crema-100/75 hover:text-crema-100 hover:bg-crema-100/8',
 };
 
 /** Botones anchos y bajos: el aire horizontal es parte del gesto editorial. */

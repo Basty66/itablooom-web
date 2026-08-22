@@ -33,7 +33,7 @@ export default function ScrollIndicator({ destino }: { destino: string }) {
         visible ? 'opacity-100' : 'pointer-events-none opacity-0'
       }`}
     >
-      <span className="texto--2 uppercase espaciado-amplio text-tinta-500 transition-colors duration-200 group-hover:text-tinta-900">
+      <span className="texto--2 uppercase espaciado-amplio text-crema-100/55 transition-colors duration-200 group-hover:text-crema-100">
         Descubre más
       </span>
       <span className="linea-oro flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out group-hover:border-dorado-500 active:scale-90">
@@ -43,7 +43,7 @@ export default function ScrollIndicator({ destino }: { destino: string }) {
           size={17}
           strokeWidth={1.5}
           aria-hidden="true"
-          className="animate-bounce text-tinta-800 motion-reduce:animate-none"
+          className="animate-bounce text-crema-100/90 motion-reduce:animate-none"
         />
       </span>
     </button>

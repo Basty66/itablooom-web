@@ -60,8 +60,8 @@ export default function SobreMi() {
             </div>
 
             <figcaption className="mt-6">
-              <p className="font-display texto-2 leading-tight text-tinta-900">{NOMBRE}</p>
-              <p className="mt-1.5 texto--2 uppercase espaciado-medio text-rosa-600">
+              <p className="font-display texto-2 leading-tight text-crema-100">{NOMBRE}</p>
+              <p className="mt-1.5 texto--2 uppercase espaciado-medio text-rosa-300">
                 Especialista en uñas, pestañas y cejas
               </p>
             </figcaption>
@@ -77,7 +77,7 @@ export default function SobreMi() {
             subtitle={`Llevo más de cinco años dedicada a las uñas, pestañas y cejas. Empecé atendiendo a amigas en mi casa y hoy tengo mi propio espacio en ${CIUDAD}, donde recibo a cada clienta con hora reservada.`}
           />
 
-          <p className="mt-4 max-w-xl texto--1 text-tinta-600 sm:texto-0">
+          <p className="mt-4 max-w-xl texto--1 text-crema-100/70 sm:texto-0">
             Me gusta que salgas sintiéndote regia, pero también que el resultado te dure. Por eso
             trabajo con productos de calidad y me tomo el tiempo de explicarte cómo cuidar tu
             trabajo en casa.
@@ -91,11 +91,11 @@ export default function SobreMi() {
                 style={{ animationDelay: `${i * 80}ms` }}
               >
                 <span className="linea-rosa flex h-10 w-10 shrink-0 items-center justify-center rounded-full border">
-                  <Icono size={17} strokeWidth={1.5} className="text-rosa-600" aria-hidden="true" />
+                  <Icono size={17} strokeWidth={1.5} className="text-rosa-300" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="texto-0 font-medium text-tinta-900">{titulo}</h3>
-                  <p className="mt-0.5 texto--1 text-tinta-600">{texto}</p>
+                  <h3 className="texto-0 font-medium text-crema-100">{titulo}</h3>
+                  <p className="mt-0.5 texto--1 text-crema-100/70">{texto}</p>
                 </div>
               </li>
             ))}

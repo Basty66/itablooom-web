@@ -66,7 +66,7 @@ export default function Reels() {
           href={INSTAGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 texto--1 uppercase espaciado-medio text-rosa-600 transition-colors duration-300 hover:text-tinta-900"
+          className="group inline-flex items-center gap-2 texto--1 uppercase espaciado-medio text-rosa-300 transition-colors duration-300 hover:text-crema-100"
         >
           @{INSTAGRAM_USUARIO}
           <ArrowRight
@@ -93,7 +93,7 @@ export default function Reels() {
               type="button"
               onClick={() => reproducir(reel.id)}
               aria-label={`Reproducir ${reel.titulo}`}
-              className="relative block w-full overflow-hidden rounded-[var(--radius-medio)] bg-crema-200 transition-shadow duration-500 sombra-sutil hover:sombra-hover"
+              className="relative block w-full overflow-hidden rounded-[var(--radius-medio)] bg-tinta-850 transition-shadow duration-500 sombra-sutil hover:sombra-hover"
             >
               <video
                 ref={(el) => {
@@ -119,11 +119,11 @@ export default function Reels() {
 
               <span
                 aria-hidden="true"
-                className={`absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-crema-100/95 transition-all duration-500 ease-out group-hover:scale-110 ${
+                className={`absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-tinta-900/95 transition-all duration-500 ease-out group-hover:scale-110 ${
                   activo === reel.id ? 'scale-75 opacity-0' : 'opacity-100'
                 }`}
               >
-                <Play size={17} strokeWidth={1.5} className="ml-0.5 text-tinta-900" />
+                <Play size={17} strokeWidth={1.5} className="ml-0.5 text-crema-100" />
               </span>
 
               <span

@@ -4,12 +4,12 @@
  */
 
 export function Skeleton({ className = '' }: { className?: string }) {
-  return <div className={`animate-pulse rounded-lg bg-tinta-900/8 ${className}`} />;
+  return <div className={`animate-pulse rounded-lg bg-crema-100/10 ${className}`} />;
 }
 
 export function ServiceCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-tinta-900/8 bg-crema-50">
+    <div className="overflow-hidden rounded-2xl border border-crema-100/10 superficie">
       <Skeleton className="aspect-[16/9] rounded-none" />
       <div className="space-y-3 p-6">
         <Skeleton className="h-5 w-2/3" />

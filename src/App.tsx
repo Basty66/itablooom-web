@@ -21,8 +21,8 @@ function ScrollToTop() {
 function NotFound() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-      <p className="texto-5 font-display text-tinta-900">404</p>
-      <p className="mt-3 texto-1 text-tinta-600">Esta página no existe</p>
+      <p className="texto-5 font-display text-crema-100">404</p>
+      <p className="mt-3 texto-1 text-crema-100/70">Esta página no existe</p>
       <Link
         to="/"
         className="mt-8 inline-flex items-center bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95"
@@ -44,8 +44,8 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
     if (this.state.hasError) {
       return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-          <p className="texto-3 font-display text-tinta-900">Algo salió mal</p>
-          <p className="mt-3 texto-0 text-tinta-600">Intentá recargar la página.</p>
+          <p className="texto-3 font-display text-crema-100">Algo salió mal</p>
+          <p className="mt-3 texto-0 text-crema-100/70">Intentá recargar la página.</p>
           <button
             onClick={() => window.location.reload()}
             className="mt-8 inline-flex items-center bg-tinta-900 px-7 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-all hover:bg-tinta-800 active:scale-95"
@@ -64,7 +64,7 @@ export default function App() {
     <Router>
       <ScrollToTop />
       <ErrorBoundary>
-        <div className="flex min-h-screen flex-col bg-crema-100">
+        <div className="flex min-h-screen flex-col bg-tinta-900">
           <a
             href="#contenido"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-tinta-900 focus:px-5 focus:py-3 focus:text-crema-100"

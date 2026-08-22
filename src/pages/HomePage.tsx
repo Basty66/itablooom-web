@@ -35,7 +35,7 @@ export default function HomePage() {
       <VideoBienvenida />
       <ComoFunciona />
 
-      <Section className="bg-crema-100">
+      <Section className="bg-tinta-900">
         <SectionHeading
           eyebrow="Servicios"
           title="Los más pedidos"
@@ -83,13 +83,14 @@ export default function HomePage() {
       <Faq />
 
       {/* Cierre: última oportunidad de conversión antes del footer. */}
-      <section className="bg-tinta-900 py-20 md:py-28">
+      {/* Único bloque claro del sitio: corta el negro y hace que el cierre resalte. */}
+      <section className="bg-crema-100 py-20 md:py-28">
         <Container className="relative text-center">
-          <h2 className="texto-3 leading-tight text-crema-100">
+          <h2 className="texto-3 leading-tight text-tinta-900">
             ¿Lista para tu próxima
-            <span className="italic text-dorado-300"> sesión?</span>
+            <span className="italic text-rosa-600"> sesión?</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-crema-100/70">
+          <p className="mx-auto mt-4 max-w-md text-tinta-600">
             Elige tu tratamiento y asegura tu horario en menos de un minuto.
           </p>
           <div className="mt-9 flex justify-center">

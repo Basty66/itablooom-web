@@ -45,7 +45,7 @@ export function SectionHeading({
   return (
     <div className={`max-w-2xl ${centrado ? 'mx-auto text-center' : 'text-left'}`}>
       {eyebrow && (
-        <p className={`texto--1 uppercase espaciado-amplio ${tono === 'rosa' ? 'text-rosa-600' : 'text-dorado-700'}`}>{eyebrow}</p>
+        <p className={`texto--1 uppercase espaciado-amplio ${tono === 'rosa' ? 'text-rosa-300' : 'text-dorado-300'}`}>{eyebrow}</p>
       )}
 
       {/* Regla fina bajo el rótulo: el separador del sistema, en vez de peso. */}
@@ -56,11 +56,11 @@ export function SectionHeading({
         />
       )}
 
-      <Tag className={`${Tag === 'h1' ? 'texto-4' : 'texto-3'} leading-tight text-tinta-900`}>
+      <Tag className={`${Tag === 'h1' ? 'texto-4' : 'texto-3'} leading-tight text-crema-100`}>
         {title}
       </Tag>
 
-      {subtitle && <p className="mt-5 texto-0 leading-relaxed text-tinta-600">{subtitle}</p>}
+      {subtitle && <p className="mt-5 texto-0 leading-relaxed text-crema-100/70">{subtitle}</p>}
     </div>
   );
 }

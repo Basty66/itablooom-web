@@ -64,9 +64,9 @@ export default function DateTimeStep({
     return (
       <div>
         <div className="mb-4 flex items-baseline gap-3">
-          <h4 className="texto--1 uppercase espaciado-medio text-tinta-900">{titulo}</h4>
+          <h4 className="texto--1 uppercase espaciado-medio text-crema-100">{titulo}</h4>
           <span className="linea-oro flex-1 border-t" aria-hidden="true" />
-          <span className="texto--1 text-tinta-400">
+          <span className="texto--1 text-crema-100/40">
             {libres > 0 ? `${libres} libre${libres > 1 ? 's' : ''}` : 'sin cupos'}
           </span>
         </div>
@@ -84,10 +84,10 @@ export default function DateTimeStep({
                 onClick={() => onHora(slot.time)}
                 className={`border py-3 texto--1 tabular-nums transition-all duration-300 ease-out ${
                   !slot.available
-                    ? 'cursor-not-allowed border-tinta-900/8 text-tinta-400/50 line-through'
+                    ? 'cursor-not-allowed border-crema-100/10 text-crema-100/25 line-through'
                     : activo
-                      ? 'border-tinta-900 bg-tinta-900 text-crema-100'
-                      : 'linea-oro text-tinta-800 hover:border-dorado-500 hover:bg-dorado-100/40'
+                      ? 'border-tinta-900 bg-dorado-400 text-tinta-900'
+                      : 'linea-oro text-crema-100/90 hover:border-dorado-500 hover:bg-dorado-100/40'
                 }`}
               >
                 {slot.time}
@@ -103,8 +103,8 @@ export default function DateTimeStep({
     <div className="space-y-12">
       <div>
         <div className="mb-5 flex items-baseline justify-between gap-3">
-          <h3 className="texto--1 uppercase espaciado-medio text-tinta-900">Elige el día</h3>
-          <span className="texto--1 capitalize text-tinta-500">{rangoMeses}</span>
+          <h3 className="texto--1 uppercase espaciado-medio text-crema-100">Elige el día</h3>
+          <span className="texto--1 capitalize text-crema-100/55">{rangoMeses}</span>
         </div>
 
         {/* Cabecera fija de días: ancla la lectura de ambas semanas. */}
@@ -113,7 +113,7 @@ export default function DateTimeStep({
             <span
               key={i}
               aria-hidden="true"
-              className="text-center texto--2 uppercase espaciado-medio text-tinta-400"
+              className="text-center texto--2 uppercase espaciado-medio text-crema-100/40"
             >
               {d}
             </span>
@@ -138,17 +138,17 @@ export default function DateTimeStep({
                     aria-label={format(dia, "EEEE d 'de' MMMM", { locale: es })}
                     className={`flex aspect-square flex-col items-center justify-center border transition-all duration-300 ease-out ${
                       domingo
-                        ? 'cursor-not-allowed border-transparent text-tinta-400/40'
+                        ? 'cursor-not-allowed border-transparent text-crema-100/40/40'
                         : activo
-                          ? 'border-tinta-900 bg-tinta-900 text-crema-100'
-                          : 'border-transparent text-tinta-800 hover:border-dorado-400/50'
+                          ? 'border-tinta-900 bg-dorado-400 text-tinta-900'
+                          : 'border-transparent text-crema-100/90 hover:border-dorado-400/50'
                     }`}
                   >
                     <span className="texto-0 tabular-nums leading-none">{format(dia, 'd')}</span>
                     {relativa && (
                       <span
                         className={`mt-1 texto--2 leading-none ${
-                          activo ? 'text-dorado-300' : 'text-dorado-700'
+                          activo ? 'text-dorado-300' : 'text-dorado-300'
                         }`}
                       >
                         {relativa}
@@ -161,9 +161,9 @@ export default function DateTimeStep({
           ))}
         </div>
 
-        <p className="mt-4 texto--1 text-tinta-500">
+        <p className="mt-4 texto--1 text-crema-100/55">
           {fecha ? (
-            <span className="capitalize text-tinta-800">
+            <span className="capitalize text-crema-100/90">
               {format(fecha, "EEEE d 'de' MMMM", { locale: es })}
             </span>
           ) : (
@@ -178,8 +178,8 @@ export default function DateTimeStep({
             <TimeSlotSkeleton />
           ) : disponibles.length === 0 ? (
             <div className="flex flex-col items-center py-12 text-center">
-              <CalendarX2 size={24} strokeWidth={1.2} className="mb-4 text-tinta-400" aria-hidden="true" />
-              <p className="texto--1 text-tinta-600">
+              <CalendarX2 size={24} strokeWidth={1.2} className="mb-4 text-crema-100/40" aria-hidden="true" />
+              <p className="texto--1 text-crema-100/70">
                 No quedan horarios para este día. Prueba con otra fecha.
               </p>
             </div>
