@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle, TrendingUp,
-  Users, Star, DollarSign, LayoutDashboard, Wallet, CalendarClock, Sparkles,
+  Users, Star, DollarSign, LayoutDashboard, Wallet, CalendarClock, Sparkles, ExternalLink,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -267,10 +268,20 @@ export default function AdminPage() {
             );
           })}
 
+          {/* Volver al sitio sin cerrar la sesión: desde el panel no había
+              forma de ir al público más que escribiendo la dirección. */}
+          <Link
+            to="/"
+            className="mt-auto flex items-center gap-4 border-l-2 border-transparent px-7 py-4 texto--1 uppercase espaciado-medio text-nacar-200/80 transition-colors duration-300 hover:bg-tinta-880 hover:text-crema-100"
+          >
+            <ExternalLink size={18} strokeWidth={1.5} aria-hidden="true" />
+            Ver el sitio
+          </Link>
+
           <button
             type="button"
             onClick={salir}
-            className="mb-8 mt-auto flex items-center gap-4 border-l-2 border-transparent px-7 py-4 texto--1 uppercase espaciado-medio text-nacar-300 transition-colors duration-300 hover:text-crema-100"
+            className="mb-8 flex items-center gap-4 border-l-2 border-transparent px-7 py-4 texto--1 uppercase espaciado-medio text-nacar-300 transition-colors duration-300 hover:text-crema-100"
           >
             <LogOut size={18} strokeWidth={1.5} aria-hidden="true" />
             Salir
@@ -322,6 +333,14 @@ export default function AdminPage() {
                   className="campo py-2.5 pl-10 pr-3 texto--1"
                 />
               </label>
+
+              <Link
+                to="/"
+                className="rounded-[var(--radius-suave)] border border-dorado-400/40 p-2.5 text-nacar-200/85 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95 lg:hidden"
+                aria-label="Ver el sitio"
+              >
+                <ExternalLink size={15} strokeWidth={1.5} aria-hidden="true" />
+              </Link>
 
               <button
                 onClick={salir}

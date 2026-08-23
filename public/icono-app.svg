@@ -1,11 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <!-- Versión "maskable": Android recorta el icono en círculo, así que el
-       contenido vive dentro del 80% central y el fondo llega hasta el borde. -->
+       contenido vive dentro del área central y el fondo llega hasta el borde.
+       Mismos colores que la marca en el sitio: inicial en crema, punto rosa. -->
   <rect width="512" height="512" fill="#171210"/>
-  <circle cx="256" cy="256" r="176" fill="none" stroke="#e9c349" stroke-opacity="0.3" stroke-width="3"/>
+  <circle cx="256" cy="256" r="176" fill="none" stroke="#e9c349" stroke-opacity="0.28" stroke-width="3"/>
   <text x="256" y="322"
         font-family="Georgia, 'Times New Roman', serif"
         font-size="220" font-weight="400"
-        fill="#e9c349" text-anchor="middle">G</text>
+        fill="#faf6ef" text-anchor="middle">G</text>
   <circle cx="352" cy="176" r="18" fill="#ffb2b9"/>
 </svg>

@@ -1,11 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- Monograma de Goddess Studio: fondo umber de la marca, inicial en oro y
-       un punto rosa. El anterior era un logo morado de otro proyecto. -->
+  <!-- Monograma de Goddess Studio. Mismos colores que la marca en el sitio:
+       fondo umber, la inicial en crema —como se ve "Goddess" en la barra— y
+       el punto en rosa, que es el acento de "Studio". El oro queda solo para
+       el filete, su papel en el resto del sistema. -->
   <rect width="64" height="64" rx="14" fill="#171210"/>
-  <rect x="4" y="4" width="56" height="56" rx="11" fill="none" stroke="#e9c349" stroke-opacity="0.35" stroke-width="1"/>
+  <rect x="4" y="4" width="56" height="56" rx="11" fill="none" stroke="#e9c349" stroke-opacity="0.3" stroke-width="1"/>
   <text x="32" y="44"
         font-family="Georgia, 'Times New Roman', serif"
         font-size="36" font-weight="400"
-        fill="#e9c349" text-anchor="middle">G</text>
+        fill="#faf6ef" text-anchor="middle">G</text>
   <circle cx="47" cy="20" r="3" fill="#ffb2b9"/>
 </svg>
