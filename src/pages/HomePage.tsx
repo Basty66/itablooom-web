@@ -7,6 +7,7 @@ import Hero from '../components/home/Hero';
 import ComoFunciona from '../components/home/ComoFunciona';
 import VideoBienvenida from '../components/home/VideoBienvenida';
 import Reels from '../components/home/Reels';
+import AntesDespues from '../components/home/AntesDespues';
 import SobreMi from '../components/home/SobreMi';
 import Faq from '../components/home/Faq';
 import ServiceCard from '../components/ServiceCard';
@@ -89,6 +90,8 @@ export default function HomePage() {
       </Section>
 
       <Reels />
+
+      <AntesDespues />
 
       <SobreMi />
 

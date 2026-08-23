@@ -447,3 +447,60 @@ export async function borrarGasto(id: string): Promise<boolean> {
     return false;
   }
 }
+
+/* ---------------------------- Galería ---------------------------- */
+
+export interface TrabajoGaleria {
+  id: string;
+  titulo: string;
+  categoria: string | null;
+  antes_url: string;
+  despues_url: string;
+}
+
+export async function getGaleria(): Promise<TrabajoGaleria[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/galeria`, { signal: AbortSignal.timeout(15000) });
+    return res.ok ? await res.json() : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Sube un par de fotos. Las imágenes viajan ya reducidas desde el navegador;
+ * la subida tarda, así que no lleva el tiempo de espera corto de las demás.
+ */
+export async function subirTrabajo(datos: {
+  titulo: string;
+  categoria?: string;
+  antes: string;
+  despues: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/galeria`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos),
+      signal: AbortSignal.timeout(60000),
+    });
+    const d = await res.json().catch(() => ({}));
+    return res.ok ? { ok: true } : { ok: false, error: d.error || 'No se pudo subir' };
+  } catch {
+    return { ok: false, error: 'Se cortó la subida. Revisa tu conexión.' };
+  }
+}
+
+export async function borrarTrabajo(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/galeria?id=${id}`, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(20000),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}

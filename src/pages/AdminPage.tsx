@@ -12,6 +12,7 @@ import { formatPrice } from '../lib/format';
 import { Skeleton } from '../components/ui/Skeleton';
 import LoginGate from '../components/admin/LoginGate';
 import Bloqueos from '../components/admin/Bloqueos';
+import Galeria from '../components/admin/Galeria';
 import Finanzas from '../components/admin/Finanzas';
 import Gastos from '../components/admin/Gastos';
 import CitaFila from '../components/admin/CitaFila';
@@ -579,6 +580,8 @@ export default function AdminPage() {
               </div>
 
               <Bloqueos fecha={fecha} />
+
+              <Galeria />
             </>
           )}
         </main>
