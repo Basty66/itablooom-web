@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
-import { RESERVA_TTL_MINUTOS, HORARIO, PASO_MINUTOS, minutosDesdeISO } from '../_shared/bookings.js';
+import { RESERVA_TTL_MINUTOS, HORARIO, PASO_MINUTOS, COLCHON_MINUTOS, minutosDesdeISO } from '../_shared/bookings.js';
 import { getCalendarEvents } from '../calendar/_lib.js';
 
 const sql = neon(process.env.DATABASE_URL!);
@@ -66,7 +66,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (!t) return null;
         const [bh, bm] = t.slice(0, 5).split(':').map(Number);
         const start = bh * 60 + bm;
-        return { start, end: start + ((b.duration_minutes as number) || 60) };
+        // La cita ocupa su duración más el colchón: así la siguiente no
+        // puede empezar en el minuto exacto en que termina la anterior.
+        return { start, end: start + ((b.duration_minutes as number) || 60) + COLCHON_MINUTOS };
       })
       .filter(Boolean) as { start: number; end: number }[];
 
@@ -98,7 +100,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       for (let min = 0; min < 60; min += PASO_MINUTOS) {
         const time = `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
         const slotStartMin = hour * 60 + min;
+        // Para chocar con otras citas se cuenta el colchón; para el cierre no,
+        // porque después de la última del día no hay a quién recibir.
         const slotEndMin = slotStartMin + serviceDuration;
+        const slotEndConColchon = slotStartMin + serviceDuration + COLCHON_MINUTOS;
 
         if (slotEndMin > endHour * 60) {
           slots.push({ time, available: false });
@@ -117,11 +122,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
 
         const isBooked = bookedRanges.some(
-          (b) => slotStartMin < b.end && slotEndMin > b.start
+          (b) => slotStartMin < b.end && slotEndConColchon > b.start
         );
 
         const isBusyOnCalendar = calendarRanges.some(
-          (c) => slotStartMin < c.end && slotEndMin > c.start
+          (c) => slotStartMin < c.end && slotEndConColchon > c.start
         );
 
         slots.push({

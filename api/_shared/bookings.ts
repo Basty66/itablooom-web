@@ -30,6 +30,17 @@ export const HORARIO: Record<number, { abre: number; cierra: number } | null> = 
 export const PASO_MINUTOS = 30;
 
 /**
+ * Colchón entre una cita y la siguiente.
+ *
+ * Las citas quedaban pegadas: una de 150 minutos que empezaba a las 10:00
+ * liberaba las 12:30 en punto, sin margen para limpiar el puesto, cobrar el
+ * saldo y recibir a la clienta siguiente. En uñas, además, el tiempo real
+ * varía con el diseño, así que cualquier atraso se arrastraba al resto del
+ * día. Estos minutos se suman al reservar, no se ofrecen como hora.
+ */
+export const COLCHON_MINUTOS = 15;
+
+/**
  * Minutos desde medianoche de un `dateTime` de Google, sin pasar por `Date`.
  *
  * Google devuelve la hora ya en la zona del calendario ("...T15:00:00-04:00"),

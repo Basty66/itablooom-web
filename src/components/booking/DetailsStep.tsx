@@ -105,13 +105,13 @@ export default function DetailsStep({ datos, onCambio }: Props) {
         </Campo>
       </div>
 
-      <Campo label="Notas para tu especialista (opcional)">
+      <Campo label="¿Algo que debamos saber? (opcional)">
         <textarea
           rows={3}
           value={datos.notes}
           onChange={(e) => set({ notes: e.target.value })}
           className={`${INPUT} resize-none`}
-          placeholder="Alergias, tratamientos previos, condiciones médicas…"
+          placeholder="Si vienes por uñas, cuéntanos el diseño que quieres o mándanos la foto de referencia por WhatsApp. También alergias o algo que debamos considerar."
         />
       </Campo>
 
