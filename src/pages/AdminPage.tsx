@@ -232,9 +232,18 @@ export default function AdminPage() {
         secciones bajan a una fila de pestañas bajo el encabezado.
       */}
       <aside className="fixed left-0 top-0 z-40 hidden h-full w-64 flex-col border-r border-dorado-400/15 bg-tinta-950 pt-8 lg:flex">
+        {/* La marca va igual que en el resto del sitio —crema y rosa— y no en
+            un dorado propio del panel, que hacía parecer otra aplicación. */}
         <div className="mb-10 px-7">
-          <p className="font-display texto-2 uppercase espaciado-medio text-dorado-400">Goddess</p>
-          <p className="mt-1 texto--2 uppercase espaciado-amplio text-nacar-300">Panel del estudio</p>
+          <div className="flex items-baseline gap-2">
+            <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
+              Goddess
+            </span>
+            <span className="texto--1 uppercase tracking-[0.25em] text-rosa-300">Studio</span>
+          </div>
+          <p className="mt-1.5 texto--2 uppercase espaciado-amplio text-nacar-300">
+            Panel del estudio
+          </p>
         </div>
 
         <nav aria-label="Secciones del panel" className="flex flex-1 flex-col gap-1">
@@ -274,7 +283,10 @@ export default function AdminPage() {
         <header className="vidrio sticky top-0 z-30 border-b">
           <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-6">
             <div className="flex items-center gap-3 lg:hidden">
-              <p className="font-display texto-1 uppercase espaciado-medio text-dorado-400">Goddess</p>
+              <span className="font-display texto-1 font-medium tracking-tight text-crema-100">
+                Goddess
+              </span>
+              <span className="texto--2 uppercase tracking-[0.25em] text-rosa-300">Studio</span>
             </div>
 
             <div className="flex flex-1 flex-wrap items-center justify-end gap-3">

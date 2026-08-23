@@ -60,37 +60,52 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   }
 }
 
+function Layout() {
+  const { pathname } = useLocation();
+  /*
+   * El panel trae su propia barra lateral, su propia cabecera y su propio
+   * ancho: la cáscara pública se le montaba encima. La barra superior quedaba
+   * flotando sobre las métricas y el pie del sitio aparecía dentro del panel,
+   * con el contenido pasando por debajo de la barra lateral.
+   */
+  const esPanel = pathname.startsWith('/admin');
+
+  return (
+    <div className="flex min-h-screen flex-col bg-tinta-900">
+      <a
+        href="#contenido"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-tinta-900 focus:px-5 focus:py-3 focus:text-crema-100"
+      >
+        Saltar al contenido
+      </a>
+
+      {!esPanel && <Navbar />}
+
+      <main id="contenido" className="flex-1">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/servicios" element={<ServicesPage />} />
+          <Route path="/agendar" element={<BookingPage />} />
+          <Route path="/confirmacion" element={<ConfirmationPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/reagendar" element={<ReschedulePage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+
+      {!esPanel && <Footer />}
+
+      <BotonWhatsApp />
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <Router>
       <ScrollToTop />
       <ErrorBoundary>
-        <div className="flex min-h-screen flex-col bg-tinta-900">
-          <a
-            href="#contenido"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-tinta-900 focus:px-5 focus:py-3 focus:text-crema-100"
-          >
-            Saltar al contenido
-          </a>
-
-          <Navbar />
-
-          <main id="contenido" className="flex-1">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/servicios" element={<ServicesPage />} />
-              <Route path="/agendar" element={<BookingPage />} />
-              <Route path="/confirmacion" element={<ConfirmationPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/reagendar" element={<ReschedulePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-
-          <Footer />
-
-          <BotonWhatsApp />
-        </div>
+        <Layout />
       </ErrorBoundary>
     </Router>
   );
