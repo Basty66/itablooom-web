@@ -30,11 +30,16 @@ export default function Navbar() {
    * tiempo hace que tres toques sueltos a lo largo de la visita no cuenten.
    */
   const toques = useRef<number[]>([]);
-  function contarToque() {
+  function contarToque(e: React.MouseEvent) {
     const ahora = Date.now();
     toques.current = [...toques.current, ahora].filter((t) => ahora - t < VENTANA_TOQUES_MS);
     if (toques.current.length >= TOQUES_PANEL) {
       toques.current = [];
+      /*
+       * Cortar la navegación del enlace: sin esto el Link seguía su curso a la
+       * portada justo después, deshaciendo el salto al panel.
+       */
+      e.preventDefault();
       navigate('/admin');
     }
   }
