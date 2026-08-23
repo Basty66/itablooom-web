@@ -2,6 +2,7 @@ import type { Service } from '../../types';
 import { formatPrice, formatDuration } from '../../lib/format';
 import { Skeleton } from '../ui/Skeleton';
 import { etiquetaCategoria } from '../ui/ServiceVisual';
+import { CATEGORIAS_GODDESS } from '../../lib/categorias';
 
 interface Props {
   services: Service[];
@@ -56,11 +57,21 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
     return acc;
   }, {});
 
+  /*
+   * Orden del rubro —uñas, pestañas, cejas— y no el que devuelva la base, que
+   * es el de creación de las filas y cambia sin aviso. Es el mismo orden que
+   * anuncia el sitio en su encabezado.
+   */
+  const ordenRubros = CATEGORIAS_GODDESS.filter((c) => c.id !== 'all').map((c) => c.label);
+  const gruposOrdenados = Object.entries(porRubro).sort(
+    ([a], [b]) => ordenRubros.indexOf(a) - ordenRubros.indexOf(b)
+  );
+
   let indice = -1;
 
   return (
     <div role="radiogroup" aria-label="Servicios disponibles" className="flex flex-col gap-7">
-      {Object.entries(porRubro).map(([rubro, lista]) => (
+      {gruposOrdenados.map(([rubro, lista]) => (
         <div key={rubro}>
           <p className="mb-1 texto--2 uppercase espaciado-amplio text-rosa-300">{rubro}</p>
           <div className="divide-y divide-dorado-400/25 border-y border-dorado-400/25">
