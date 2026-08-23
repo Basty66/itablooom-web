@@ -1,3 +1,4 @@
+import { Check } from 'lucide-react';
 import type { Service } from '../../types';
 import { formatPrice, formatDuration } from '../../lib/format';
 import { Skeleton } from '../ui/Skeleton';
@@ -103,7 +104,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
               }`}
             />
 
-            <span className="h-24 w-20 shrink-0 overflow-hidden bg-tinta-850">
+            <span className="h-24 w-24 shrink-0 overflow-hidden rounded-[var(--radius-medio)] bg-tinta-850 sm:h-28 sm:w-28">
               {service.image_url && (
                 <img
                   src={service.image_url}
@@ -125,17 +126,22 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
               </span>
             </span>
 
-            <span className="shrink-0 pl-2 text-right">
+            <span className="flex shrink-0 flex-col items-end gap-1.5 pl-2 text-right">
               <span className="block font-display texto-1 tabular-nums text-dorado-400">
                 {formatPrice(service.price)}
               </span>
-              <span
-                className={`mt-1 block texto--2 uppercase espaciado-medio transition-colors duration-300 ${
-                  activo ? 'text-rosa-300' : 'text-nacar-300'
-                }`}
-              >
-                {activo ? 'Elegido' : 'Elegir'}
-              </span>
+              {/* Palomita para el elegido: en una lista de siete filas, la
+                  barra de 2px al canto se pierde de vista. */}
+              {activo ? (
+                <span className="flex items-center gap-1.5 texto--2 uppercase espaciado-medio text-rosa-300">
+                  <Check size={13} strokeWidth={2.5} aria-hidden="true" />
+                  Elegido
+                </span>
+              ) : (
+                <span className="texto--2 uppercase espaciado-medio text-nacar-300 transition-colors duration-300 group-hover:text-crema-100">
+                  Elegir
+                </span>
+              )}
             </span>
           </button>
         );

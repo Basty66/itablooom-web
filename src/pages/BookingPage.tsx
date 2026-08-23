@@ -108,6 +108,13 @@ export default function BookingPage() {
   };
   const todoListo = listo.servicio && listo.horario && listo.datos;
 
+  /*
+   * Pasos resueltos, para la barra de avance. Se derivan en cascada y no
+   * sumando `listo`: el pago trae una opción por defecto, así que contarlo
+   * como resuelto apenas hay horario haría saltar la barra de 1 a 3.
+   */
+  const pasosListos = listo.datos ? 4 : abierta === 'datos' ? 3 : listo.horario ? 2 : listo.servicio ? 1 : 0;
+
   const total = Number(service?.price) || 0;
   const abono = Number(service?.deposit_amount) || 0;
   const aPagarAhora = datos.paymentType === 'full' ? total : abono;
@@ -170,13 +177,38 @@ export default function BookingPage() {
   return (
     <div className="min-h-screen bg-tinta-900 py-8 md:py-14">
       <Container>
+        {/*
+          El titular decía "¿Cuándo te esperamos?" durante los cuatro pasos,
+          también mientras se elegía el servicio, donde todavía no toca hablar
+          de cuándo. Ahora es fijo y la pregunta del momento la lleva cada
+          sección del acordeón.
+        */}
         <header className="mb-8">
-          <p className="texto--1 uppercase espaciado-amplio text-rosa-300">Reserva tu hora</p>
+          <p className="texto--1 uppercase espaciado-amplio text-rosa-300">Agenda tu visita</p>
           <h1 className="mt-4 texto-5 text-crema-100">
-            ¿Cuándo te
-            <br />
-            <span className="italic text-dorado-400">esperamos?</span>
+            Reserva tu <span className="italic text-dorado-400">hora</span>
           </h1>
+
+          {/* Progreso: cuánto falta para terminar. Sin esto la clienta no
+              sabía si quedaba un paso o cinco. */}
+          <div className="mt-7 flex items-center gap-4">
+            <div
+              className="h-px flex-1 overflow-hidden bg-crema-100/10"
+              role="progressbar"
+              aria-valuenow={pasosListos}
+              aria-valuemin={0}
+              aria-valuemax={4}
+              aria-label="Avance de la reserva"
+            >
+              <div
+                className="h-full bg-rosa-300 transition-all duration-700 ease-out"
+                style={{ width: `${(pasosListos / 4) * 100}%` }}
+              />
+            </div>
+            <span className="shrink-0 texto--2 uppercase espaciado-medio tabular-nums text-nacar-300">
+              {pasosListos} de 4
+            </span>
+          </div>
         </header>
 
         <form onSubmit={onSubmit}>
