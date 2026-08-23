@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
-import { RESERVA_TTL_MINUTOS, expirarReservasVencidas, HORARIO } from '../_shared/bookings.js';
+import { RESERVA_TTL_MINUTOS, expirarReservasVencidas, HORARIO, PASO_MINUTOS, COLCHON_MINUTOS } from '../_shared/bookings.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -83,26 +83,77 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const [hh, mm] = String(time).split(':').map(Number);
+    if (!Number.isInteger(hh) || !Number.isInteger(mm) || hh < 0 || hh > 23 || mm < 0 || mm > 59) {
+      return res.status(400).json({ error: 'Hora inválida' });
+    }
     const inicio = hh * 60 + mm;
     const duracion = Number((service as any).duration_minutes) || 60;
     if (inicio < horario.abre * 60 || inicio + duracion > horario.cierra * 60) {
       return res.status(400).json({ error: 'Ese horario está fuera de la atención de ese día' });
     }
 
+    /*
+     * Validaciones que solo existían en el formulario. La API se puede llamar
+     * directamente, así que acá también: si no, entran reservas para fechas ya
+     * pasadas, con correos a los que nunca llegará la confirmación, o a horas
+     * fuera de la grilla como las 10:07.
+     */
+    if (mm % PASO_MINUTOS !== 0) {
+      return res.status(400).json({ error: 'Esa hora no corresponde a un bloque de la agenda' });
+    }
+
+    const hoy = new Date();
+    const inicioDelDiaDeHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+    if (new Date(anio, mes - 1, dia) < inicioDelDiaDeHoy) {
+      return res.status(400).json({ error: 'Esa fecha ya pasó' });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(clientEmail))) {
+      return res.status(400).json({ error: 'El correo no tiene un formato válido' });
+    }
+
+    if (paymentType !== undefined && paymentType !== 'deposit' && paymentType !== 'full') {
+      return res.status(400).json({ error: 'Tipo de pago inválido' });
+    }
+
     // Libera los cupos de quienes abandonaron el checkout antes de evaluar
     // si el horario sigue tomado.
     await expirarReservasVencidas(sql);
 
-    const existingBooking = await sql`
-      SELECT id FROM bookings
-      WHERE booking_date = ${date} AND booking_time = ${time}
+    /*
+     * Solapamiento real, no coincidencia de hora exacta.
+     *
+     * Antes comparaba `booking_time = ${time}`: una cita de tres horas desde
+     * las 10:00 no impedía reservar las 11:00, porque la hora de inicio era
+     * distinta. El listado de horarios sí lo calculaba bien, así que el
+     * formulario no ofrecía ese cupo — pero la API es alcanzable directamente
+     * y dos clientas que reservaban a la vez podían quedar encima.
+     *
+     * Se cuenta también el colchón, para no dejar citas pegadas por esta vía.
+     */
+    const ocupado = await sql`
+      SELECT b.id FROM bookings b
+      WHERE b.booking_date = ${date}
         AND (
-          status = 'confirmed'
-          OR (status = 'pending' AND created_at > NOW() - (${RESERVA_TTL_MINUTOS} * INTERVAL '1 minute'))
+          b.status = 'confirmed'
+          OR (b.status = 'pending' AND b.created_at > NOW() - (${RESERVA_TTL_MINUTOS} * INTERVAL '1 minute'))
+        )
+        AND (
+          (
+            b.booking_time,
+            b.booking_time
+              + (SELECT s.duration_minutes FROM services s WHERE s.id = b.service_id) * INTERVAL '1 minute'
+              + ${COLCHON_MINUTOS} * INTERVAL '1 minute'
+          )
+          OVERLAPS
+          (
+            ${time}::time,
+            ${time}::time + ${duracion} * INTERVAL '1 minute' + ${COLCHON_MINUTOS} * INTERVAL '1 minute'
+          )
         )
     `;
 
-    if (existingBooking.length > 0) {
+    if (ocupado.length > 0) {
       return res.status(409).json({ error: 'Este horario ya está reservado' });
     }
 
@@ -115,7 +166,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const bookingId = (bookingResult[0] as any).id;
 
     const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
-    const appUrl = process.env.APP_URL || 'https://itablooom-web.vercel.app';
+    const appUrl = process.env.APP_URL || 'https://goddessstudio.cl';
 
     /*
      * La clienta elige entre abonar o pagar todo. Antes se cobraba siempre
