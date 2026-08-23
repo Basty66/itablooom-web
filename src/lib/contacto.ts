@@ -8,10 +8,12 @@ export const CIUDAD = 'Melipilla';
 /** Formato internacional sin signos, como lo requiere wa.me. */
 export const WHATSAPP_NUMERO = '56974095567';
 export const WHATSAPP_VISIBLE = '+56 9 7409 5567';
-/* Correo real de la clienta. Cuando exista goddessstudio.cl y esté
-   verificado en Resend, conviene migrar a hola@goddessstudio.cl. */
+/* Correo real de la clienta. Con goddessstudio.cl ya verificado en Resend,
+   conviene migrar a hola@goddessstudio.cl. */
 export const EMAIL = 'goddess.studio.melipilla@gmail.com';
-export const INSTAGRAM_USUARIO = 'goddess.studio';
+/* Con guiones bajos: el perfil sin ellos es de otra persona, y el sitio
+   estuvo enlazando ahí. */
+export const INSTAGRAM_USUARIO = '_goddess.studio_';
 
 export function linkWhatsApp(mensaje?: string): string {
   const base = `https://wa.me/${WHATSAPP_NUMERO}`;
