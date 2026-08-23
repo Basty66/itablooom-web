@@ -45,14 +45,28 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
     );
   }
 
+  /*
+   * Agrupados por rubro. En lista corrida, con siete servicios mezclados, las
+   * tres variantes de acrílicas quedaban separadas entre pestañas y cejas: no
+   * se leía que fueran alternativas de lo mismo.
+   */
+  const porRubro = services.reduce<Record<string, Service[]>>((acc, s) => {
+    const clave = etiquetaCategoria(s.category);
+    (acc[clave] ||= []).push(s);
+    return acc;
+  }, {});
+
+  let indice = -1;
+
   return (
-    <div
-      role="radiogroup"
-      aria-label="Servicios disponibles"
-      className="divide-y divide-dorado-400/25 border-y border-dorado-400/25"
-    >
-      {services.map((service, i) => {
+    <div role="radiogroup" aria-label="Servicios disponibles" className="flex flex-col gap-7">
+      {Object.entries(porRubro).map(([rubro, lista]) => (
+        <div key={rubro}>
+          <p className="mb-1 texto--2 uppercase espaciado-amplio text-rosa-300">{rubro}</p>
+          <div className="divide-y divide-dorado-400/25 border-y border-dorado-400/25">
+      {lista.map((service) => {
         const activo = seleccionado?.id === service.id;
+        const i = ++indice;
 
         return (
           <button
@@ -91,11 +105,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
             </span>
 
             <span className="flex min-w-0 flex-1 flex-col">
-              <span className="texto--2 uppercase espaciado-medio text-dorado-300">
-                {etiquetaCategoria(service.category)}
-              </span>
-
-              <span className="mt-1.5 font-display texto-1 leading-tight text-crema-100">
+              <span className="font-display texto-1 leading-tight text-crema-100">
                 {service.name}
               </span>
 
@@ -119,6 +129,9 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
           </button>
         );
       })}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

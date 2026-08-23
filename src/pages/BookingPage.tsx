@@ -19,6 +19,17 @@ type Paso = 'servicio' | 'horario' | 'pago' | 'datos';
 
 const PROFESIONAL = 'Ignacia Ramírez';
 
+/**
+ * Tronco común de un servicio con variantes.
+ *
+ * Los nombres se escriben "Familia — Variante", así que lo que va antes de la
+ * raya agrupa: las tres acrílicas comparten familia y el lifting de pestañas
+ * es el único de la suya.
+ */
+function familia(nombre: string): string {
+  return nombre.split('—')[0].trim().toLowerCase();
+}
+
 export default function BookingPage() {
   const [searchParams] = useSearchParams();
 
@@ -55,10 +66,20 @@ export default function BookingPage() {
     const id = searchParams.get('service');
     if (id && services.length > 0) {
       const encontrado = services.find((s) => s.id === id);
-      // Si llega con el servicio en la URL, ese paso ya está resuelto.
       if (encontrado) {
         setService(encontrado);
-        setAbierta((actual) => (actual === 'servicio' ? 'horario' : actual));
+        /*
+         * Llegar con el servicio en la URL solo adelanta el paso cuando no hay
+         * nada más que decidir. Si ese servicio tiene variantes —las acrílicas
+         * vienen en un solo color, con diseño y premium—, saltarse el paso
+         * dejaba a la clienta en la fecha sin haber visto nunca que existían
+         * las otras dos, y con una duración y un precio elegidos por ella sin
+         * saberlo.
+         */
+        const tieneVariantes = services.filter((s) => familia(s.name) === familia(encontrado.name)).length > 1;
+        if (!tieneVariantes) {
+          setAbierta((actual) => (actual === 'servicio' ? 'horario' : actual));
+        }
       }
     }
   }, [searchParams, services]);
