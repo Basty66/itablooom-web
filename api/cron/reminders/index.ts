@@ -92,12 +92,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const fechaLinda = `${nombresDias[fecha.getDay()]} ${fecha.getDate()} de ${nombresMeses[fecha.getMonth()]}`;
 
       try {
-        const ownerEmail = process.env.OWNER_EMAIL || 'cristianbastian.dev@gmail.com';
+        const ownerEmail = process.env.OWNER_EMAIL || 'goddess.studio.melipilla@gmail.com';
 
         // Resend gratis solo permite enviar al email de la cuenta.
         // El dueño recibe el recordatorio y lo reenvía por WhatsApp si quiere.
         await resend.emails.send({
-          from: 'Itablooom <onboarding@resend.dev>',
+          from: 'Goddess Studio <hola@goddessstudio.cl>',
           to: ownerEmail,
           subject: `Recordatorio: ${booking.client_name} tiene cita mañana a las ${hora}`,
           html: `
@@ -110,7 +110,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background-color:#fdfbf7;border-radius:24px;border:1px solid rgba(20,16,14,0.08);overflow:hidden;box-shadow:0 20px 60px -40px rgba(20,16,14,0.5);">
 
         <tr><td style="background-color:#14100e;padding:32px 32px 28px;text-align:center;">
-          <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e9b4b9;font-weight:500;">Itablooom Studio</p>
+          <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e9b4b9;font-weight:500;">Goddess Studio</p>
           <h1 style="margin:0;font-size:20px;font-weight:600;color:#faf6ef;">Cita mañana 📅</h1>
         </td></tr>
 
@@ -153,7 +153,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       </table>
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
         <tr><td style="padding:20px 0;text-align:center;">
-          <p style="margin:0;font-size:11px;color:#9a8d84;">Itablooom Studio · Santiago, Chile</p>
+          <p style="margin:0;font-size:11px;color:#9a8d84;">Goddess Studio · Melipilla, Chile</p>
         </td></tr>
       </table>
     </td></tr>
