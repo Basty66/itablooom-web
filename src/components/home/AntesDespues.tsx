@@ -63,6 +63,12 @@ function Comparador({ trabajo }: { trabajo: TrabajoGaleria }) {
           Después
         </span>
 
+        {/*
+          `touch-action: pan-y` reparte los gestos: el arrastre vertical
+          scrollea la página y el horizontal mueve el comparador. Sin esto, el
+          control cubre la foto entera y podría quedarse con el gesto de
+          scroll, dejando el dedo trabado al pasar por la galería.
+        */}
         <input
           type="range"
           min={0}
@@ -70,7 +76,7 @@ function Comparador({ trabajo }: { trabajo: TrabajoGaleria }) {
           value={pos}
           onChange={(e) => setPos(Number(e.target.value))}
           aria-label={`Comparar antes y después de ${trabajo.titulo}`}
-          className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
+          className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0 [touch-action:pan-y]"
         />
       </div>
 
