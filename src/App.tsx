@@ -3,6 +3,7 @@ import { Component, useEffect, type ReactNode } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BotonWhatsApp from './components/ui/BotonWhatsApp';
+import BotonSubir from './components/ui/BotonSubir';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import BookingPage from './pages/BookingPage';
@@ -96,6 +97,7 @@ function Layout() {
       {!esPanel && <Footer />}
 
       <BotonWhatsApp />
+      <BotonSubir />
     </div>
   );
 }
