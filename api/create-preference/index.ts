@@ -43,6 +43,56 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Faltan campos obligatorios' });
     }
 
+    /*
+     * Todo el saneamiento va antes de tocar la base.
+     *
+     * La comprobación de duplicados interpolaba la hora recibida, así que un
+     * "99:99" llegaba a Postgres como `'99:99'::time` y reventaba con un 500
+     * genérico en vez de un mensaje claro: la entrada sin validar alcanzaba la
+     * consulta antes que la validación.
+     *
+     * Estas reglas existían solo en el formulario, y la API es alcanzable
+     * directamente: sin ellas entran reservas para fechas pasadas, con correos
+     * a los que nunca llegará la confirmación, o a horas fuera de la grilla.
+     */
+    const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID.test(String(serviceId))) {
+      return res.status(400).json({ error: 'serviceId inválido' });
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date))) {
+      return res.status(400).json({ error: 'Fecha inválida' });
+    }
+    const [anio, mes, dia] = String(date).split('-').map(Number);
+    const fechaPedida = new Date(anio, mes - 1, dia);
+    if (Number.isNaN(fechaPedida.getTime()) || fechaPedida.getMonth() !== mes - 1) {
+      return res.status(400).json({ error: 'Fecha inválida' });
+    }
+
+    if (!/^\d{2}:\d{2}$/.test(String(time))) {
+      return res.status(400).json({ error: 'Hora inválida' });
+    }
+    const [hh, mm] = String(time).split(':').map(Number);
+    if (hh > 23 || mm > 59) {
+      return res.status(400).json({ error: 'Hora inválida' });
+    }
+    if (mm % PASO_MINUTOS !== 0) {
+      return res.status(400).json({ error: 'Esa hora no corresponde a un bloque de la agenda' });
+    }
+
+    const hoy = new Date();
+    if (fechaPedida < new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())) {
+      return res.status(400).json({ error: 'Esa fecha ya pasó' });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(clientEmail))) {
+      return res.status(400).json({ error: 'El correo no tiene un formato válido' });
+    }
+
+    if (paymentType !== undefined && paymentType !== 'deposit' && paymentType !== 'full') {
+      return res.status(400).json({ error: 'Tipo de pago inválido' });
+    }
+
     const recentDuplicate = await sql`
       SELECT id FROM bookings
       WHERE client_email = ${clientEmail}
@@ -59,11 +109,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!UUID.test(String(serviceId))) {
-      return res.status(400).json({ error: 'serviceId inválido' });
-    }
-
     const services = await sql`SELECT * FROM services WHERE id = ${serviceId}`;
     const service = services[0] as any;
 
@@ -76,44 +121,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
      * el frontend deshabilita domingos y horarios fuera de rango, pero la API
      * es alcanzable directamente y aceptaba cualquier fecha.
      */
-    const [anio, mes, dia] = String(date).split('-').map(Number);
-    const horario = HORARIO[new Date(anio, mes - 1, dia).getDay()];
+    const horario = HORARIO[fechaPedida.getDay()];
     if (!horario) {
       return res.status(400).json({ error: 'Ese día no atendemos' });
     }
 
-    const [hh, mm] = String(time).split(':').map(Number);
-    if (!Number.isInteger(hh) || !Number.isInteger(mm) || hh < 0 || hh > 23 || mm < 0 || mm > 59) {
-      return res.status(400).json({ error: 'Hora inválida' });
-    }
     const inicio = hh * 60 + mm;
     const duracion = Number((service as any).duration_minutes) || 60;
     if (inicio < horario.abre * 60 || inicio + duracion > horario.cierra * 60) {
       return res.status(400).json({ error: 'Ese horario está fuera de la atención de ese día' });
-    }
-
-    /*
-     * Validaciones que solo existían en el formulario. La API se puede llamar
-     * directamente, así que acá también: si no, entran reservas para fechas ya
-     * pasadas, con correos a los que nunca llegará la confirmación, o a horas
-     * fuera de la grilla como las 10:07.
-     */
-    if (mm % PASO_MINUTOS !== 0) {
-      return res.status(400).json({ error: 'Esa hora no corresponde a un bloque de la agenda' });
-    }
-
-    const hoy = new Date();
-    const inicioDelDiaDeHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-    if (new Date(anio, mes - 1, dia) < inicioDelDiaDeHoy) {
-      return res.status(400).json({ error: 'Esa fecha ya pasó' });
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(clientEmail))) {
-      return res.status(400).json({ error: 'El correo no tiene un formato válido' });
-    }
-
-    if (paymentType !== undefined && paymentType !== 'deposit' && paymentType !== 'full') {
-      return res.status(400).json({ error: 'Tipo de pago inválido' });
     }
 
     // Libera los cupos de quienes abandonaron el checkout antes de evaluar
