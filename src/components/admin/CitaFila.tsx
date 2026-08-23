@@ -83,31 +83,53 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
   }
 
   const BOTON =
-    'inline-flex items-center gap-1.5 border px-3 py-1.5 texto--2 uppercase espaciado-medio ' +
-    'transition-all duration-300 active:scale-95 disabled:opacity-40';
+    'inline-flex items-center justify-center gap-1.5 rounded-[var(--radius-suave)] border px-3 py-2.5 texto--2 uppercase espaciado-medio ' +
+    'transition-all duration-300 active:scale-95 disabled:opacity-40 sm:justify-start sm:py-1.5';
 
   return (
-    <li className="px-5 py-4">
-      <div className="flex items-start gap-4">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-tinta-850 texto--1 font-medium tabular-nums text-crema-100">
-          {b.booking_time ? String(b.booking_time).slice(0, 5) : '—'}
-        </span>
+    <li className="px-4 py-4 sm:px-5">
+      {/*
+        En móvil la fila se apila. Con las tres columnas horizontales, el
+        nombre quedaba en 109px de ancho y se partía en cinco líneas: cada
+        cita ocupaba 400px, media pantalla. Desde sm vuelve a la fila, que
+        ahí sí entra.
+      */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
+        {/* Cabecera: la hora y el estado, que es lo que se escanea. */}
+        <div className="flex items-center justify-between gap-3 sm:block sm:justify-start">
+          <span className="flex h-11 shrink-0 items-center justify-center rounded-[var(--radius-suave)] bg-tinta-850 px-3 texto-0 font-medium tabular-nums text-crema-100 sm:h-12 sm:w-12 sm:px-0">
+            {b.booking_time ? String(b.booking_time).slice(0, 5) : '—'}
+          </span>
+          <span
+            className={`shrink-0 rounded-full border px-3 py-1 texto--2 uppercase espaciado-medio sm:hidden ${estado.clase}`}
+          >
+            {estado.label}
+          </span>
+        </div>
 
         <div className="min-w-0 flex-1">
           <p className="texto-0 font-medium text-crema-100">{b.client_name}</p>
           <p className="texto--1 text-nacar-200/80">{b.service_name || 'Servicio'}</p>
-          <p className="texto--1 text-nacar-300">{b.client_phone}</p>
+          <a
+            href={`tel:${(b.client_phone || '').replace(/[^0-9+]/g, '')}`}
+            className="inline-block py-1 texto--1 text-nacar-300 transition-colors hover:text-crema-100"
+          >
+            {b.client_phone}
+          </a>
         </div>
 
-        <div className="shrink-0 text-right">
-          <span className={`inline-block rounded-full border px-3 py-1 texto--2 uppercase espaciado-medio ${estado.clase}`}>
+        {/* Montos: en móvil van en una línea al pie, no en columna. */}
+        <div className="flex items-baseline justify-between gap-3 sm:block sm:shrink-0 sm:text-right">
+          <span
+            className={`hidden rounded-full border px-3 py-1 texto--2 uppercase espaciado-medio sm:inline-block ${estado.clase}`}
+          >
             {estado.label}
           </span>
-          <p className="mt-1.5 texto--1 text-crema-100">
+          <p className="texto-0 text-crema-100 sm:mt-1.5 sm:texto--1">
             {formatPrice(Number(b.total_amount || 0))}
           </p>
           {debeSaldo ? (
-            <p className="texto--1 text-dorado-300">Debe {formatPrice(saldo)}</p>
+            <p className="texto--1 font-medium text-dorado-300">Debe {formatPrice(saldo)}</p>
           ) : b.remaining_paid ? (
             <p className="texto--1 text-nacar-300">Pagado completo</p>
           ) : null}
@@ -116,7 +138,7 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
 
       {/* Acciones: solo las que aplican al estado de esta cita. */}
       {(debeSaldo || puedeNoShow) && (
-        <div className="mt-3 flex flex-wrap items-center gap-2 pl-16">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:pl-16">
           {b.status === 'confirmed' && (
             <button onClick={() => onRecordatorio(b)} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
               <MessageCircle size={13} strokeWidth={1.5} aria-hidden="true" />
@@ -151,7 +173,7 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
       )}
 
       {link && (
-        <div className="anim-entrada linea-oro ml-16 mt-3 flex items-center gap-2 border p-3">
+        <div className="anim-entrada linea-oro mt-3 flex flex-wrap items-center gap-2 rounded-[var(--radius-suave)] border p-3 sm:ml-16">
           <Copy size={13} strokeWidth={1.5} className="shrink-0 text-dorado-300" aria-hidden="true" />
           <span className="texto--1 text-nacar-200/80">Link copiado — envíaselo por WhatsApp:</span>
           <a href={link} target="_blank" rel="noopener noreferrer" className="min-w-0 flex-1 truncate texto--1 text-crema-100 underline">
@@ -161,7 +183,7 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
       )}
 
       {error && (
-        <p role="alert" className="ml-16 mt-2 texto--1 text-nacar-100">
+        <p role="alert" className="mt-2 texto--1 text-nacar-100 sm:ml-16">
           {error}
         </p>
       )}
