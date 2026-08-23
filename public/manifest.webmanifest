@@ -1,0 +1,42 @@
+{
+  "name": "Goddess Studio",
+  "short_name": "Goddess",
+  "description": "Reserva de horas para uñas, pestañas y cejas en Melipilla.",
+  "lang": "es-CL",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#171210",
+  "theme_color": "#171210",
+  "categories": ["lifestyle", "business"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icono-app.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Panel del estudio",
+      "short_name": "Panel",
+      "description": "Ver la agenda del día y cobrar saldos",
+      "url": "/admin"
+    },
+    {
+      "name": "Reservar una hora",
+      "short_name": "Reservar",
+      "description": "Agendar un servicio",
+      "url": "/agendar"
+    }
+  ]
+}

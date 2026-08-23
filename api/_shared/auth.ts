@@ -11,7 +11,20 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  */
 
 const COOKIE = 'itb_admin';
-const DURACION_HORAS = 12;
+
+/*
+ * Duración de la sesión.
+ *
+ * Con 12 horas había que escribir la contraseña casi a diario, y el panel se
+ * usa desde el teléfono varias veces al día —para cobrar un saldo o mirar la
+ * agenda entre clienta y clienta—, así que esa fricción terminaba en una
+ * contraseña más corta o anotada en cualquier parte.
+ *
+ * Treinta días es el equilibrio para un dispositivo personal con bloqueo de
+ * pantalla. La cookie sigue siendo HttpOnly y firmada, y "Salir" la borra en
+ * el acto si el teléfono se pierde.
+ */
+const DURACION_HORAS = 24 * 30;
 
 function b64url(bytes: Uint8Array): string {
   let bin = '';

@@ -1,6 +1,6 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, Mail } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Button from './ui/Button';
 import IconoInstagram from './ui/IconoInstagram';
 import { linkWhatsApp, EMAIL, INSTAGRAM_URL, WHATSAPP_VISIBLE } from '../lib/contacto';
@@ -11,10 +11,33 @@ const LINKS = [
   { path: '/agendar', label: 'Agendar' },
 ];
 
+/** Toques seguidos sobre la marca para entrar al panel, y ventana para darlos. */
+const TOQUES_PANEL = 3;
+const VENTANA_TOQUES_MS = 1200;
+
 export default function Navbar() {
   const [abierto, setAbierto] = useState(false);
   const [conScroll, setConScroll] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  /*
+   * Atajo al panel: tres toques sobre la marca.
+   *
+   * Ignacia entra desde su teléfono varias veces al día y escribir la ruta a
+   * mano es incómodo. No es una medida de seguridad —la ruta sigue siendo
+   * pública y protegida por contraseña—, solo evita el tipeo. La ventana de
+   * tiempo hace que tres toques sueltos a lo largo de la visita no cuenten.
+   */
+  const toques = useRef<number[]>([]);
+  function contarToque() {
+    const ahora = Date.now();
+    toques.current = [...toques.current, ahora].filter((t) => ahora - t < VENTANA_TOQUES_MS);
+    if (toques.current.length >= TOQUES_PANEL) {
+      toques.current = [];
+      navigate('/admin');
+    }
+  }
 
   useEffect(() => {
     const alScrollear = () => setConScroll(window.scrollY > 16);
@@ -42,7 +65,7 @@ export default function Navbar() {
     >
       <nav aria-label="Principal" className="mx-auto w-full max-w-[1200px] px-5 sm:px-6">
         <div className="flex h-18 items-center justify-between py-4">
-          <Link to="/" className="group flex items-baseline gap-2">
+          <Link to="/" onClick={contarToque} className="group flex items-baseline gap-2">
             <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
               Goddess
             </span>
