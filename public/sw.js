@@ -11,7 +11,7 @@
  *  - El resto va a la red primero y solo cae en la copia guardada si el
  *    teléfono está sin señal.
  */
-const CACHE = 'goddess-v1';
+const CACHE = 'goddess-v2';
 
 self.addEventListener('install', (evento) => {
   // Toma el control sin esperar a que se cierren las pestañas viejas.
@@ -44,7 +44,12 @@ self.addEventListener('fetch', (evento) => {
     (async () => {
       try {
         const respuesta = await fetch(request);
-        // Solo se guardan respuestas completas y correctas.
+        /*
+         * Solo se guardan respuestas propias y completas. `type === 'basic'`
+         * deja fuera las redirigidas a otro origen: en los despliegues de
+         * vista previa, Vercel manda al login de su SSO y guardar esa
+         * respuesta dejaría el caché envenenado con una página ajena.
+         */
         if (respuesta && respuesta.status === 200 && respuesta.type === 'basic') {
           const cache = await caches.open(CACHE);
           cache.put(request, respuesta.clone());
@@ -58,7 +63,17 @@ self.addEventListener('fetch', (evento) => {
           const inicio = await caches.match('/');
           if (inicio) return inicio;
         }
-        throw new Error('sin conexión');
+        /*
+         * Se devuelve una respuesta de error en vez de lanzar. Lanzar acá
+         * producía un "Uncaught (in promise)" en la consola por cada recurso
+         * que no cargara, ensuciando el registro con ruido que parecía un
+         * fallo del sitio.
+         */
+        return new Response('', {
+          status: 504,
+          statusText: 'Sin conexión',
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        });
       }
     })()
   );
