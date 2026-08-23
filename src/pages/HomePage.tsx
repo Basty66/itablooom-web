@@ -37,6 +37,10 @@ export default function HomePage() {
       <VideoBienvenida />
       <ComoFunciona />
 
+      {/* Los resultados van antes del catálogo: convencen justo antes de
+          que la clienta vea los precios, y ahí es donde más pesan. */}
+      <AntesDespues />
+
       <Section className="bg-tinta-900">
         <SectionHeading
           eyebrow="Especialidades"
@@ -90,8 +94,6 @@ export default function HomePage() {
       </Section>
 
       <Reels />
-
-      <AntesDespues />
 
       <SobreMi />
 
