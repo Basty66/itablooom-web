@@ -62,7 +62,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
    * es el de creación de las filas y cambia sin aviso. Es el mismo orden que
    * anuncia el sitio en su encabezado.
    */
-  const ordenRubros = CATEGORIAS_GODDESS.filter((c) => c.id !== 'all').map((c) => c.label);
+  const ordenRubros: string[] = CATEGORIAS_GODDESS.filter((c) => c.id !== 'all').map((c) => c.label);
   const gruposOrdenados = Object.entries(porRubro).sort(
     ([a], [b]) => ordenRubros.indexOf(a) - ordenRubros.indexOf(b)
   );
