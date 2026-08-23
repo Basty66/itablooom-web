@@ -84,7 +84,7 @@ export default function Reels() {
         Carrusel con scroll-snap: en móvil se desliza uno a uno y en escritorio
         se ven todos. Los márgenes negativos permiten que sangre hasta el borde.
       */}
-      <div className="-mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
+      <div className="-mx-5 mt-12 flex snap-x snap-mandatory gap-4 sin-barra overflow-x-auto px-5 pb-4 sm:mx-0 sm:px-0">
         {REELS.map((reel, i) => (
           <article
             key={reel.id}

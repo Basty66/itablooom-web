@@ -174,7 +174,7 @@ export default function ServicesPage() {
             <div
               role="tablist"
               aria-label="Filtrar por rubro"
-              className="flex gap-2 overflow-x-auto py-3 [scrollbar-width:none] sm:justify-center sm:gap-3 sm:py-0 sm:pb-10"
+              className="flex gap-2 sin-barra overflow-x-auto py-3 sm:justify-center sm:gap-3 sm:py-0 sm:pb-10"
             >
               {filtros.map(({ id, label, total }) => {
                 const activo = rubroActivo === id;

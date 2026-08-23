@@ -257,6 +257,21 @@
     border-radius: var(--radius-medio);
   }
 
+  /*
+   * Franja que se desliza sin barra a la vista.
+   *
+   * El sitio pinta un scrollbar dorado de 10px, que en una tira de pestañas o
+   * de chips aparece como una banda gruesa bajo el contenido y se lee como un
+   * elemento roto, no como un control.
+   */
+  .sin-barra {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .sin-barra::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Chip: relleno rosa apenas insinuado con el mismo rosa en el canto. El
      borde sólido es lo que lo hace legible; solo con el 12% de fondo la
      píldora se pierde contra la tarjeta. */

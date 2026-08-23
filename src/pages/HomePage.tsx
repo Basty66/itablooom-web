@@ -50,7 +50,7 @@ export default function HomePage() {
           Los márgenes negativos permiten que el carrusel sangre hasta el borde
           sin romper el ancho del contenedor.
         */}
-        <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+        <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-4 sin-barra overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
           {cargando
             ? Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} className="w-[78%] shrink-0 snap-center sm:w-auto">

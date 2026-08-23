@@ -290,18 +290,42 @@ export default function AdminPage() {
       </aside>
 
       <div className="lg:pl-64">
-        {/* Encabezado con la fecha de trabajo y el buscador siempre a mano. */}
+        {/*
+          Encabezado en dos filas ordenadas y no en tres sueltas: la marca con
+          las acciones arriba, y los campos de buscar y fecha abajo ocupando el
+          ancho. Antes el buscador caía solo en la primera fila, la marca
+          quedaba junto a la fecha y los botones colgaban en una tercera.
+        */}
         <header className="vidrio sticky top-0 z-30 border-b">
-          <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-6">
-            <div className="flex items-center gap-3 lg:hidden">
+          <div className="flex items-center justify-between gap-3 px-5 pb-3 pt-4 sm:px-6 lg:hidden">
+            <div className="flex items-baseline gap-2">
               <span className="font-display texto-1 font-medium tracking-tight text-crema-100">
                 Goddess
               </span>
               <span className="texto--2 uppercase tracking-[0.25em] text-rosa-300">Studio</span>
             </div>
 
-            <div className="flex flex-1 flex-wrap items-center justify-end gap-3">
-              <label className="relative">
+            <div className="flex items-center gap-2">
+              <Link
+                to="/"
+                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-suave)] border border-dorado-400/40 text-nacar-200/85 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95"
+                aria-label="Ver el sitio"
+              >
+                <ExternalLink size={15} strokeWidth={1.5} aria-hidden="true" />
+              </Link>
+              <button
+                onClick={salir}
+                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-suave)] border border-dorado-400/40 text-nacar-200/85 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95"
+                aria-label="Cerrar sesión"
+              >
+                <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 px-5 pb-4 sm:px-6 lg:py-4">
+            <div className="flex w-full flex-1 items-center gap-3 lg:w-auto lg:justify-end">
+              <label className="relative min-w-0 flex-1 lg:flex-none">
                 <span className="sr-only">Buscar clienta</span>
                 <Search
                   size={15}
@@ -314,11 +338,11 @@ export default function AdminPage() {
                   placeholder="Nombre o correo…"
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
-                  className="campo w-44 py-2.5 pl-10 pr-3 texto--1 sm:w-56"
+                  className="campo w-full min-w-0 py-2.5 pl-10 pr-3 texto--1 lg:w-56"
                 />
               </label>
 
-              <label className="relative">
+              <label className="relative shrink-0">
                 <span className="sr-only">Fecha de la agenda</span>
                 <CalendarDays
                   size={15}
@@ -334,26 +358,11 @@ export default function AdminPage() {
                 />
               </label>
 
-              <Link
-                to="/"
-                className="rounded-[var(--radius-suave)] border border-dorado-400/40 p-2.5 text-nacar-200/85 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95 lg:hidden"
-                aria-label="Ver el sitio"
-              >
-                <ExternalLink size={15} strokeWidth={1.5} aria-hidden="true" />
-              </Link>
-
-              <button
-                onClick={salir}
-                className="rounded-[var(--radius-suave)] border border-dorado-400/40 p-2.5 text-nacar-200/85 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95 lg:hidden"
-                aria-label="Cerrar sesión"
-              >
-                <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
-              </button>
             </div>
           </div>
 
           {/* Pestañas equivalentes a la barra lateral, solo en móvil. */}
-          <nav aria-label="Secciones del panel" className="flex gap-1 overflow-x-auto px-5 pb-3 sm:px-6 lg:hidden">
+          <nav aria-label="Secciones del panel" className="sin-barra flex gap-2 overflow-x-auto px-5 pb-3 sm:px-6 lg:hidden">
             {SECCIONES.map(({ id, label, icono: Icono }) => {
               const activa = seccion === id;
               return (
