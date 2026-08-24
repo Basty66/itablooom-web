@@ -82,7 +82,17 @@ function Layout() {
 
       {!esPanel && <Navbar />}
 
-      <main id="contenido" className="flex-1">
+      {/*
+        La clave por ruta remonta el contenido en cada navegación, que es lo
+        que hace correr la aparición de nuevo. Va en el propio <main> para no
+        agregar un nodo de más.
+
+        La animación es solo de opacidad, a propósito: un `transform` acá
+        convertiría a <main> en el contenedor de referencia de todo lo que
+        tenga `position: fixed` adentro —los botones flotantes, el panel del
+        menú— y dejarían de anclarse a la pantalla.
+      */}
+      <main id="contenido" key={pathname} className="anim-pagina flex-1">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/servicios" element={<ServicesPage />} />

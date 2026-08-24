@@ -46,7 +46,9 @@ export default function Faq() {
         {PREGUNTAS.map(({ pregunta, respuesta }, i) => {
           const activa = abierta === i;
           return (
-            <div key={pregunta}>
+            /* Las preguntas caen una tras otra al llegar a la sección, en vez
+               de aparecer el bloque entero de una vez. */
+            <div key={pregunta} className="anim-entrada" style={{ animationDelay: `${i * 70}ms` }}>
               <h3>
                 <button
                   type="button"

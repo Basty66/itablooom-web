@@ -10,12 +10,17 @@ import { getGaleria, type TrabajoGaleria } from '../../lib/api';
  * arrastra con el dedo, con el mouse y también con las flechas del teclado,
  * que es lo que un div con eventos de puntero no da gratis.
  */
-function Comparador({ trabajo }: { trabajo: TrabajoGaleria }) {
+function Comparador({ trabajo, indice = 0 }: { trabajo: TrabajoGaleria; indice?: number }) {
   const [pos, setPos] = useState(50);
   const contenedor = useRef<HTMLDivElement>(null);
 
   return (
-    <figure className="overflow-hidden rounded-[var(--radius-foto)] border border-crema-100/8 bg-tinta-880">
+    /* Entran una tras otra, no las seis de golpe. El retraso queda retenido
+       hasta que la sección aparece, como el resto de las entradas del sitio. */
+    <figure
+      className="anim-entrada overflow-hidden rounded-[var(--radius-foto)] border border-crema-100/8 bg-tinta-880"
+      style={{ animationDelay: `${indice * 90}ms` }}
+    >
       {/*
         Cuadrado y no retrato: las fotos del estudio suelen venir anotadas
         —flechas y texto que llegan a los dos bordes—, y un recorte 4:5 les
@@ -123,8 +128,8 @@ export default function AntesDespues() {
       />
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {trabajos.slice(0, 6).map((t) => (
-          <Comparador key={t.id} trabajo={t} />
+        {trabajos.slice(0, 6).map((t, i) => (
+          <Comparador key={t.id} trabajo={t} indice={i} />
         ))}
       </div>
     </Section>

@@ -25,7 +25,16 @@ export default function Hero() {
      */
     <section className="luz-vino relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-center [@media(max-height:520px)]:min-h-0">
       <Container className="relative w-full">
-        <div className="py-16 md:py-24 [@media(max-height:520px)]:py-8">
+        {/*
+          El colchón de abajo no es estético: el indicador de scroll va anclado
+          al pie del hero y el contenido va centrado, así que en pantallas
+          cortas —un teléfono de 664px con las barras del navegador— la línea
+          del abono terminaba pasando por encima de "Descubre más".
+
+          Se reserva justo en el tramo donde el indicador aparece, que es a
+          partir de 600px de alto; por debajo no se muestra y el colchón sobra.
+        */}
+        <div className="py-16 md:py-24 [@media(min-height:600px)]:pb-36 [@media(max-height:520px)]:py-8">
           {/* Línea corta al costado del rótulo: el gesto de apertura del
               diseño, más elegante que una regla debajo. */}
           <div

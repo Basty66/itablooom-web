@@ -15,6 +15,7 @@ import ServiceCard from '../components/ServiceCard';
 import Button from '../components/ui/Button';
 import { Section, SectionHeading, Container } from '../components/ui/Section';
 import Revelar from '../components/ui/Revelar';
+import Trazo from '../components/ui/Trazo';
 import { ServiceCardSkeleton } from '../components/ui/Skeleton';
 
 export default function HomePage() {
@@ -38,6 +39,9 @@ export default function HomePage() {
       <Hero />
       <VideoBienvenida />
       <ComoFunciona />
+
+      {/* Cierra el bloque de "cómo es venir" y abre el de resultados. */}
+      <Trazo forma="baja" />
 
       {/* Los resultados van antes del catálogo: convencen justo antes de
           que la clienta vea los precios, y ahí es donde más pesan. */}
@@ -96,6 +100,10 @@ export default function HomePage() {
       </Section>
 
       <Reels />
+
+      {/* Del portafolio a la persona: la curva sube, para no repetir el gesto
+          del trazo anterior. */}
+      <Trazo forma="sube" />
 
       <SobreMi />
 

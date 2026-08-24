@@ -380,6 +380,11 @@
     animation: velo 1.2s var(--ease-suave) both;
   }
 
+  /* Aparición al cambiar de página: corta el salto seco entre rutas. */
+  .anim-pagina {
+    animation: aparecer 0.45s var(--ease-suave) both;
+  }
+
   /*
    * Las entradas escalonadas esperan a que su sección entre en pantalla.
    *
@@ -465,6 +470,21 @@
   }
   to {
     transform: scale(1.06) translate3d(0, -1.5%, 0);
+  }
+}
+
+/*
+ * Aparición al cambiar de ruta. Solo opacidad, nunca desplazamiento: un
+ * `transform` sobre el contenedor de las páginas volvería a <main> el marco de
+ * referencia de todo lo que lleve `position: fixed` —los botones flotantes, el
+ * panel del menú— y dejarían de anclarse a la pantalla.
+ */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

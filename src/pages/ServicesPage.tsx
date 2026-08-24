@@ -6,6 +6,7 @@ import { getServices } from '../lib/api';
 import { CATEGORIAS_GODDESS } from '../lib/categorias';
 import ServiceVisual, { etiquetaCategoria } from '../components/ui/ServiceVisual';
 import { Container } from '../components/ui/Section';
+import Revelar from '../components/ui/Revelar';
 import { ServiceCardSkeleton } from '../components/ui/Skeleton';
 import { formatPrice, formatDuration } from '../lib/format';
 
@@ -232,7 +233,11 @@ export default function ServicesPage() {
 
         <div className="space-y-14 sm:space-y-20">
           {visibles.map((rubro, i) => (
-            <section id={`rubro-${rubro.id}`} key={rubro.id} className="scroll-mt-28 space-y-6 sm:space-y-10">
+            /* Cada rubro se revela al llegar. El primero entra de inmediato
+               porque ya está en pantalla al abrir el catálogo; retenerlo
+               dejaría la página en blanco el primer instante. */
+            <Revelar key={rubro.id} delay={i === 0 ? 0 : 60}>
+            <section id={`rubro-${rubro.id}`} className="scroll-mt-28 space-y-6 sm:space-y-10">
               {/* Encabezado de rubro: número, nombre y una regla que se estira
                   hasta el borde, rematada por un punto. Con un rubro filtrado
                   el nombre ya está en el filtro activo, así que numerarlo
@@ -257,6 +262,7 @@ export default function ServicesPage() {
                 ))}
               </div>
             </section>
+            </Revelar>
           ))}
         </div>
       </Container>
