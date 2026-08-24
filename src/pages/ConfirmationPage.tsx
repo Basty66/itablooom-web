@@ -43,7 +43,7 @@ function Estado({
         className={`anim-velo mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border ${
           tono === 'exito'
             ? 'border-rosa-300/40 bg-rosa-300/10 text-rosa-300'
-            : 'border-dorado-400/40 bg-tinta-850 text-dorado-300'
+            : 'border-cobre-400/40 bg-tinta-850 text-cobre-300'
         }`}
       >
         <Icono size={32} strokeWidth={1.3} aria-hidden="true" />
@@ -117,7 +117,7 @@ export default function ConfirmationPage() {
   if (cargando) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-tinta-900">
-        <Loader2 size={34} strokeWidth={1.3} className="animate-spin text-dorado-500" aria-hidden="true" />
+        <Loader2 size={34} strokeWidth={1.3} className="animate-spin text-cobre-500" aria-hidden="true" />
         <span className="sr-only">Cargando tu reserva…</span>
       </div>
     );
@@ -197,7 +197,7 @@ export default function ConfirmationPage() {
               },
             ].map(({ icono: Icono, label, valor }) => (
               <div key={label} className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-dorado-400/20 bg-tinta-860">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-cobre-400/20 bg-tinta-860">
                   <Icono size={18} strokeWidth={1.5} className="text-crema-100/90" aria-hidden="true" />
                 </span>
                 <div className="min-w-0">
@@ -208,9 +208,9 @@ export default function ConfirmationPage() {
             ))}
           </dl>
 
-          <div className="mt-7 linea-oro border-t pt-6">
+          <div className="mt-7 linea-cobre border-t pt-6">
             <h3 className="mb-4 flex items-center gap-2 texto-1 text-crema-100">
-              <CreditCard size={17} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
+              <CreditCard size={17} strokeWidth={1.5} className="text-cobre-300" aria-hidden="true" />
               Resumen de pago
             </h3>
             {/*
@@ -233,7 +233,7 @@ export default function ConfirmationPage() {
                     <dt className="text-nacar-200/80">Saldo a pagar en el local</dt>
                     <dd className="font-medium text-crema-100">{formatPrice(saldoPendiente)}</dd>
                   </div>
-                  <div className="linea-oro flex justify-between gap-4 border-t pt-2.5">
+                  <div className="linea-cobre flex justify-between gap-4 border-t pt-2.5">
                     <dt className="text-nacar-300">Valor del servicio</dt>
                     <dd className="text-nacar-300">{formatPrice(totalServicio)}</dd>
                   </div>
@@ -246,7 +246,7 @@ export default function ConfirmationPage() {
             </dl>
           </div>
 
-          <div className="mt-7 linea-oro border-t p-0 pt-6">
+          <div className="mt-7 linea-cobre border-t p-0 pt-6">
             <h3 className="mb-3 texto-0 font-medium text-crema-100">Antes de tu cita</h3>
             <ul className="space-y-2 texto--1 text-nacar-200/80">
               {/*
@@ -263,14 +263,14 @@ export default function ConfirmationPage() {
                 <li key={linea} className="flex items-start gap-2.5">
                   <span
                     aria-hidden="true"
-                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-dorado-400"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-cobre-400"
                   />
                   {linea}
                 </li>
               ))}
             </ul>
             <p className="mt-4 flex items-center gap-2 texto--1 text-nacar-300">
-              <MapPin size={14} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
+              <MapPin size={14} strokeWidth={1.5} className="text-cobre-300" aria-hidden="true" />
               {CIUDAD}, Chile
             </p>
           </div>

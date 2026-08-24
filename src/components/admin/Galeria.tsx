@@ -163,7 +163,7 @@ export default function Galeria() {
             setError('');
             setAviso('');
           }}
-          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-dorado-300 transition-colors duration-300 hover:text-crema-100"
+          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-cobre-300 transition-colors duration-300 hover:text-crema-100"
         >
           {abierto ? <X size={14} strokeWidth={1.5} /> : <ImagePlus size={14} strokeWidth={1.5} />}
           {abierto ? 'Cancelar' : 'Agregar'}

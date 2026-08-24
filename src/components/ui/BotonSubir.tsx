@@ -44,7 +44,7 @@ export default function BotonSubir() {
       type="button"
       onClick={subir}
       aria-label="Volver arriba"
-      className={`vidrio fixed right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-dorado-400/30 text-dorado-300 transition-all duration-500 ease-out hover:border-dorado-400 hover:text-crema-100 active:scale-95 sm:right-8 sm:h-14 sm:w-14 ${alto} ${
+      className={`vidrio fixed right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-cobre-400/30 text-cobre-300 transition-all duration-500 ease-out hover:border-cobre-400 hover:text-crema-100 active:scale-95 sm:right-8 sm:h-14 sm:w-14 ${alto} ${
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
       }`}
     >

@@ -7,7 +7,8 @@
 @theme {
   /* Crema: fondos y superficies. */
   --color-crema-50: #fdfbf7;
-  --color-crema-100: #faf6ef;
+  /* El "blanco" del boceto: un hueso más cálido que el crema anterior. */
+  --color-crema-100: #f7f0ea;
   --color-crema-200: #f4ede1;
   --color-crema-300: #ebe0ce;
   --color-crema-400: #ddcdb4;
@@ -20,7 +21,8 @@
      usan las pantallas de panel para apilar tarjeta sobre tarjeta sin
      recurrir a sombras. */
   --color-tinta-950: #110d0b;
-  --color-tinta-880: #1f1b18;
+  /* El "negro-2" del boceto: la superficie de las tarjetas de servicio. */
+  --color-tinta-880: #1f1614;
   --color-tinta-870: #231f1c;
   --color-tinta-860: #2e2927;
   --color-tinta-840: #393431;
@@ -31,46 +33,57 @@
   --color-tinta-600: #5a4f47;
   --color-tinta-700: #3a322c;
   --color-tinta-800: #241e1a;
-  --color-tinta-900: #171210;
+  /* El "negro" del boceto: el fondo dominante de todo el sitio. */
+  --color-tinta-900: #140f0e;
 
   /* Rosado pastel: acento. */
   --color-rosa-50: #fdf4f4;
   --color-rosa-100: #fae8e9;
-  --color-rosa-200: #ffdadb;
-  --color-rosa-300: #ffb2b9;
+  /* El rosa del boceto es más apagado que el pastel anterior: el mismo tono
+     al que llegó la clienta, y menos caramelo sobre el negro. */
+  --color-rosa-200: #efc9c8;
+  --color-rosa-300: #e3afae;
   --color-rosa-400: #db949b;
   --color-rosa-500: #c87880;
   --color-rosa-550: #b0525c;
-  /* Vino profundo: el color de la letra sobre el rosa claro. Es la pareja que
-     el sistema define para el relleno primario y mide 7.71:1, bastante mejor
-     que poner crema sobre un rosa oscurecido (4.63:1). */
-  --color-vino-900: #561d25;
+  /*
+   * Vino profundo: el segundo color de la marca. Cumple dos papeles y ninguno
+   * es texto sobre el negro: como superficie completa (el bloque de la reseña)
+   * y como tinta sobre los fondos claros, donde mide 8.61:1.
+   *
+   * Sobre el negro da 1.96:1: ahí es invisible. Ese es el motivo de que los
+   * títulos sigan en hueso y los filetes en cobre.
+   */
+  --color-vino-900: #7a2638;
+  /* Vino claro: solo para filetes y subrayados sobre oscuro, nunca para
+     texto (2.68:1). */
+  --color-vino-700: #9a3448;
   /* Para texto pequeño sobre crema: rosa-500 solo alcanza 3.02:1 y AA pide
      4.5:1. Este llega a ~5.2:1 manteniendo el mismo matiz. */
   --color-rosa-600: #a34a55;
 
-  /*
-   * Goddess Studio: nude y dorado.
-   * El dorado de marca (#c4a265) sirve para superficies y detalles, pero sobre
-   * crema da ~2.2:1 y no alcanza para texto. Por eso hay una versión oscura
-   * (dorado-700) reservada a textos pequeños, con el mismo matiz.
-   */
   --color-nude-100: #faf3ea;
   --color-nude-200: #f5e6d3;
   --color-nude-300: #e8d4b8;
 
-  /* Oro con saturación real, no beige: el dorado apagado se leía como barro
-     sobre crema. El 400 es el oro de marca; el 700 existe solo para texto
-     pequeño, donde el oro brillante no alcanza el contraste AA. */
-  --color-dorado-100: #fbf1cf;
-  --color-dorado-200: #f4e0a0;
-  --color-dorado-300: #ffe088;
-  --color-dorado-400: #e9c349;
-  --color-dorado-500: #b8912a;
-  /* El 500 sobre crema da 2.74:1 y el titular necesita 3:1. Este llega a
-     3.4:1 sin perder el matiz dorado. */
-  --color-dorado-600: #a67f1e;
-  --color-dorado-700: #6b5215;
+  /*
+   * Cobre: el metal de la marca, en reemplazo del dorado.
+   *
+   * El oro amarillo y el rosa eran dos familias peleando sobre el mismo negro.
+   * El cobre sale del rosa oscurecido, así que precios y filetes se leen como
+   * parte de la misma paleta y no como un tercer color invitado.
+   *
+   * El 400 es el tono del boceto y da 6.87:1 sobre el negro. El 600 y el 700
+   * existen solo para las secciones claras, donde el cobre normal se apaga
+   * contra el hueso.
+   */
+  --color-cobre-100: #f2e2d9;
+  --color-cobre-200: #e3c4b4;
+  --color-cobre-300: #d6a992;
+  --color-cobre-400: #c68f76;
+  --color-cobre-500: #a9705a;
+  --color-cobre-600: #8a5540;
+  --color-cobre-700: #6b3f2e;
 
   /* Nácar: el texto sobre oscuro no es crema puro sino un blanco entibiado en
      rosa. La diferencia con el crema es mínima en aislado, pero en bloque
@@ -108,12 +121,18 @@
     /* body-md 16px y body-lg 18px. */
     --paso-0: 1rem;
     --paso-1: 1.125rem;
-    /* headline-sm 24px y headline-md 32px, con arranque menor en móvil. */
-    --paso-2: clamp(1.3rem, 0.6vw + 1.15rem, 1.5rem);
-    --paso-3: clamp(1.6rem, 1.2vw + 1.3rem, 2rem);
-    --paso-4: clamp(1.9rem, 1.8vw + 1.45rem, 2.5rem);
-    /* display-lg: 40px en móvil, 56px desde el ancho de diseño. */
-    --paso-5: clamp(2.5rem, 2.8vw + 1.8rem, 3.5rem);
+    /*
+     * Titulares al tamaño del boceto, que es bastante más grande que la escala
+     * anterior: el nombre pasa de 56px a 86px y los títulos de sección de 40px
+     * a 51px. Ese salto es casi todo el efecto editorial que se buscaba —el
+     * cuerpo y los rótulos no se tocan, porque agrandarlos lo volvería
+     * aparatoso en vez de elegante.
+     */
+    --paso-2: clamp(1.35rem, 0.8vw + 1.15rem, 1.6rem);
+    --paso-3: clamp(1.6rem, 1.4vw + 1.25rem, 1.95rem);
+    --paso-4: clamp(2.1rem, 2.6vw + 1.4rem, 3.2rem);
+    /* display-lg: 48px en móvil, 86px desde el ancho de diseño. */
+    --paso-5: clamp(3rem, 5.2vw + 1.6rem, 5.4rem);
   }
 
   html {
@@ -123,7 +142,7 @@
 
   body {
     margin: 0;
-    /* Negro dominante: sobre este fondo el oro brillante recién funciona como
+    /* Negro dominante: sobre este fondo el cobre recién funciona como
        texto (≈8:1); sobre crema daba 1.95:1 y era ilegible. */
     background-color: var(--color-tinta-900);
     color: var(--color-crema-100);
@@ -155,19 +174,19 @@
 
   /* Un solo anillo de foco para todo el sitio, visible sobre crema y sobre tinta. */
   /*
-   * Anillo de foco único para todo el sitio. Va en el oro claro y a 2px: el
-   * dorado-500 a 1px se perdía sobre el fondo oscuro, justo para quien
+   * Anillo de foco único para todo el sitio. Va en el cobre claro y a 2px: el
+   * cobre-500 a 1px se perdía sobre el fondo oscuro, justo para quien
    * navega con teclado y no tiene otra pista de dónde está parado.
    * `border-radius: 0` se quita para que el anillo siga la forma del control
    * en vez de recuadrar en ángulo recto un botón redondeado.
    */
   :focus-visible {
-    outline: 2px solid var(--color-dorado-300);
+    outline: 2px solid var(--color-cobre-300);
     outline-offset: 3px;
   }
 
   ::selection {
-    background-color: var(--color-dorado-400);
+    background-color: var(--color-cobre-400);
     color: var(--color-tinta-900);
   }
 
@@ -178,12 +197,12 @@
     background: var(--color-tinta-850);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-dorado-300);
+    background: var(--color-cobre-300);
     border-radius: 999px;
     border: 2px solid var(--color-tinta-850);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-dorado-400);
+    background: var(--color-cobre-400);
   }
 }
 
@@ -192,10 +211,10 @@
      Nada de las sombras densas del sistema anterior. */
   /* Sobre fondo oscuro una sombra no se ve: el relieve lo da un halo tenue. */
   .sombra-sutil {
-    box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.08), 0 12px 32px -20px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 0 1px rgba(198, 143, 118, 0.08), 0 12px 32px -20px rgba(0, 0, 0, 0.8);
   }
   .sombra-hover {
-    box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.22), 0 20px 48px -20px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 0 1px rgba(198, 143, 118, 0.22), 0 20px 48px -20px rgba(0, 0, 0, 0.9);
   }
 
   /* Brillo que recorre el botón al pasar el cursor. */
@@ -218,11 +237,11 @@
   .espaciado-amplio { letter-spacing: 0.15em; }
   .espaciado-medio { letter-spacing: 0.1em; }
 
-  /* Línea fina dorada: único separador del sistema, en vez de sombras. */
-  .linea-oro { border-color: color-mix(in oklab, var(--color-dorado-400) 20%, transparent); }
+  /* Línea fina de cobre: único separador del sistema, en vez de sombras. */
+  .linea-cobre { border-color: color-mix(in oklab, var(--color-cobre-400) 20%, transparent); }
 
   /* Variante rosada de la misma línea, para las secciones más cálidas.
-     El oro solo se leía sobrio; alternarlo con rosa feminiza el conjunto
+     El cobre solo se leía sobrio; alternarlo con rosa feminiza el conjunto
      sin perder el aire de marca cara. */
   .linea-rosa { border-color: color-mix(in oklab, var(--color-rosa-300) 35%, transparent); }
 
@@ -243,24 +262,29 @@
    * tonales. El borde claro al 10% define el canto, que sin él se pierde
    * contra el fondo.
    */
+  /*
+   * Casi opaco, como en el boceto: el 72% anterior dejaba pasar el contenido
+   * de abajo y los titulares grandes se leían a través de la barra. A 92% el
+   * desenfoque basta con 6px.
+   */
   .vidrio {
-    background-color: color-mix(in oklab, var(--color-tinta-850) 72%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-color: color-mix(in oklab, var(--color-crema-100) 10%, transparent);
+    background-color: color-mix(in oklab, var(--color-tinta-900) 92%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-color: color-mix(in oklab, var(--color-rosa-300) 14%, transparent);
   }
 
-  /* Tarjeta del sistema: superficie con canto de oro apenas visible. */
+  /* Tarjeta del sistema: superficie con canto de cobre apenas visible. */
   .tarjeta {
     background-color: var(--color-tinta-850);
-    border: 1px solid color-mix(in oklab, var(--color-dorado-400) 15%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-cobre-400) 15%, transparent);
     border-radius: var(--radius-medio);
   }
 
   /*
    * Franja que se desliza sin barra a la vista.
    *
-   * El sitio pinta un scrollbar dorado de 10px, que en una tira de pestañas o
+   * El sitio pinta un scrollbar de cobre de 10px, que en una tira de pestañas o
    * de chips aparece como una banda gruesa bajo el contenido y se lee como un
    * elemento roto, no como un control.
    */
@@ -290,23 +314,23 @@
     flex: 1 1 auto;
     align-self: flex-end;
     margin-bottom: 0.32em;
-    border-bottom: 1px dotted color-mix(in oklab, var(--color-dorado-400) 38%, transparent);
+    border-bottom: 1px dotted color-mix(in oklab, var(--color-cobre-400) 38%, transparent);
   }
 
   /* Anillo punteado del retrato: dos círculos concéntricos, el exterior
      discontinuo, para enmarcar la foto sin encerrarla en un borde duro. */
   .anillo-retrato {
-    border: 1px dashed color-mix(in oklab, var(--color-dorado-400) 45%, transparent);
+    border: 1px dashed color-mix(in oklab, var(--color-cobre-400) 45%, transparent);
     padding: 14px;
   }
 
-  /* Campo de formulario: caja tonal con una sola línea de oro abajo. Al
+  /* Campo de formulario: caja tonal con una sola línea de cobre abajo. Al
      enfocar sube la opacidad en vez de cambiar de color, para no romper la
      paleta con un azul de sistema. */
   .campo {
     background-color: var(--color-tinta-850);
     border: 0;
-    border-bottom: 1px solid color-mix(in oklab, var(--color-dorado-400) 30%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-cobre-400) 30%, transparent);
     border-radius: var(--radius-suave) var(--radius-suave) 0 0;
     color: var(--color-crema-100);
     transition: border-color 0.3s var(--ease-suave), background-color 0.3s var(--ease-suave);
@@ -314,7 +338,7 @@
   .campo::placeholder { color: color-mix(in oklab, var(--color-nacar-300) 85%, transparent); }
   .campo:focus {
     outline: none;
-    border-bottom-color: var(--color-dorado-400);
+    border-bottom-color: var(--color-cobre-400);
     background-color: color-mix(in oklab, var(--color-tinta-850) 70%, var(--color-tinta-900));
   }
 
@@ -340,7 +364,7 @@
    * Retrato de estudio: blanco y negro con una pizca de sepia. El gris puro
    * se va al azul y sobre este fondo de umber cálido se ve como una foto
    * pegada encima; el sepia bajo la integra. Al quitarle el color, el rosa y
-   * el oro de la marca quedan como los únicos tonos de la pantalla.
+   * el cobre de la marca quedan como los únicos tonos de la pantalla.
    */
   .foto-estudio {
     filter: grayscale(1) sepia(0.18) contrast(1.06) brightness(0.97);
@@ -382,7 +406,7 @@
 }
 
 /* El diseño resuelve el hover con brillo, no con cambio de color: mantiene
-   la identidad del oro y funciona igual en todas las variantes. */
+   la identidad del cobre y funciona igual en todas las variantes. */
 @layer utilities {
   .brillo-hover { transition: filter 0.3s var(--ease-suave); }
   .brillo-hover:hover { filter: brightness(1.1); }

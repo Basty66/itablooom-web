@@ -110,7 +110,7 @@ export default function ReschedulePage() {
     return (
       <div className="min-h-screen bg-tinta-900 py-16">
         <Container className="max-w-lg text-center">
-          <AlertCircle size={40} strokeWidth={1.3} className="mx-auto mb-4 text-dorado-300" />
+          <AlertCircle size={40} strokeWidth={1.3} className="mx-auto mb-4 text-cobre-300" />
           <h1 className="texto-3 text-crema-100">Link inválido</h1>
           <p className="mt-3 texto-0 text-nacar-200/80">Pide a Goddess Studio el link correcto para reagendar.</p>
         </Container>
@@ -137,14 +137,14 @@ export default function ReschedulePage() {
     <div className="min-h-screen bg-tinta-900 py-10 md:py-16">
       <Container className="max-w-lg">
         <header className="mb-8 text-center">
-          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-dorado-300">Reagendar cita</p>
+          <p className="texto--1 mb-2 font-medium uppercase tracking-[0.2em] text-cobre-300">Reagendar cita</p>
           <h1 className="texto-3 text-crema-100">
             {verificado ? 'Elegí tu nuevo horario' : 'Verificá tu reserva'}
           </h1>
         </header>
 
         {error && (
-          <div className="mb-6 rounded-[var(--radius-suave)] border border-dorado-400/30 bg-tinta-850 px-4 py-3 texto--1 text-crema-100/90">
+          <div className="mb-6 rounded-[var(--radius-suave)] border border-cobre-400/30 bg-tinta-850 px-4 py-3 texto--1 text-crema-100/90">
             {error}
           </div>
         )}
@@ -181,7 +181,7 @@ export default function ReschedulePage() {
             </div>
             <p className="mt-4 texto--1 text-center text-nacar-300">
               ¿No encontrás tu reserva?{' '}
-              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-dorado-300 underline">Escríbenos</a>
+              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-cobre-300 underline">Escríbenos</a>
             </p>
           </div>
         ) : (
@@ -203,7 +203,7 @@ export default function ReschedulePage() {
               {/* Calendario */}
               <div className="mb-6">
                 <h3 className="mb-3 flex items-center gap-2 texto-1 text-crema-100">
-                  <CalendarDays size={17} strokeWidth={1.5} className="text-dorado-300" />
+                  <CalendarDays size={17} strokeWidth={1.5} className="text-cobre-300" />
                   Elegí el nuevo día
                 </h3>
                 <div className="grid grid-cols-7 gap-1.5">
@@ -216,7 +216,7 @@ export default function ReschedulePage() {
                         onClick={() => { setFecha(dia); setHora(''); }}
                         /* Mismo lenguaje que el agendador: la selección va
                            en rosa y el radio es el de los controles (8px).
-                           Acá marcaba en oro y con 12px, así que reagendar
+                           Acá marcaba en cobre y con 12px, así que reagendar
                            parecía otra aplicación. */
                         className={`flex flex-col items-center rounded-[var(--radius-suave)] py-2 transition-all duration-200 ${
                           activo
@@ -237,7 +237,7 @@ export default function ReschedulePage() {
               {fecha && (
                 <div className="anim-entrada">
                   <h3 className="mb-3 flex items-center gap-2 texto-1 text-crema-100">
-                    <Clock3 size={17} strokeWidth={1.5} className="text-dorado-300" />
+                    <Clock3 size={17} strokeWidth={1.5} className="text-cobre-300" />
                     Elige la hora
                   </h3>
                   {cargandoSlots ? (
@@ -254,7 +254,7 @@ export default function ReschedulePage() {
                           className={`rounded-[var(--radius-suave)] border py-2.5 texto-0 tabular-nums transition-all duration-200 ${
                             hora === slot.time
                               ? 'border-rosa-300 bg-rosa-300/10 font-medium text-rosa-300'
-                              : 'border-dorado-400/10 bg-tinta-880 text-nacar-200/85 hover:border-dorado-400/30 hover:bg-tinta-840 hover:text-crema-100 active:scale-95'
+                              : 'border-cobre-400/10 bg-tinta-880 text-nacar-200/85 hover:border-cobre-400/30 hover:bg-tinta-840 hover:text-crema-100 active:scale-95'
                           }`}
                         >
                           {slot.time}

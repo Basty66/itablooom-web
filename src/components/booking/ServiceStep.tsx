@@ -24,7 +24,7 @@ interface Props {
 export default function ServiceStep({ services, seleccionado, onSeleccionar, cargando }: Props) {
   if (cargando) {
     return (
-      <div className="divide-y divide-dorado-400/25 border-y border-dorado-400/25">
+      <div className="divide-y divide-cobre-400/25 border-y border-cobre-400/25">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex gap-5 py-5">
             <Skeleton className="h-24 w-20 shrink-0" />
@@ -41,7 +41,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
 
   if (services.length === 0) {
     return (
-      <p className="linea-oro border-y py-10 text-center texto--1 text-nacar-200/80">
+      <p className="linea-cobre border-y py-10 text-center texto--1 text-nacar-200/80">
         No hay servicios disponibles en este momento.
       </p>
     );
@@ -75,7 +75,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
       {gruposOrdenados.map(([rubro, lista]) => (
         <div key={rubro}>
           <p className="mb-1 texto--2 uppercase espaciado-amplio text-rosa-300">{rubro}</p>
-          <div className="divide-y divide-dorado-400/25 border-y border-dorado-400/25">
+          <div className="divide-y divide-cobre-400/25 border-y border-cobre-400/25">
       {lista.map((service) => {
         const activo = seleccionado?.id === service.id;
         const i = ++indice;
@@ -127,7 +127,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
             </span>
 
             <span className="flex shrink-0 flex-col items-end gap-1.5 pl-2 text-right">
-              <span className="block font-display texto-1 tabular-nums text-dorado-400">
+              <span className="block font-display texto-1 tabular-nums text-cobre-400">
                 {formatPrice(service.price)}
               </span>
               {/* Palomita para el elegido: en una lista de siete filas, la

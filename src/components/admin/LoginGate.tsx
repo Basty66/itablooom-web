@@ -55,8 +55,8 @@ export default function LoginGate({ onEntrar }: { onEntrar: () => void }) {
             className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-rosa-300/50 to-transparent"
           />
 
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-dorado-400/40 bg-tinta-860">
-            <Lock size={21} strokeWidth={1.5} className="text-dorado-300" aria-hidden="true" />
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-cobre-400/40 bg-tinta-860">
+            <Lock size={21} strokeWidth={1.5} className="text-cobre-300" aria-hidden="true" />
           </span>
 
           <h1 className="mt-6 text-center font-display texto-3 text-crema-100">Panel del estudio</h1>

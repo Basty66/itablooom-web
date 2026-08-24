@@ -57,9 +57,9 @@ export default function Finanzas({
                 <dd className="texto-0 tabular-nums text-crema-100">{formatPrice(monto)}</dd>
               </div>
               {/* Barra proporcional: se lee de un vistazo sin leer los números. */}
-              <div className="mt-1.5 h-px w-full bg-dorado-400/20">
+              <div className="mt-1.5 h-px w-full bg-cobre-400/20">
                 <div
-                  className="h-px bg-dorado-500 transition-all duration-700 ease-out"
+                  className="h-px bg-cobre-500 transition-all duration-700 ease-out"
                   style={{ width: `${pct}%` }}
                   aria-hidden="true"
                 />
@@ -69,7 +69,7 @@ export default function Finanzas({
         })}
       </dl>
 
-      <div className="linea-oro mt-5 flex items-baseline justify-between gap-3 border-t pt-4">
+      <div className="linea-cobre mt-5 flex items-baseline justify-between gap-3 border-t pt-4">
         <span className="texto--1 text-nacar-200/80">Total cobrado</span>
         <span className="texto-0 tabular-nums text-crema-100">{formatPrice(total)}</span>
       </div>
@@ -82,7 +82,7 @@ export default function Finanzas({
       )}
 
       {/* Lo que queda: el número por el que se mide si el mes cerró bien. */}
-      <div className="linea-oro mt-3 flex items-baseline justify-between gap-3 border-t pt-4">
+      <div className="linea-cobre mt-3 flex items-baseline justify-between gap-3 border-t pt-4">
         <span className="texto--1 uppercase espaciado-medio text-crema-100">Te queda</span>
         <span className="font-display texto-3 tabular-nums text-crema-100">
           {formatPrice(total - gastos)}
@@ -95,7 +95,7 @@ export default function Finanzas({
             <span className="texto--1 text-nacar-200/80">Falta cobrar en el local</span>
             <span className="texto-0 tabular-nums text-nacar-200/80">{formatPrice(porCobrar)}</span>
           </div>
-          <div className="linea-oro mt-3 flex items-baseline justify-between gap-3 border-t pt-3">
+          <div className="linea-cobre mt-3 flex items-baseline justify-between gap-3 border-t pt-3">
             <span className="texto--1 text-nacar-300">
               Total agendado
               <span className="ml-2 texto--2 text-nacar-300">si todas pagan completo</span>

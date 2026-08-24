@@ -38,8 +38,8 @@ interface HeadingProps {
   subtitle?: string;
   as?: 'h1' | 'h2';
   align?: 'left' | 'center';
-  /** El rosa marca las secciones cálidas; el oro, las de negocio. */
-  tono?: 'oro' | 'rosa';
+  /** El rosa marca las secciones cálidas; el cobre, las de negocio. */
+  tono?: 'cobre' | 'rosa';
 }
 
 export function SectionHeading({
@@ -56,7 +56,7 @@ export function SectionHeading({
       {eyebrow && (
         <p
           className={`texto--1 font-medium uppercase espaciado-amplio ${
-            tono === 'oro' ? 'text-dorado-400' : 'text-rosa-300'
+            tono === 'cobre' ? 'text-cobre-400' : 'text-rosa-300'
           }`}
         >
           {eyebrow}
@@ -67,7 +67,7 @@ export function SectionHeading({
       {eyebrow && (
         <div
           aria-hidden="true"
-          className={`${tono === 'oro' ? 'linea-oro' : 'linea-rosa'} mb-6 mt-4 w-10 border-t ${centrado ? 'mx-auto' : ''}`}
+          className={`${tono === 'cobre' ? 'linea-cobre' : 'linea-rosa'} mb-6 mt-4 w-10 border-t ${centrado ? 'mx-auto' : ''}`}
         />
       )}
 

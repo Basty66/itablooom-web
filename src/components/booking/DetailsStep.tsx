@@ -17,7 +17,7 @@ interface Props {
 }
 
 /*
- * Campo tonal con una sola línea de oro abajo (utilidad `.campo`). Antes el
+ * Campo tonal con una sola línea de cobre abajo (utilidad `.campo`). Antes el
  * foco aplicaba `border-tinta-900`, o sea el color del propio fondo: enfocar
  * hacía desaparecer la línea en vez de destacarla.
  */

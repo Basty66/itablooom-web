@@ -186,7 +186,7 @@ export default function BookingPage() {
         <header className="mb-8">
           <p className="texto--1 uppercase espaciado-amplio text-rosa-300">Agenda tu visita</p>
           <h1 className="mt-4 texto-5 text-crema-100">
-            Reserva tu <span className="italic text-dorado-400">hora</span>
+            Reserva tu <span className="italic text-cobre-400">hora</span>
           </h1>
 
           {/* Progreso: cuánto falta para terminar. Sin esto la clienta no
@@ -297,9 +297,9 @@ export default function BookingPage() {
               {error && (
                 <p
                   role="alert"
-                  className="anim-entrada flex items-center gap-2 rounded-[var(--radius-suave)] border border-dorado-400/30 bg-tinta-850 px-4 py-3 texto--1 text-crema-100/90"
+                  className="anim-entrada flex items-center gap-2 rounded-[var(--radius-suave)] border border-cobre-400/30 bg-tinta-850 px-4 py-3 texto--1 text-crema-100/90"
                 >
-                  <AlertCircle size={16} strokeWidth={1.5} className="shrink-0 text-dorado-300" aria-hidden="true" />
+                  <AlertCircle size={16} strokeWidth={1.5} className="shrink-0 text-cobre-300" aria-hidden="true" />
                   {error}
                 </p>
               )}
@@ -318,7 +318,7 @@ export default function BookingPage() {
 
                 <dl className="mt-7 space-y-5">
                   <div className="flex items-start gap-4">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-dorado-400/20 bg-tinta-860">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-cobre-400/20 bg-tinta-860">
                       <Sparkles size={15} strokeWidth={1.5} className="text-rosa-300" aria-hidden="true" />
                     </span>
                     <div className="min-w-0">
@@ -335,7 +335,7 @@ export default function BookingPage() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-dorado-400/20 bg-tinta-860">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-cobre-400/20 bg-tinta-860">
                       <UserRound size={15} strokeWidth={1.5} className="text-rosa-300" aria-hidden="true" />
                     </span>
                     <div>
@@ -345,7 +345,7 @@ export default function BookingPage() {
                   </div>
                 </dl>
 
-                <div className="linea-oro my-6 border-t" />
+                <div className="linea-cobre my-6 border-t" />
 
                 {fecha && hora ? (
                   <div className="rounded-[var(--radius-suave)] border border-rosa-300/20 bg-tinta-860/60 p-4">
@@ -366,7 +366,7 @@ export default function BookingPage() {
                   <span className="texto--2 uppercase espaciado-amplio text-nacar-300">
                     {datos.paymentType === 'full' ? 'Pagas ahora' : 'Abonas ahora'}
                   </span>
-                  <span className="font-display texto-3 text-dorado-400">{formatPrice(aPagarAhora)}</span>
+                  <span className="font-display texto-3 text-cobre-400">{formatPrice(aPagarAhora)}</span>
                 </div>
                 {saldo > 0 && (
                   <p className="mt-1 text-right texto--1 text-nacar-300">
@@ -406,7 +406,7 @@ export default function BookingPage() {
                     <dd className="text-crema-100">{PROFESIONAL}</dd>
                   </div>
                   {saldo > 0 && (
-                    <div className="linea-oro flex justify-between gap-4 border-t pt-2">
+                    <div className="linea-cobre flex justify-between gap-4 border-t pt-2">
                       <dt className="text-nacar-300">Saldo en el local</dt>
                       <dd className="text-crema-100">{formatPrice(saldo)}</dd>
                     </div>
@@ -431,7 +431,7 @@ export default function BookingPage() {
                     className={`transition-transform duration-300 ${resumenAbierto ? '' : 'rotate-180'}`}
                   />
                 </span>
-                <span className="block font-display texto-2 text-dorado-400">
+                <span className="block font-display texto-2 text-cobre-400">
                   {formatPrice(aPagarAhora)}
                 </span>
               </button>
@@ -472,7 +472,7 @@ function BotonPagar({
       className={`brillo brillo-hover flex items-center justify-center gap-2 rounded-[var(--radius-suave)] px-6 py-3.5 texto--1 font-medium uppercase espaciado-medio transition-all duration-300 ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 ${
         todoListo
           ? 'bg-rosa-300 text-vino-900 hover:bg-rosa-200'
-          : 'border border-dorado-400/45 text-dorado-300 hover:bg-dorado-400/10'
+          : 'border border-cobre-400/45 text-cobre-300 hover:bg-cobre-400/10'
       } ${className}`}
     >
       {procesando ? (

@@ -20,7 +20,7 @@ const ESTADOS: Record<string, { clase: string; label: string }> = {
   confirmed: { clase: 'bg-emerald-400/15 text-emerald-300 border-emerald-400/30', label: 'Confirmada' },
   pending: { clase: 'bg-amber-400/15 text-amber-300 border-amber-400/30', label: 'Pendiente' },
   cancelled: { clase: 'bg-crema-100/8 text-nacar-300 border-crema-100/15', label: 'Cancelada' },
-  completed: { clase: 'bg-dorado-400/18 text-dorado-300 border-dorado-400/35', label: 'Completada' },
+  completed: { clase: 'bg-cobre-400/18 text-cobre-300 border-cobre-400/35', label: 'Completada' },
   no_show: { clase: 'bg-rosa-500/20 text-rosa-300 border-rosa-400/35', label: 'No asistió' },
 };
 
@@ -129,7 +129,7 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
             {formatPrice(Number(b.total_amount || 0))}
           </p>
           {debeSaldo ? (
-            <p className="texto--1 font-medium text-dorado-300">Debe {formatPrice(saldo)}</p>
+            <p className="texto--1 font-medium text-cobre-300">Debe {formatPrice(saldo)}</p>
           ) : b.remaining_paid ? (
             <p className="texto--1 text-nacar-300">Pagado completo</p>
           ) : null}
@@ -140,7 +140,7 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
       {(debeSaldo || puedeNoShow) && (
         <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:pl-16">
           {b.status === 'confirmed' && (
-            <button onClick={() => onRecordatorio(b)} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
+            <button onClick={() => onRecordatorio(b)} className={`${BOTON} linea-cobre text-nacar-200/85 hover:border-cobre-400`}>
               <MessageCircle size={13} strokeWidth={1.5} aria-hidden="true" />
               Recordar
             </button>
@@ -148,15 +148,15 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
 
           {debeSaldo && (
             <>
-              <button onClick={pedirLink} disabled={!!ocupado} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
+              <button onClick={pedirLink} disabled={!!ocupado} className={`${BOTON} linea-cobre text-nacar-200/85 hover:border-cobre-400`}>
                 {ocupado === 'link' ? <Loader2 size={13} className="animate-spin" /> : <Link2 size={13} strokeWidth={1.5} />}
                 Link de pago
               </button>
-              <button onClick={() => cobrar('cash')} disabled={!!ocupado} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
+              <button onClick={() => cobrar('cash')} disabled={!!ocupado} className={`${BOTON} linea-cobre text-nacar-200/85 hover:border-cobre-400`}>
                 {ocupado === 'cash' ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} strokeWidth={1.5} />}
                 Cobré efectivo
               </button>
-              <button onClick={() => cobrar('transfer')} disabled={!!ocupado} className={`${BOTON} linea-oro text-nacar-200/85 hover:border-dorado-400`}>
+              <button onClick={() => cobrar('transfer')} disabled={!!ocupado} className={`${BOTON} linea-cobre text-nacar-200/85 hover:border-cobre-400`}>
                 {ocupado === 'transfer' ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} strokeWidth={1.5} />}
                 Cobré transferencia
               </button>
@@ -164,7 +164,7 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
           )}
 
           {puedeNoShow && (
-            <button onClick={noShow} disabled={!!ocupado} className={`${BOTON} border-crema-100/20 text-nacar-300 hover:border-dorado-400 hover:text-crema-100`}>
+            <button onClick={noShow} disabled={!!ocupado} className={`${BOTON} border-crema-100/20 text-nacar-300 hover:border-cobre-400 hover:text-crema-100`}>
               {ocupado === 'noshow' ? <Loader2 size={13} className="animate-spin" /> : <UserX size={13} strokeWidth={1.5} />}
               No asistió
             </button>
@@ -173,8 +173,8 @@ export default function CitaFila({ booking: b, onRecordatorio, onCambio }: Props
       )}
 
       {link && (
-        <div className="anim-entrada linea-oro mt-3 flex flex-wrap items-center gap-2 rounded-[var(--radius-suave)] border p-3 sm:ml-16">
-          <Copy size={13} strokeWidth={1.5} className="shrink-0 text-dorado-300" aria-hidden="true" />
+        <div className="anim-entrada linea-cobre mt-3 flex flex-wrap items-center gap-2 rounded-[var(--radius-suave)] border p-3 sm:ml-16">
+          <Copy size={13} strokeWidth={1.5} className="shrink-0 text-cobre-300" aria-hidden="true" />
           <span className="texto--1 text-nacar-200/80">Link copiado — envíaselo por WhatsApp:</span>
           <a href={link} target="_blank" rel="noopener noreferrer" className="min-w-0 flex-1 truncate texto--1 text-crema-100 underline">
             {link}

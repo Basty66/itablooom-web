@@ -68,8 +68,8 @@ export default function DateTimeStep({
     return (
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <Icono size={18} strokeWidth={1.4} className="text-dorado-400/70" aria-hidden="true" />
-          <h4 className="linea-oro flex-1 border-b pb-1 texto--1 uppercase espaciado-amplio text-nacar-200/80">
+          <Icono size={18} strokeWidth={1.4} className="text-cobre-400/70" aria-hidden="true" />
+          <h4 className="linea-cobre flex-1 border-b pb-1 texto--1 uppercase espaciado-amplio text-nacar-200/80">
             {titulo}
           </h4>
           <span className="texto--2 text-nacar-300">
@@ -93,10 +93,10 @@ export default function DateTimeStep({
                 onClick={() => onHora(slot.time)}
                 className={`flex items-center justify-center rounded-[var(--radius-suave)] border px-4 py-3 texto-0 tabular-nums transition-all duration-300 ease-out ${
                   !slot.available
-                    ? 'cursor-not-allowed border-dorado-400/5 bg-tinta-880 text-nacar-300/40 line-through decoration-dorado-400/20'
+                    ? 'cursor-not-allowed border-cobre-400/5 bg-tinta-880 text-nacar-300/40 line-through decoration-cobre-400/20'
                     : activo
                       ? 'border-rosa-300 bg-rosa-300/10 font-medium text-rosa-300'
-                      : 'border-dorado-400/10 bg-tinta-880 text-nacar-200/85 hover:border-dorado-400/30 hover:bg-tinta-840 hover:text-crema-100'
+                      : 'border-cobre-400/10 bg-tinta-880 text-nacar-200/85 hover:border-cobre-400/30 hover:bg-tinta-840 hover:text-crema-100'
                 }`}
               >
                 {slot.time}
@@ -129,7 +129,7 @@ export default function DateTimeStep({
                 aria-label={label}
                 disabled={dir < 0 ? semana === 0 : semana === semanas.length - 1}
                 onClick={() => setSemana((s) => Math.min(Math.max(s + dir, 0), semanas.length - 1))}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-dorado-400/25 text-nacar-200/85 transition-colors duration-300 hover:border-rosa-300 hover:text-rosa-300 disabled:opacity-30"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-cobre-400/25 text-nacar-200/85 transition-colors duration-300 hover:border-rosa-300 hover:text-rosa-300 disabled:opacity-30"
               >
                 <Icono size={17} strokeWidth={1.5} aria-hidden="true" />
               </button>
@@ -186,7 +186,7 @@ export default function DateTimeStep({
                       <span
                         aria-hidden="true"
                         className={`absolute bottom-1.5 h-1 w-1 rounded-full ${
-                          activo ? 'bg-vino-900/60' : 'bg-dorado-400/70'
+                          activo ? 'bg-vino-900/60' : 'bg-cobre-400/70'
                         }`}
                       />
                     )}
@@ -197,7 +197,7 @@ export default function DateTimeStep({
           ))}
         </div>
 
-        <p className="linea-oro mt-5 border-t pt-4 texto--1 text-nacar-300">
+        <p className="linea-cobre mt-5 border-t pt-4 texto--1 text-nacar-300">
           {fecha ? (
             <span className="capitalize text-crema-100/90">
               {format(fecha, "EEEE d 'de' MMMM", { locale: es })}

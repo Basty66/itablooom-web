@@ -53,14 +53,14 @@ export default function Faq() {
                   onClick={() => setAbierta(activa ? null : i)}
                   aria-expanded={activa}
                   aria-controls={`faq-panel-${i}`}
-                  className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-dorado-300"
+                  className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-cobre-300"
                 >
                   <span className="font-display texto-1 text-crema-100">{pregunta}</span>
                   <Plus
                     size={19}
                     strokeWidth={1.5}
                     aria-hidden="true"
-                    className={`shrink-0 text-dorado-300 transition-transform duration-300 ease-out ${
+                    className={`shrink-0 text-cobre-300 transition-transform duration-300 ease-out ${
                       activa ? 'rotate-45' : ''
                     }`}
                   />

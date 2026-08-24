@@ -137,7 +137,7 @@ export default function Bloqueos({ fecha }: { fecha: string }) {
             setAviso('');
             setError('');
           }}
-          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-dorado-300 transition-colors duration-300 hover:text-crema-100"
+          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-cobre-300 transition-colors duration-300 hover:text-crema-100"
         >
           {abierto ? <X size={14} strokeWidth={1.5} /> : <Plus size={14} strokeWidth={1.5} />}
           {abierto ? 'Cancelar' : 'Bloquear'}
@@ -251,7 +251,7 @@ export default function Bloqueos({ fecha }: { fecha: string }) {
           {bloqueos.map((b) => (
             <li
               key={b.id}
-              className="linea-oro flex items-center gap-3 rounded-[var(--radius-suave)] border px-3 py-2 texto--1 text-nacar-100"
+              className="linea-cobre flex items-center gap-3 rounded-[var(--radius-suave)] border px-3 py-2 texto--1 text-nacar-100"
             >
               <span className="tabular-nums">
                 {String(b.time_start).slice(0, 5)} — {String(b.time_end).slice(0, 5)}

@@ -22,7 +22,7 @@ type Categoria = Service['category'];
 const ESTILOS: Record<Categoria, { icono: typeof Droplets; fondo: string; etiqueta: string }> = {
   facial: { icono: Sparkles, fondo: 'from-crema-200 via-nude-200 to-nude-300', etiqueta: 'Uñas' },
   laser: { icono: Eye, fondo: 'from-nude-200 via-nude-200 to-nude-300', etiqueta: 'Pestañas' },
-  course: { icono: Feather, fondo: 'from-dorado-300/40 via-nude-200 to-nude-200', etiqueta: 'Cejas' },
+  course: { icono: Feather, fondo: 'from-cobre-300/40 via-nude-200 to-nude-200', etiqueta: 'Cejas' },
 };
 
 const RESPALDO = { icono: Wand2, fondo: 'from-nude-200 to-nude-200', etiqueta: 'Servicio' };
@@ -82,7 +82,7 @@ export default function ServiceVisual({
         </>
       ) : (
         <div className="flex h-full w-full items-center justify-center">
-          <div aria-hidden="true" className="linea-oro absolute h-24 w-24 rounded-full border" />
+          <div aria-hidden="true" className="linea-cobre absolute h-24 w-24 rounded-full border" />
           <Icono
             size={30}
             strokeWidth={1.25}

@@ -37,7 +37,7 @@ export default function ScrollIndicator({ destino }: { destino: string }) {
       <span className="texto--2 uppercase espaciado-amplio text-nacar-300 transition-colors duration-200 group-hover:text-crema-100">
         Descubre más
       </span>
-      <span className="linea-oro flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out group-hover:border-dorado-500 active:scale-90">
+      <span className="linea-cobre flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out group-hover:border-cobre-500 active:scale-90">
         {/* El rebote va en el icono y no en el botón, para que el área de
             click quede quieta y no se escape del cursor. */}
         <ChevronDown

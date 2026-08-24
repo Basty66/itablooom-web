@@ -98,7 +98,7 @@ export default function Hero() {
               {/* Marco desplazado: profundidad con una línea, no con sombra. */}
               <div
                 aria-hidden="true"
-                className="linea-oro pointer-events-none absolute inset-0 h-full w-full rounded-[var(--radius-foto)] border sm:-bottom-4 sm:-right-4 sm:inset-auto"
+                className="linea-cobre pointer-events-none absolute inset-0 h-full w-full rounded-[var(--radius-foto)] border sm:-bottom-4 sm:-right-4 sm:inset-auto"
               />
             </div>
           </div>

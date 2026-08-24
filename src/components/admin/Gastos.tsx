@@ -61,7 +61,7 @@ export default function Gastos({ gastos, onCambio }: { gastos: Gasto[]; onCambio
         <h2 className="font-display texto-2 text-crema-100">Gastos del mes</h2>
         <button
           onClick={() => setAbierto(!abierto)}
-          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-dorado-300 transition-colors duration-300 hover:text-crema-100"
+          className="inline-flex items-center gap-1.5 texto--1 uppercase espaciado-medio text-cobre-300 transition-colors duration-300 hover:text-crema-100"
         >
           {abierto ? <X size={14} strokeWidth={1.5} /> : <Plus size={14} strokeWidth={1.5} />}
           {abierto ? 'Cancelar' : 'Agregar'}
@@ -128,7 +128,7 @@ export default function Gastos({ gastos, onCambio }: { gastos: Gasto[]; onCambio
       {gastos.length === 0 ? (
         <p className="texto--1 text-nacar-300">Sin gastos registrados este mes.</p>
       ) : (
-        <ul className="divide-y divide-dorado-400/20">
+        <ul className="divide-y divide-cobre-400/20">
           {gastos.map((g) => (
             <li key={g.id} className="flex items-center gap-3 py-2.5">
               <span className="min-w-0 flex-1">

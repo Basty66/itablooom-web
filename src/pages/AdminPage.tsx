@@ -53,7 +53,7 @@ function Sparkline({ valores }: { valores: number[] }) {
       viewBox="0 0 100 20"
       preserveAspectRatio="none"
       aria-hidden="true"
-      className="h-8 w-full overflow-visible text-dorado-400/50"
+      className="h-8 w-full overflow-visible text-cobre-400/50"
     >
       <path d={`M${linea}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d={`M${linea} L100,20 L0,20 Z`} fill="currentColor" opacity="0.12" />
@@ -104,7 +104,7 @@ function TarjetaMetrica({
           size={18}
           strokeWidth={1.5}
           aria-hidden="true"
-          className={destacada ? 'text-rosa-300' : 'text-dorado-400/60'}
+          className={destacada ? 'text-rosa-300' : 'text-cobre-400/60'}
         />
       </div>
 
@@ -183,7 +183,7 @@ export default function AdminPage() {
   if (autenticado === null) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center bg-tinta-900">
-        <Loader2 size={30} strokeWidth={1.3} className="animate-spin text-dorado-500" aria-hidden="true" />
+        <Loader2 size={30} strokeWidth={1.3} className="animate-spin text-cobre-500" aria-hidden="true" />
         <span className="sr-only">Verificando sesión…</span>
       </div>
     );
@@ -233,9 +233,9 @@ export default function AdminPage() {
         Barra lateral fija en escritorio. En móvil no cabe, así que las mismas
         secciones bajan a una fila de pestañas bajo el encabezado.
       */}
-      <aside className="fixed left-0 top-0 z-40 hidden h-full w-64 flex-col border-r border-dorado-400/15 bg-tinta-950 pt-8 lg:flex">
+      <aside className="fixed left-0 top-0 z-40 hidden h-full w-64 flex-col border-r border-cobre-400/15 bg-tinta-950 pt-8 lg:flex">
         {/* La marca va igual que en el resto del sitio —crema y rosa— y no en
-            un dorado propio del panel, que hacía parecer otra aplicación. */}
+            un cobre propio del panel, que hacía parecer otra aplicación. */}
         <div className="mb-10 px-7">
           <div className="flex items-baseline gap-2">
             <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
@@ -309,14 +309,14 @@ export default function AdminPage() {
             <div className="flex items-center gap-2">
               <Link
                 to="/"
-                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-suave)] border border-dorado-400/40 text-nacar-200/85 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95"
+                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-suave)] border border-cobre-400/40 text-nacar-200/85 transition-all duration-200 hover:border-cobre-400 hover:text-crema-100 active:scale-95"
                 aria-label="Ver el sitio"
               >
                 <ExternalLink size={15} strokeWidth={1.5} aria-hidden="true" />
               </Link>
               <button
                 onClick={salir}
-                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-suave)] border border-dorado-400/40 text-nacar-200/85 transition-all duration-200 hover:border-dorado-400 hover:text-crema-100 active:scale-95"
+                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-suave)] border border-cobre-400/40 text-nacar-200/85 transition-all duration-200 hover:border-cobre-400 hover:text-crema-100 active:scale-95"
                 aria-label="Cerrar sesión"
               >
                 <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
@@ -394,7 +394,7 @@ export default function AdminPage() {
                   <h1 className="font-display texto-4 text-crema-100">Resumen del estudio</h1>
                   <p className="mt-1 texto-0 text-nacar-200/80">Cómo va el mes, de un vistazo.</p>
                 </div>
-                <span className="flex items-center gap-2 texto--2 uppercase espaciado-amplio text-dorado-400">
+                <span className="flex items-center gap-2 texto--2 uppercase espaciado-amplio text-cobre-400">
                   <Sparkles size={15} strokeWidth={1.5} aria-hidden="true" />
                   Datos en vivo
                 </span>
@@ -466,7 +466,7 @@ export default function AdminPage() {
                               {formatPrice(Number(dia.total))}
                             </span>
                             <div
-                              className="w-full rounded-t-[var(--radius-suave)] bg-gradient-to-t from-dorado-400/40 to-dorado-400 transition-all duration-500"
+                              className="w-full rounded-t-[var(--radius-suave)] bg-gradient-to-t from-cobre-400/40 to-cobre-400 transition-all duration-500"
                               style={{ height: `${Math.max(alto, 3)}%` }}
                             />
                             <span className="texto--2 uppercase espaciado-medio text-nacar-300">
@@ -485,7 +485,7 @@ export default function AdminPage() {
                     <ol className="space-y-4">
                       {stats.serviciosTop.map((s, i) => (
                         <li key={s.name} className="flex items-center gap-4">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-tinta-860 texto--1 tabular-nums text-dorado-300">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-tinta-860 texto--1 tabular-nums text-cobre-300">
                             {i + 1}
                           </span>
                           <div className="min-w-0 flex-1">
@@ -545,7 +545,7 @@ export default function AdminPage() {
                     role="alert"
                     className="flex items-center gap-2 bg-tinta-860 px-5 py-3 texto--1 text-crema-100/90"
                   >
-                    <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-dorado-300" aria-hidden="true" />
+                    <AlertCircle size={15} strokeWidth={1.5} className="shrink-0 text-cobre-300" aria-hidden="true" />
                     {error}
                   </p>
                 )}

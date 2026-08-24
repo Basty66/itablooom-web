@@ -18,11 +18,11 @@ const HORARIOS = [
 
 export default function Footer() {
   return (
-    /* El fondo era `bg-dorado-400`: oro sólido bajo un contenido escrito
-       entero para fondo oscuro (crema, dorado-300, bordes claros), así que el
+    /* El fondo era `bg-cobre-400`: cobre sólido bajo un contenido escrito
+       entero para fondo oscuro (crema, cobre-300, bordes claros), así que el
        pie entero quedaba en 1.5:1. Va al escalón más profundo de la escala,
        que además lo separa del cuerpo de la página. */
-    <footer className="textura-papel relative border-t border-dorado-400/15 bg-tinta-950 text-nacar-200">
+    <footer className="textura-papel relative border-t border-cobre-400/15 bg-tinta-950 text-nacar-200">
       <Container className="relative py-16">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-5">
@@ -55,7 +55,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/80 transition-all duration-200 ease-out hover:border-dorado-400 hover:text-dorado-300 active:scale-95"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/80 transition-all duration-200 ease-out hover:border-cobre-400 hover:text-cobre-300 active:scale-95"
                 >
                   {icono}
                 </a>
@@ -66,14 +66,14 @@ export default function Footer() {
               href={linkWhatsApp()}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-block py-2.5 texto-0 text-nacar-200/80 transition-colors duration-200 hover:text-dorado-300"
+              className="mt-2 inline-block py-2.5 texto-0 text-nacar-200/80 transition-colors duration-200 hover:text-cobre-300"
             >
               {WHATSAPP_VISIBLE}
             </a>
           </div>
 
           <nav aria-label="Pie de página" className="md:col-span-3">
-            <h2 className="texto--1 mb-4 font-medium uppercase tracking-[0.2em] text-dorado-300">
+            <h2 className="texto--1 mb-4 font-medium uppercase tracking-[0.2em] text-cobre-300">
               Navegación
             </h2>
             <ul className="space-y-2.5">
@@ -93,7 +93,7 @@ export default function Footer() {
           </nav>
 
           <div className="md:col-span-4">
-            <h2 className="texto--1 mb-4 font-medium uppercase tracking-[0.2em] text-dorado-300">
+            <h2 className="texto--1 mb-4 font-medium uppercase tracking-[0.2em] text-cobre-300">
               Atención
             </h2>
             <dl className="space-y-2.5">
@@ -111,7 +111,7 @@ export default function Footer() {
               ))}
             </dl>
             <p className="mt-5 flex items-center gap-2 texto-0 text-nacar-200/80">
-              <MapPin size={15} strokeWidth={1.5} aria-hidden="true" className="text-dorado-300" />
+              <MapPin size={15} strokeWidth={1.5} aria-hidden="true" className="text-cobre-300" />
               Melipilla, Chile
             </p>
           </div>

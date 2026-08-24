@@ -69,7 +69,7 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
               className={`relative rounded-2xl border p-5 text-left transition-all duration-300 ease-out ${
                 activo
                   ? 'border-rosa-300 bg-rosa-300/10'
-                  : 'border-crema-100/10 bg-tinta-880 hover:border-dorado-400/40 hover:bg-tinta-870'
+                  : 'border-crema-100/10 bg-tinta-880 hover:border-cobre-400/40 hover:bg-tinta-870'
               }`}
             >
               <span className="flex items-start justify-between gap-3">
@@ -77,7 +77,7 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
                   size={20}
                   strokeWidth={1.4}
                   aria-hidden="true"
-                  className={activo ? 'text-rosa-300' : 'text-dorado-400/70'}
+                  className={activo ? 'text-rosa-300' : 'text-cobre-400/70'}
                 />
                 {activo ? (
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-rosa-300">
@@ -96,7 +96,7 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
                 {titulo}
               </span>
               <span
-                className={`mt-1 block font-display texto-3 ${activo ? 'text-rosa-300' : 'text-dorado-400'}`}
+                className={`mt-1 block font-display texto-3 ${activo ? 'text-rosa-300' : 'text-cobre-400'}`}
               >
                 {formatPrice(monto)}
               </span>
@@ -106,8 +106,8 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
         })}
       </div>
 
-      <p className="linea-oro mt-6 flex items-start gap-2 border-t pt-5 texto--1 text-nacar-200/80">
-        <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-dorado-300" aria-hidden="true" />
+      <p className="linea-cobre mt-6 flex items-start gap-2 border-t pt-5 texto--1 text-nacar-200/80">
+        <Timer size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-cobre-300" aria-hidden="true" />
         Tu horario queda tomado por 10 minutos mientras completas el pago. Si no alcanzas, vuelve a
         elegirlo sin problema.
       </p>

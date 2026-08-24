@@ -51,11 +51,11 @@ export default function ServiceCard({
         </p>
 
         {/* mt-auto alinea el pie de todas las tarjetas aunque el texto varíe. */}
-        <div className="linea-oro mt-auto flex items-baseline justify-between gap-4 border-t pt-4">
+        <div className="linea-cobre mt-auto flex items-baseline justify-between gap-4 border-t pt-4">
           <div>
-            {/* El precio es el único dato en oro de la tarjeta: así destaca
+            {/* El precio es el único dato en cobre de la tarjeta: así destaca
                 sin necesidad de agrandarlo ni ponerlo en negrita. */}
-            <p className="font-display texto-2 text-dorado-400">{formatPrice(service.price)}</p>
+            <p className="font-display texto-2 text-cobre-400">{formatPrice(service.price)}</p>
             <p className="mt-0.5 texto--1 uppercase espaciado-medio text-nacar-300">
               {formatDuration(service.duration_minutes)}
             </p>
@@ -64,13 +64,13 @@ export default function ServiceCard({
           <Link
             to={`/agendar?service=${service.id}`}
             aria-label={`Reservar ${service.name}`}
-            className="relative -my-3 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-colors duration-300 hover:text-dorado-300"
+            className="relative -my-3 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-colors duration-300 hover:text-cobre-300"
           >
             Reservar
             {/* Subrayado que se extiende al pasar el cursor. */}
             <span
               aria-hidden="true"
-              className="absolute -bottom-1 left-0 h-px w-0 bg-dorado-500 transition-all duration-300 ease-out group-hover:w-full"
+              className="absolute -bottom-1 left-0 h-px w-0 bg-cobre-500 transition-all duration-300 ease-out group-hover:w-full"
             />
           </Link>
         </div>

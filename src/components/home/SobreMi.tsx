@@ -42,7 +42,7 @@ export default function SobreMi() {
         */}
         <div className="lg:col-span-4">
           <figure className="mx-auto max-w-[11rem] text-center sm:max-w-[16rem] lg:mx-0 lg:max-w-none">
-            {/* Aro discontinuo de oro alrededor del retrato: enmarca sin
+            {/* Aro discontinuo de cobre alrededor del retrato: enmarca sin
                 encerrar, y el aire entre línea y foto es parte del gesto.
                 En móvil el retrato baja a 11rem: a 16rem se comía media
                 pantalla antes de que empezara la historia. */}

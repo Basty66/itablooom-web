@@ -8,6 +8,7 @@ import ComoFunciona from '../components/home/ComoFunciona';
 import VideoBienvenida from '../components/home/VideoBienvenida';
 import Reels from '../components/home/Reels';
 import AntesDespues from '../components/home/AntesDespues';
+import Testimonio from '../components/home/Testimonio';
 import SobreMi from '../components/home/SobreMi';
 import Faq from '../components/home/Faq';
 import ServiceCard from '../components/ServiceCard';
@@ -79,7 +80,7 @@ export default function HomePage() {
           <div className="mt-14 text-center">
             <Link
               to="/servicios"
-              className="group -my-3 inline-flex items-center gap-3 py-3 texto--1 font-medium uppercase espaciado-amplio text-dorado-300 transition-colors duration-300 hover:text-dorado-200"
+              className="group -my-3 inline-flex items-center gap-3 py-3 texto--1 font-medium uppercase espaciado-amplio text-cobre-300 transition-colors duration-300 hover:text-cobre-200"
             >
               Ver menú completo
               <ArrowRight
@@ -99,24 +100,28 @@ export default function HomePage() {
 
       <Faq />
 
+      {/* La voz de una clienta justo antes del cierre: es donde más pesa, y de
+          paso el vino corta el negro antes del bloque claro. */}
+      <Testimonio />
+
       {/* Cierre: última oportunidad de conversión antes del footer. */}
       {/* Único bloque claro del sitio: corta el negro y hace que el cierre resalte. */}
       <section className="bg-crema-100 py-20 md:py-28">
         <Container className="relative text-center">
-          <p className="texto--1 font-medium uppercase espaciado-amplio text-rosa-600">
-            Tu próxima visita
+          <p className="texto--1 font-medium uppercase espaciado-amplio text-vino-900">
+            Reserva tu hora
           </p>
-          <h2 className="mt-5 texto-4 text-tinta-900">
-            ¿Lista para tu próxima
-            <span className="italic text-rosa-600"> sesión?</span>
+          <h2 className="mt-5 texto-4 text-tinta-880">
+            Sal de aquí sintiéndote
+            <span className="italic text-vino-900"> diosa.</span>
           </h2>
           {/* Sin tope de ancho la línea llegaba a 128 caracteres: el ojo
               pierde el renglón al volver a la izquierda. */}
           <p className="mx-auto mt-4 max-w-[42ch] texto-1 text-tinta-600">
-            Elige tu tratamiento y asegura tu horario en menos de un minuto.
+            Cuéntanos qué servicio te interesa y te confirmamos la disponibilidad el mismo día.
           </p>
-          {/* Acá el secundario del sistema (oro sobre oscuro) no sirve: sobre
-              el crema el oro se borra. Va el primario, que sí contrasta. */}
+          {/* Acá el secundario del sistema (cobre sobre oscuro) no sirve: sobre
+              el crema el cobre se borra. Va el primario, que sí contrasta. */}
           <div className="mt-9 flex justify-center">
             <Button to="/agendar" size="lg" variant="primary">
               <CalendarHeart size={18} strokeWidth={1.5} />

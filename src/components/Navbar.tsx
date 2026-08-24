@@ -69,12 +69,29 @@ export default function Navbar() {
       }`}
     >
       <nav aria-label="Principal" className="mx-auto w-full max-w-[1200px] px-5 sm:px-6">
-        <div className="flex h-18 items-center justify-between py-4">
+        {/*
+          La barra se contrae al bajar, como en el boceto, pero solo desde
+          escritorio: en móvil su alto está atado al panel del menú, que arranca
+          en `top-18`, y a la altura que el hero descuenta para medir una
+          pantalla. Contraerla ahí abriría un hueco entre barra y panel.
+
+          Sin scroll conserva el alto de siempre por el mismo motivo: el hero
+          calcula contra 4.5rem y cualquier otro valor le agregaría un scroll
+          de unos pocos píxeles apenas cargada la página.
+        */}
+        <div
+          className={`flex items-center justify-between transition-[height] duration-300 ease-out ${
+            conScroll ? 'h-18 md:h-14' : 'h-18 md:h-18'
+          }`}
+        >
+          {/* La marca completa en serif, con "Studio" en itálica rosa: en el
+              boceto es una sola palabra compuesta, no un logo con bajada en
+              versalitas. */}
           <Link to="/" onClick={contarToque} className="group flex items-baseline gap-2">
             <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
               Goddess
             </span>
-            <span className="texto--1 uppercase tracking-[0.25em] text-rosa-300 transition-colors duration-200 group-hover:text-rosa-200">
+            <span className="font-display texto-2 italic text-rosa-300 transition-colors duration-200 group-hover:text-rosa-200">
               Studio
             </span>
           </Link>
@@ -88,13 +105,13 @@ export default function Navbar() {
                   to={link.path}
                   aria-current={activo ? 'page' : undefined}
                   /* Versalitas espaciadas y, para la página actual, una línea
-                     de oro debajo: el sistema marca el activo con esa regla y
+                     de cobre debajo: el sistema marca el activo con esa regla y
                      no cambiando el color de la letra. */
                   className="group relative inline-block py-1 texto--1 font-medium uppercase espaciado-amplio text-nacar-200/80 transition-colors duration-200 hover:text-crema-100"
                 >
                   {link.label}
                   <span
-                    className={`absolute -bottom-0.5 left-0 h-px bg-dorado-400 transition-all duration-300 ease-out ${
+                    className={`absolute -bottom-0.5 left-0 h-px bg-cobre-400 transition-all duration-300 ease-out ${
                       activo ? 'w-full' : 'w-0 group-hover:w-full'
                     }`}
                   />
@@ -141,7 +158,7 @@ export default function Navbar() {
         />
 
         <div
-          className={`textura-papel absolute inset-0 flex flex-col overflow-y-auto border-t border-dorado-400/15 bg-tinta-950 px-5 pb-8 pt-8 transition-all duration-500 ease-out ${
+          className={`textura-papel absolute inset-0 flex flex-col overflow-y-auto border-t border-cobre-400/15 bg-tinta-950 px-5 pb-8 pt-8 transition-all duration-500 ease-out ${
             abierto ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
           }`}
         >
@@ -155,7 +172,7 @@ export default function Navbar() {
                   key={link.path}
                   to={link.path}
                   aria-current={activo ? 'page' : undefined}
-                  className="linea-oro group flex items-baseline gap-4 border-b py-5 first:border-t"
+                  className="linea-cobre group flex items-baseline gap-4 border-b py-5 first:border-t"
                   /* Entrada escalonada: los enlaces aparecen en orden, como el
                      resto de las secciones del sitio. */
                   style={{
@@ -168,13 +185,13 @@ export default function Navbar() {
                   <span className="texto--2 tabular-nums text-rosa-300">0{i + 1}</span>
                   <span
                     className={`font-display texto-3 transition-colors duration-300 ${
-                      activo ? 'text-dorado-400' : 'text-crema-100'
+                      activo ? 'text-cobre-400' : 'text-crema-100'
                     }`}
                   >
                     {link.label}
                   </span>
                   {activo && (
-                    <span aria-hidden="true" className="ml-auto self-center h-px w-6 bg-dorado-400" />
+                    <span aria-hidden="true" className="ml-auto self-center h-px w-6 bg-cobre-400" />
                   )}
                 </Link>
               );
@@ -187,7 +204,7 @@ export default function Navbar() {
 
           {/* Contacto al pie del panel: en móvil es lo que más se busca
               después de la navegación. */}
-          <div className="linea-oro mt-auto border-t pt-6">
+          <div className="linea-cobre mt-auto border-t pt-6">
             <p className="texto--2 uppercase espaciado-amplio text-nacar-300">Escríbenos</p>
             <div className="mt-4 flex items-center gap-3">
               {[
@@ -201,7 +218,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/85 transition-colors duration-200 hover:border-dorado-400 hover:text-dorado-300"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/85 transition-colors duration-200 hover:border-cobre-400 hover:text-cobre-300"
                 >
                   <Icono size={17} strokeWidth={1.5} aria-hidden="true" />
                 </a>

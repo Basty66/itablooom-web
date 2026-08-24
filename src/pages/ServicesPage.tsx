@@ -33,7 +33,7 @@ function TarjetaServicio({ service, prioritaria }: { service: Service; prioritar
     <Link
       to={`/agendar?service=${service.id}`}
       aria-label={`Reservar ${service.name}`}
-      className="group flex overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 transition-all duration-500 ease-out hover:border-dorado-400/30 active:scale-[0.99] sm:h-full sm:flex-col sm:active:scale-100 sm:hover:-translate-y-2"
+      className="group flex overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 transition-all duration-500 ease-out hover:border-cobre-400/30 active:scale-[0.99] sm:h-full sm:flex-col sm:active:scale-100 sm:hover:-translate-y-2"
     >
       <div className="relative w-[34%] shrink-0 sm:w-full">
         {/* En móvil la foto llena la columna (sin proporción propia, que
@@ -66,8 +66,8 @@ function TarjetaServicio({ service, prioritaria }: { service: Service; prioritar
             <Clock3 size={13} strokeWidth={1.5} aria-hidden="true" />
             {formatDuration(service.duration_minutes)}
           </span>
-          <span aria-hidden="true" className="h-3 w-px bg-dorado-400/25" />
-          <span className="font-display texto-1 text-dorado-400 sm:texto-2">
+          <span aria-hidden="true" className="h-3 w-px bg-cobre-400/25" />
+          <span className="font-display texto-1 text-cobre-400 sm:texto-2">
             {formatPrice(service.price)}
           </span>
         </p>
@@ -148,8 +148,8 @@ export default function ServicesPage() {
         />
         <div className="relative mx-auto max-w-2xl text-center">
           <p className="texto--1 uppercase espaciado-amplio text-rosa-300">Santuario de belleza</p>
-          <h1 className="mt-4 texto-5 text-dorado-400 sm:mt-5">Nuestros servicios</h1>
-          <div aria-hidden="true" className="linea-oro mx-auto my-4 w-16 border-t sm:my-6" />
+          <h1 className="mt-4 texto-5 text-cobre-400 sm:mt-5">Nuestros servicios</h1>
+          <div aria-hidden="true" className="linea-cobre mx-auto my-4 w-16 border-t sm:my-6" />
           {/* El párrafo largo se guarda para pantallas grandes: en móvil son
               tres líneas más entre la clienta y el primer servicio. */}
           <p className="texto-0 leading-relaxed text-nacar-200/80 sm:texto-1">
@@ -242,8 +242,8 @@ export default function ServicesPage() {
                   0{i + 1}
                 </span>
                 <h2 className="font-display texto-4 text-crema-100">{rubro.label}</h2>
-                <span aria-hidden="true" className="relative h-px flex-1 bg-dorado-400/20">
-                  <span className="absolute right-0 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-dorado-400/50" />
+                <span aria-hidden="true" className="relative h-px flex-1 bg-cobre-400/20">
+                  <span className="absolute right-0 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-cobre-400/50" />
                 </span>
               </div>
 
