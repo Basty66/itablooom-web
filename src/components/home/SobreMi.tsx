@@ -33,7 +33,7 @@ const PILARES = [
 
 export default function SobreMi() {
   return (
-    <Section id="sobre-mi" className="fondo-rosado">
+    <Section id="sobre-mi" className="velo-vino">
       <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-16">
         {/*
           Columna de identidad: retrato circular con el nombre debajo. El

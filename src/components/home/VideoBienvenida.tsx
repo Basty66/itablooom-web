@@ -32,7 +32,7 @@ export default function VideoBienvenida() {
   }
 
   return (
-    <Section className="fondo-rosado">
+    <Section className="velo-vino">
       <SectionHeading
         tono="rosa"
         eyebrow="Conoce el espacio"

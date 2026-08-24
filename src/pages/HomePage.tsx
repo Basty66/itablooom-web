@@ -14,6 +14,7 @@ import Faq from '../components/home/Faq';
 import ServiceCard from '../components/ServiceCard';
 import Button from '../components/ui/Button';
 import { Section, SectionHeading, Container } from '../components/ui/Section';
+import Revelar from '../components/ui/Revelar';
 import { ServiceCardSkeleton } from '../components/ui/Skeleton';
 
 export default function HomePage() {
@@ -108,26 +109,32 @@ export default function HomePage() {
       {/* Único bloque claro del sitio: corta el negro y hace que el cierre resalte. */}
       <section className="bg-crema-100 py-20 md:py-28">
         <Container className="relative text-center">
-          <p className="texto--1 font-medium uppercase espaciado-amplio text-vino-900">
-            Reserva tu hora
-          </p>
-          <h2 className="mt-5 texto-4 text-tinta-880">
-            Sal de aquí sintiéndote
-            <span className="italic text-vino-900"> diosa.</span>
-          </h2>
-          {/* Sin tope de ancho la línea llegaba a 128 caracteres: el ojo
-              pierde el renglón al volver a la izquierda. */}
-          <p className="mx-auto mt-4 max-w-[42ch] texto-1 text-tinta-600">
-            Cuéntanos qué servicio te interesa y te confirmamos la disponibilidad el mismo día.
-          </p>
+          {/* Era la única sección que no se revelaba al llegar: al ser la
+              última, aparecía ya puesta y el cierre perdía el gesto. */}
+          <Revelar>
+            <p className="texto--1 font-medium uppercase espaciado-amplio text-vino-900">
+              Reserva tu hora
+            </p>
+            <h2 className="mt-5 texto-4 text-tinta-880">
+              Sal de aquí sintiéndote
+              <span className="italic text-vino-900"> diosa.</span>
+            </h2>
+            {/* Sin tope de ancho la línea llegaba a 128 caracteres: el ojo
+                pierde el renglón al volver a la izquierda. */}
+            <p className="mx-auto mt-4 max-w-[42ch] texto-1 text-tinta-600">
+              Cuéntanos qué servicio te interesa y te confirmamos la disponibilidad el mismo día.
+            </p>
+          </Revelar>
           {/* Acá el secundario del sistema (cobre sobre oscuro) no sirve: sobre
               el crema el cobre se borra. Va el primario, que sí contrasta. */}
-          <div className="mt-9 flex justify-center">
-            <Button to="/agendar" size="lg" variant="primary">
-              <CalendarHeart size={18} strokeWidth={1.5} />
-              Reservar mi hora
-            </Button>
-          </div>
+          <Revelar delay={160}>
+            <div className="mt-9 flex justify-center">
+              <Button to="/agendar" size="lg" variant="primary">
+                <CalendarHeart size={18} strokeWidth={1.5} />
+                Reservar mi hora
+              </Button>
+            </div>
+          </Revelar>
         </Container>
       </section>
     </>

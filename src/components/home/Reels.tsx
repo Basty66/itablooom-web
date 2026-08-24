@@ -161,7 +161,7 @@ export default function Reels() {
   if (REELS.length === 0) return null;
 
   return (
-    <Section className="fondo-rosado">
+    <Section className="velo-vino">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading
           align="left"

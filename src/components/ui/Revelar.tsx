@@ -43,10 +43,17 @@ export default function Revelar({ children, delay = 0, className = '' }: Props) 
     return () => observador.disconnect();
   }, []);
 
+  /*
+   * Las dos clases no son decorativas: `revelador` marca el territorio y
+   * `revelado` avisa que ya entró. El CSS las usa para retener las animaciones
+   * de entrada que viven adentro, que si no se gastarían al cargar la página
+   * —mientras la clienta sigue leyendo el encabezado— y al llegar acá ya
+   * estarían puestas.
+   */
   return (
     <div
       ref={ref}
-      className={className}
+      className={`revelador ${visible ? 'revelado' : ''} ${className}`}
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? 'none' : 'translateY(1.5rem)',

@@ -248,10 +248,30 @@
   /* Fondo apenas teñido: rompe el crema plano en las secciones cálidas. */
   /* Secciones cálidas: un velo rosado casi imperceptible sobre el negro.
      Con más opacidad el rosa se ensucia y pierde el aire premium. */
-  .fondo-rosado {
+  /*
+   * El foco de luz del boceto: una elipse de vino arriba a la derecha que se
+   * apaga antes de llegar al centro.
+   *
+   * Antes era un velo rosa que bajaba en línea recta desde el borde superior:
+   * aclaraba la sección entera por parejo y no se leía como luz, solo como un
+   * fondo un poco más claro. Un radial descentrado sí tiene dirección, y deja
+   * el resto del negro intacto para que el titular recorte contra él.
+   */
+  .luz-vino {
+    background-color: var(--color-tinta-900);
+    background-image: radial-gradient(ellipse 65% 55% at 80% 24%,
+      color-mix(in oklab, var(--color-vino-900) 38%, transparent),
+      transparent 60%);
+  }
+
+  /*
+   * Las demás secciones oscuras llevan el mismo vino, mucho más lavado: da
+   * continuidad de familia sin repetir el foco, que es del hero.
+   */
+  .velo-vino {
     background-image: linear-gradient(180deg,
-      color-mix(in oklab, var(--color-rosa-500) 12%, transparent) 0%,
-      var(--color-tinta-900) 55%);
+      color-mix(in oklab, var(--color-vino-900) 16%, transparent) 0%,
+      var(--color-tinta-900) 60%);
   }
 
   /* Superficie elevada, para tarjetas y bloques sobre el fondo. */
@@ -358,6 +378,22 @@
 
   .anim-velo {
     animation: velo 1.2s var(--ease-suave) both;
+  }
+
+  /*
+   * Las entradas escalonadas esperan a que su sección entre en pantalla.
+   *
+   * Sin esto se gastaban al cargar la página: en una portada de ocho pantallas
+   * las tarjetas de abajo terminaban de aparecer mientras la clienta seguía
+   * leyendo el titular, y al llegar scrolleando ya estaban puestas. El
+   * escalonado existía, pero no lo veía nadie.
+   *
+   * `both` deja la animación plantada en su primer fotograma, así que
+   * pausarla equivale a mantener el elemento oculto hasta que le toque.
+   */
+  .revelador:not(.revelado) .anim-entrada,
+  .revelador:not(.revelado) .anim-velo {
+    animation-play-state: paused;
   }
 
   /*
