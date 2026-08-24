@@ -16,7 +16,13 @@ function Comparador({ trabajo }: { trabajo: TrabajoGaleria }) {
 
   return (
     <figure className="overflow-hidden rounded-[var(--radius-foto)] border border-crema-100/8 bg-tinta-880">
-      <div ref={contenedor} className="relative aspect-[4/5] select-none">
+      {/*
+        Cuadrado y no retrato: las fotos del estudio suelen venir anotadas
+        —flechas y texto que llegan a los dos bordes—, y un recorte 4:5 les
+        comía las esquinas. Además, apiladas en móvil, seis retratos hacían de
+        esta sección la más larga de la home.
+      */}
+      <div ref={contenedor} className="relative aspect-square select-none">
         {/* El "después" va al fondo y el "antes" se recorta encima: así el
             deslizador descubre el resultado, que es el sentido de la lectura. */}
         <img

@@ -84,7 +84,7 @@ export default function Hero() {
               <div className="overflow-hidden rounded-[var(--radius-foto)]">
                 <img
                   src="/images/g-hero.jpg"
-                  alt="Sesión de extensión de pestañas en Goddess Studio"
+                  alt="Uñas almendradas con francesita marrón y detalles dorados, trabajo de Goddess Studio"
                   fetchPriority="high"
                   decoding="async"
                   width={900}
