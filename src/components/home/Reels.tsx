@@ -195,7 +195,8 @@ export default function Reels() {
       */}
       <div className="-mx-5 mt-12 flex snap-x snap-mandatory gap-4 sin-barra overflow-x-auto px-5 pb-4 sm:mx-0 sm:px-0">
         {REELS.map((reel, i) => {
-          const sonando = conSonido && activo === reel.id;
+          const reproduciendo = activo === reel.id;
+          const sonando = conSonido && reproduciendo;
           return (
             <article
               key={reel.id}
@@ -212,20 +213,40 @@ export default function Reels() {
                 es un botón propio que cubre toda la tarjeta.
               */}
               <div className="relative overflow-hidden rounded-[var(--radius-foto)] bg-tinta-850 transition-shadow duration-500 sombra-sutil hover:sombra-hover">
-                <video
-                  ref={(el) => {
-                    refs.current[reel.id] = el;
+                {/*
+                  La tarjeta pausada respira: el mismo acercamiento lentísimo
+                  del hero, seis por ciento en veintiocho segundos. Cuatro
+                  pósters completamente quietos no se leen como algo que se
+                  pueda tocar.
+
+                  El retraso negativo arranca a cada uno en un punto distinto
+                  del ciclo —sin esperar a que pase— para que no respiren los
+                  cuatro al unísono, que se vería mecánico. Y al reproducirse
+                  la animación se pausa en vez de quitarse: quitarla devuelve
+                  el zoom a cero de golpe, y ese salto se nota.
+                */}
+                <div
+                  className="deriva"
+                  style={{
+                    animationDelay: `-${i * 7}s`,
+                    animationPlayState: reproduciendo ? 'paused' : 'running',
                   }}
-                  className="aspect-[9/16] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                  poster={reel.poster}
-                  preload="none"
-                  muted
-                  loop
-                  playsInline
-                  onPause={() => setActivo((a) => (a === reel.id ? null : a))}
                 >
-                  <source src={reel.video} type="video/mp4" />
-                </video>
+                  <video
+                    ref={(el) => {
+                      refs.current[reel.id] = el;
+                    }}
+                    className="aspect-[9/16] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                    poster={reel.poster}
+                    preload="none"
+                    muted
+                    loop
+                    playsInline
+                    onPause={() => setActivo((a) => (a === reel.id ? null : a))}
+                  >
+                    <source src={reel.video} type="video/mp4" />
+                  </video>
+                </div>
 
                 <button
                   type="button"
