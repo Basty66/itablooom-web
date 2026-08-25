@@ -52,8 +52,11 @@ interface Entrada {
    *
    * Solo lo llevan los servicios cuyo trabajo varía de verdad —los mismos que
    * tienen rango de precio—. En pestañas y cejas la duración es predecible y
-   * bloquear de más solo quemaría agenda. PROVISIONAL: los debe confirmar
-   * Ignacia con su trabajo más largo, no con el promedio.
+   * bloquear de más solo quemaría agenda.
+   *
+   * Ignacia confirmó que ningún trabajo de uñas pasa de 2h30, así que ese es
+   * el techo. El esmaltado se queda en dos horas: es un servicio más corto y
+   * subirlo al techo general bloquearía media hora que nunca usa.
    */
   minutosMax?: number;
   imagen: string;
@@ -166,7 +169,7 @@ const CATALOGO: Entrada[] = [
     precio: 22000,
     precioMax: 32000,
     minutos: 120,
-    minutosMax: 180,
+    minutosMax: 150,
     imagen: '/images/g-unas-color.jpg',
   },
   {
@@ -177,7 +180,7 @@ const CATALOGO: Entrada[] = [
     precio: 25000,
     precioMax: 35000,
     minutos: 135,
-    minutosMax: 195,
+    minutosMax: 150,
     imagen: '/images/g-unas-premium.jpg',
   },
 

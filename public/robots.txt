@@ -1,0 +1,14 @@
+# Goddess Studio — Melipilla
+# El sitio entero es público salvo el panel y las pantallas de trámite.
+
+User-agent: *
+Allow: /
+
+# El panel es privado y además cada página de acá dentro solo tiene sentido
+# con una reserva en curso: indexarlas mostraría en Google pantallas vacías
+# o de error en vez del sitio.
+Disallow: /admin
+Disallow: /confirmacion
+Disallow: /reagendar
+
+Sitemap: https://goddessstudio.cl/sitemap.xml
