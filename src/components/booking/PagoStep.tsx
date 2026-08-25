@@ -19,10 +19,17 @@ interface Props {
  * queda pendiente en cada caso.
  */
 export default function PagoStep({ datos, onCambio, service }: Props) {
-  if (!service) return null;
-
-  const total = Number(service.price) || 0;
-  const abono = Number(service.deposit_amount) || 0;
+  /*
+   * Todo lo que sigue se calcula con `service` opcional y el corte por falta de
+   * servicio va más abajo, después del efecto.
+   *
+   * El motivo es la regla de los hooks: si el `return null` fuera antes, este
+   * componente tendría cero hooks mientras no hay servicio y uno en cuanto lo
+   * hay. Al elegir servicio con la sección de pago ya abierta, React vería
+   * cambiar el número de hooks entre dos renders y reventaría el paso entero.
+   */
+  const total = Number(service?.price) || 0;
+  const abono = Number(service?.deposit_amount) || 0;
   const saldo = Math.max(total - abono, 0);
 
   /*
@@ -34,7 +41,7 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
    * iría creyendo que no debe nada; el resto aparecería recién al terminar,
    * que es exactamente la sorpresa que este flujo existe para evitar.
    */
-  const valorAbierto = Boolean(service.price_max && Number(service.price_max) > total);
+  const valorAbierto = Boolean(service?.price_max && Number(service.price_max) > total);
 
   // Si venía eligiendo pago total y cambia a un servicio de valor abierto, se
   // vuelve al abono: si no, quedaría marcada una opción que ya no se muestra.
@@ -43,6 +50,8 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
       onCambio({ ...datos, paymentType: 'deposit' });
     }
   }, [valorAbierto, datos, onCambio]);
+
+  if (!service) return null;
 
   const opciones = [
     {
