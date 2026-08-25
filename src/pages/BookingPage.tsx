@@ -13,7 +13,7 @@ import ServiceStep from '../components/booking/ServiceStep';
 import DateTimeStep from '../components/booking/DateTimeStep';
 import PagoStep from '../components/booking/PagoStep';
 import DetailsStep, { type DatosCliente } from '../components/booking/DetailsStep';
-import { formatPrice, formatPriceRange, formatDuration } from '../lib/format';
+import { formatPrice, formatPriceRange, formatDurationRange } from '../lib/format';
 
 type Paso = 'servicio' | 'horario' | 'pago' | 'datos';
 
@@ -191,7 +191,7 @@ export default function BookingPage() {
   }
 
   const resumenServicio = service
-    ? `${service.name} · ${formatDuration(service.duration_minutes)} · ${formatPriceRange(service.price, service.price_max)}`
+    ? `${service.name} · ${formatDurationRange(service.duration_minutes, service.duration_max_minutes)} · ${formatPriceRange(service.price, service.price_max)}`
     : undefined;
   const resumenHorario =
     fecha && hora ? `${format(fecha, "EEE d 'de' MMM", { locale: es })} · ${hora}` : undefined;
@@ -356,7 +356,7 @@ export default function BookingPage() {
                       </dd>
                       {service && (
                         <dd className="texto--1 text-nacar-200/70">
-                          {formatDuration(service.duration_minutes)}
+                          {formatDurationRange(service.duration_minutes, service.duration_max_minutes)}
                         </dd>
                       )}
                     </div>

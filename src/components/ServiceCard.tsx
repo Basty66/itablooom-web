@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Service } from '../types';
-import { formatPriceRange, formatDuration } from '../lib/format';
+import { formatPriceRange, formatDurationRange } from '../lib/format';
 import ServiceVisual, { etiquetaCategoria } from './ui/ServiceVisual';
 
 interface Props {
@@ -57,7 +57,7 @@ export default function ServiceCard({
                 sin necesidad de agrandarlo ni ponerlo en negrita. */}
             <p className="font-display texto-2 text-cobre-400">{formatPriceRange(service.price, service.price_max)}</p>
             <p className="mt-0.5 texto--1 uppercase espaciado-medio text-nacar-300">
-              {formatDuration(service.duration_minutes)}
+              {formatDurationRange(service.duration_minutes, service.duration_max_minutes)}
             </p>
           </div>
 

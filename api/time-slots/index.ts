@@ -42,7 +42,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(404).json({ error: 'Service not found' });
     }
 
-    const serviceDuration = (service.duration_minutes as number) || 60;
+    /*
+     * Se bloquea el trabajo más largo, no el corriente.
+     *
+     * Un desvío no se amortigua: si una cita se pasa una hora, las tres
+     * siguientes esperan esa hora entera, porque el colchón de quince minutos
+     * ya está gastado en el espaciado normal entre citas. Reservar de más
+     * cuesta un hueco que se puede volver a abrir a mano; quedarse corto
+     * arrastra el día completo.
+     *
+     * Solo lo traen los servicios cuyo trabajo varía —los de uñas—; en el
+     * resto `duration_max_minutes` viene vacío y manda la duración de siempre.
+     */
+    const serviceDuration =
+      (service.duration_max_minutes as number) || (service.duration_minutes as number) || 60;
 
     const blocked = await sql`SELECT time_start, time_end FROM blocked_times WHERE date = ${date as string}`;
 
@@ -51,7 +64,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Una `pending` solo retiene el cupo durante la ventana de pago; pasada esa
     // ventana el horario vuelve a estar disponible aunque siga marcada así.
     const existingBookings = await sql`
-      SELECT b.booking_time, s.duration_minutes
+      SELECT b.booking_time, s.duration_minutes, s.duration_max_minutes
       FROM bookings b JOIN services s ON b.service_id = s.id
       WHERE b.booking_date = ${date as string}
         AND (
@@ -66,9 +79,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (!t) return null;
         const [bh, bm] = t.slice(0, 5).split(':').map(Number);
         const start = bh * 60 + bm;
-        // La cita ocupa su duración más el colchón: así la siguiente no
-        // puede empezar en el minuto exacto en que termina la anterior.
-        return { start, end: start + ((b.duration_minutes as number) || 60) + COLCHON_MINUTOS };
+        /*
+         * La cita ocupa su duración más el colchón: así la siguiente no puede
+         * empezar en el minuto exacto en que termina la anterior. Y ocupa su
+         * trabajo más largo, igual que al reservarla: si acá se contara la
+         * duración corriente, la agenda ofrecería un hueco que la cita
+         * anterior todavía está usando.
+         */
+        const dura = (b.duration_max_minutes as number) || (b.duration_minutes as number) || 60;
+        return { start, end: start + dura + COLCHON_MINUTOS };
       })
       .filter(Boolean) as { start: number; end: number }[];
 

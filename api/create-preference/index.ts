@@ -127,7 +127,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const inicio = hh * 60 + mm;
-    const duracion = Number((service as any).duration_minutes) || 60;
+    /*
+     * Igual que en la disponibilidad: se reserva el trabajo más largo. Si
+     * acá se usara la duración corriente, el hueco que muestra la agenda y
+     * el que se ocupa al confirmar dirían cosas distintas, y dos clientas
+     * podrían quedar encima.
+     */
+    const duracion =
+      Number((service as any).duration_max_minutes) ||
+      Number((service as any).duration_minutes) ||
+      60;
     if (inicio < horario.abre * 60 || inicio + duracion > horario.cierra * 60) {
       return res.status(400).json({ error: 'Ese horario está fuera de la atención de ese día' });
     }
@@ -158,7 +167,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           (
             b.booking_time,
             b.booking_time
-              + (SELECT s.duration_minutes FROM services s WHERE s.id = b.service_id) * INTERVAL '1 minute'
+              + (SELECT COALESCE(s.duration_max_minutes, s.duration_minutes) FROM services s WHERE s.id = b.service_id) * INTERVAL '1 minute'
               + ${COLCHON_MINUTOS} * INTERVAL '1 minute'
           )
           OVERLAPS

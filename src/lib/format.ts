@@ -26,6 +26,25 @@ export function formatPriceRange(
   return `${formatPrice(desde)} – ${formatPrice(hasta)}`;
 }
 
+/**
+ * Duración de un servicio, que puede venir en rango.
+ *
+ * En uñas el trabajo depende del diseño, igual que el precio. Anunciar solo la
+ * duración corriente hace que la clienta reserve dos horas de su tarde para
+ * algo que puede tomarle tres: el dato le sirve para organizarse, no solo para
+ * llenar la ficha.
+ *
+ * Cuando ambos extremos caen en horas exactas se escribe "2–3 h" en vez de
+ * "2 h – 3 h", que en la tarjeta de móvil se parte en dos renglones.
+ */
+export function formatDurationRange(minutos: number, maximo?: number | null): string {
+  if (!maximo || Number(maximo) <= Number(minutos)) return formatDuration(minutos);
+  if (minutos % 60 === 0 && Number(maximo) % 60 === 0) {
+    return `${minutos / 60}–${Number(maximo) / 60} h`;
+  }
+  return `${formatDuration(minutos)} – ${formatDuration(Number(maximo))}`;
+}
+
 /** 240 -> "4 h", 90 -> "1 h 30 min", 30 -> "30 min". */
 export function formatDuration(minutos: number): string {
   if (minutos < 60) return `${minutos} min`;

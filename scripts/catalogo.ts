@@ -40,8 +40,22 @@ interface Entrada {
   precio: number;
   /** Techo del rango, cuando el valor depende del largo y el diseño. */
   precioMax?: number;
-  /** Minutos de sillón. PROVISIONAL: los debe confirmar Ignacia. */
+  /** Minutos de sillón en un trabajo corriente. PROVISIONAL: los debe confirmar Ignacia. */
   minutos: number;
+  /**
+   * Minutos del trabajo más elaborado que se hace de este servicio.
+   *
+   * Es lo que el sistema bloquea en la agenda, aunque a la clienta se le
+   * muestre la duración corriente. Un desvío no se amortigua: si una cita se
+   * pasa una hora, las tres siguientes esperan esa hora completa, porque el
+   * colchón de quince minutos ya está gastado en el espaciado normal.
+   *
+   * Solo lo llevan los servicios cuyo trabajo varía de verdad —los mismos que
+   * tienen rango de precio—. En pestañas y cejas la duración es predecible y
+   * bloquear de más solo quemaría agenda. PROVISIONAL: los debe confirmar
+   * Ignacia con su trabajo más largo, no con el promedio.
+   */
+  minutosMax?: number;
   imagen: string;
   /**
    * Va sumado a otro servicio y no como hora propia.
@@ -141,6 +155,7 @@ const CATALOGO: Entrada[] = [
     precio: 15000,
     precioMax: 20000,
     minutos: 90,
+    minutosMax: 120,
     imagen: '/images/g-unas-esmaltado.jpg',
   },
   {
@@ -151,6 +166,7 @@ const CATALOGO: Entrada[] = [
     precio: 22000,
     precioMax: 32000,
     minutos: 120,
+    minutosMax: 180,
     imagen: '/images/g-unas-color.jpg',
   },
   {
@@ -161,6 +177,7 @@ const CATALOGO: Entrada[] = [
     precio: 25000,
     precioMax: 35000,
     minutos: 135,
+    minutosMax: 195,
     imagen: '/images/g-unas-premium.jpg',
   },
 
@@ -212,7 +229,8 @@ async function main() {
   if (aplicar) {
     await sql`ALTER TABLE services ADD COLUMN IF NOT EXISTS price_max INTEGER`;
     await sql`ALTER TABLE services ADD COLUMN IF NOT EXISTS es_complemento BOOLEAN NOT NULL DEFAULT false`;
-    console.log('✓ columnas price_max y es_complemento listas\n');
+    await sql`ALTER TABLE services ADD COLUMN IF NOT EXISTS duration_max_minutes INTEGER`;
+    console.log('✓ columnas price_max, es_complemento y duration_max_minutes listas\n');
   } else {
     console.log('(en modo aplicar se agregarían las columnas price_max y es_complemento)\n');
   }
@@ -225,22 +243,23 @@ async function main() {
 
     const rango = (s.precioMax ? `$${s.precio}–$${s.precioMax}` : `$${s.precio}`) + (s.complemento ? ' [complemento]' : '');
     if (existente) {
-      console.log(`${aplicar ? '✓' : '→'} actualiza  ${s.nombre.padEnd(32)} ${rango}  ${s.minutos}min`);
+      console.log(`${aplicar ? '✓' : '→'} actualiza  ${s.nombre.padEnd(32)} ${rango}  ${s.minutos}min${s.minutosMax ? ` (bloquea ${s.minutosMax})` : ''}`);
       if (aplicar) {
         await sql`
           UPDATE services SET
             description = ${s.descripcion}, category = ${s.categoria},
             price = ${s.precio}, price_max = ${s.precioMax ?? null},
-            duration_minutes = ${s.minutos}, deposit_amount = ${abonoDe(s.precio)},
+            duration_minutes = ${s.minutos}, duration_max_minutes = ${s.minutosMax ?? null},
+            deposit_amount = ${abonoDe(s.precio)},
             image_url = ${s.imagen}, es_complemento = ${s.complemento ?? false}, active = true
           WHERE id = ${existente.id}`;
       }
     } else {
-      console.log(`${aplicar ? '✓' : '→'} crea       ${s.nombre.padEnd(32)} ${rango}  ${s.minutos}min`);
+      console.log(`${aplicar ? '✓' : '→'} crea       ${s.nombre.padEnd(32)} ${rango}  ${s.minutos}min${s.minutosMax ? ` (bloquea ${s.minutosMax})` : ''}`);
       if (aplicar) {
         await sql`
-          INSERT INTO services (name, description, duration_minutes, price, price_max, deposit_amount, category, image_url, es_complemento, active)
-          VALUES (${s.nombre}, ${s.descripcion}, ${s.minutos}, ${s.precio}, ${s.precioMax ?? null},
+          INSERT INTO services (name, description, duration_minutes, duration_max_minutes, price, price_max, deposit_amount, category, image_url, es_complemento, active)
+          VALUES (${s.nombre}, ${s.descripcion}, ${s.minutos}, ${s.minutosMax ?? null}, ${s.precio}, ${s.precioMax ?? null},
                   ${abonoDe(s.precio)}, ${s.categoria}, ${s.imagen}, ${s.complemento ?? false}, true)`;
       }
     }

@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react';
 import type { Service } from '../../types';
-import { formatPriceRange, formatDuration } from '../../lib/format';
+import { formatPriceRange, formatDurationRange } from '../../lib/format';
 import { Skeleton } from '../ui/Skeleton';
 import { etiquetaCategoria } from '../ui/ServiceVisual';
 import { CATEGORIAS_GODDESS } from '../../lib/categorias';
@@ -122,7 +122,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
               </span>
 
               <span className="mt-1 texto--1 text-nacar-300">
-                {formatDuration(service.duration_minutes)}
+                {formatDurationRange(service.duration_minutes, service.duration_max_minutes)}
               </span>
             </span>
 

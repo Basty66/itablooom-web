@@ -3,6 +3,11 @@ export interface Service {
   name: string;
   description: string;
   duration_minutes: number;
+  /**
+   * Minutos del trabajo más elaborado. Es lo que se bloquea en la agenda,
+   * aunque a la clienta se le muestre el rango completo.
+   */
+  duration_max_minutes?: number | null;
   price: number;
   /**
    * Techo del rango, cuando el valor depende del largo y del diseño. Si viene,
