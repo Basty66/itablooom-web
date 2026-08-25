@@ -9,6 +9,12 @@ export interface Service {
    * `price` es el piso y el valor exacto se define en el estudio.
    */
   price_max?: number | null;
+  /**
+   * Se suma a otro servicio y no se reserva como hora propia: el visajismo es
+   * diseño de cejas que acompaña, nunca la visita completa. Aparece en el
+   * catálogo con su valor, pero fuera de la lista de lo agendable.
+   */
+  es_complemento?: boolean;
   deposit_amount: number;
   category: 'facial' | 'laser' | 'course';
   image_url?: string;

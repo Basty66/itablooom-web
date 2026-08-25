@@ -59,7 +59,13 @@ export default function BookingPage() {
 
   useEffect(() => {
     getServices()
-      .then(setServices)
+      /*
+       * Los complementos no se agendan solos: el visajismo acompaña a otro
+       * servicio y su valor está por debajo del abono, así que reservarlo
+       * suelto cobraría más por adelantado que lo que cuesta. Se piden en el
+       * estudio junto con la hora principal.
+       */
+      .then((lista) => setServices(lista.filter((s) => !s.es_complemento)))
       .catch(() => setError('No pudimos cargar los servicios. Recarga la página.'))
       .finally(() => setCargandoServices(false));
   }, []);

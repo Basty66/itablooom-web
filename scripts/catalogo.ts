@@ -43,6 +43,14 @@ interface Entrada {
   /** Minutos de sillón. PROVISIONAL: los debe confirmar Ignacia. */
   minutos: number;
   imagen: string;
+  /**
+   * Va sumado a otro servicio y no como hora propia.
+   *
+   * El visajismo es diseño de cejas que acompaña, nunca la visita completa.
+   * Además su valor queda por debajo del abono de $10.000, así que reservarlo
+   * suelto cobraría más por adelantado que lo que cuesta el servicio.
+   */
+  complemento?: boolean;
 }
 
 const CATALOGO: Entrada[] = [
@@ -102,6 +110,7 @@ const CATALOGO: Entrada[] = [
     precio: 8000,
     minutos: 30,
     imagen: '/images/g-cejas-diseno.jpg',
+    complemento: true,
   },
   {
     nombre: 'Visajismo + Henna',
@@ -111,6 +120,7 @@ const CATALOGO: Entrada[] = [
     precio: 12000,
     minutos: 45,
     imagen: '/images/g-cejas-diseno.jpg',
+    complemento: true,
   },
   {
     nombre: 'Laminado de Cejas',
@@ -189,9 +199,10 @@ async function main() {
 
   if (aplicar) {
     await sql`ALTER TABLE services ADD COLUMN IF NOT EXISTS price_max INTEGER`;
-    console.log('✓ columna price_max lista\n');
+    await sql`ALTER TABLE services ADD COLUMN IF NOT EXISTS es_complemento BOOLEAN NOT NULL DEFAULT false`;
+    console.log('✓ columnas price_max y es_complemento listas\n');
   } else {
-    console.log('(en modo aplicar se agregaría la columna price_max)\n');
+    console.log('(en modo aplicar se agregarían las columnas price_max y es_complemento)\n');
   }
 
   // ---- Altas y actualizaciones ----
@@ -200,7 +211,7 @@ async function main() {
       SELECT id, price, duration_minutes, active FROM services WHERE name = ${s.nombre}
     `) as any[];
 
-    const rango = s.precioMax ? `$${s.precio}–$${s.precioMax}` : `$${s.precio}`;
+    const rango = (s.precioMax ? `$${s.precio}–$${s.precioMax}` : `$${s.precio}`) + (s.complemento ? ' [complemento]' : '');
     if (existente) {
       console.log(`${aplicar ? '✓' : '→'} actualiza  ${s.nombre.padEnd(32)} ${rango}  ${s.minutos}min`);
       if (aplicar) {
@@ -209,16 +220,16 @@ async function main() {
             description = ${s.descripcion}, category = ${s.categoria},
             price = ${s.precio}, price_max = ${s.precioMax ?? null},
             duration_minutes = ${s.minutos}, deposit_amount = ${ABONO},
-            image_url = ${s.imagen}, active = true
+            image_url = ${s.imagen}, es_complemento = ${s.complemento ?? false}, active = true
           WHERE id = ${existente.id}`;
       }
     } else {
       console.log(`${aplicar ? '✓' : '→'} crea       ${s.nombre.padEnd(32)} ${rango}  ${s.minutos}min`);
       if (aplicar) {
         await sql`
-          INSERT INTO services (name, description, duration_minutes, price, price_max, deposit_amount, category, image_url, active)
+          INSERT INTO services (name, description, duration_minutes, price, price_max, deposit_amount, category, image_url, es_complemento, active)
           VALUES (${s.nombre}, ${s.descripcion}, ${s.minutos}, ${s.precio}, ${s.precioMax ?? null},
-                  ${ABONO}, ${s.categoria}, ${s.imagen}, true)`;
+                  ${ABONO}, ${s.categoria}, ${s.imagen}, ${s.complemento ?? false}, true)`;
       }
     }
   }

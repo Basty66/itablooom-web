@@ -25,7 +25,9 @@ export default function HomePage() {
   useEffect(() => {
     let vigente = true;
     getServices()
-      .then((data) => vigente && setServices(data.slice(0, 3)))
+      /* Los complementos quedan fuera de los destacados: la portada muestra
+         lo que se puede reservar, no lo que se agrega a otra hora. */
+      .then((data) => vigente && setServices(data.filter((s) => !s.es_complemento).slice(0, 3)))
       .catch(() => vigente && setServices([]))
       .finally(() => vigente && setCargando(false));
     // Evita setState si la clienta navega antes de que responda la API.

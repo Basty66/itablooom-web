@@ -20,22 +20,27 @@ const RUBROS = CATEGORIAS_GODDESS.filter((c) => c.id !== 'all');
  * clienta viene a elegir, no a mirar, y el botón es el remate de la tarjeta.
  */
 function TarjetaServicio({ service, prioritaria }: { service: Service; prioritaria: boolean }) {
-  return (
-    /*
-     * Dos formas según el ancho. En móvil es una fila corta y toda la tarjeta
-     * es el enlace: el dedo acierta en cualquier parte y no hace falta apuntar
-     * a un botón chico. Desde sm recupera la tarjeta vertical con foto grande,
-     * donde el espacio sobra y la foto vende.
-     *
-     * Con la foto arriba a tamaño completo cada tarjeta medía 526px y el
-     * catálogo se iba a casi seis pantallas, con la mayoría del tráfico
-     * entrando por teléfono.
-     */
-    <Link
-      to={`/agendar?service=${service.id}`}
-      aria-label={`Reservar ${service.name}`}
-      className="group flex overflow-hidden rounded-2xl border border-crema-100/5 bg-tinta-880 transition-all duration-500 ease-out hover:border-cobre-400/30 active:scale-[0.99] sm:h-full sm:flex-col sm:active:scale-100 sm:hover:-translate-y-2"
-    >
+  /*
+   * Hay servicios que se suman a otra hora y no se reservan solos: el
+   * visajismo es diseño de cejas que acompaña. Esos siguen mostrándose con su
+   * valor —la clienta quiere saber cuánto cuesta agregarlo— pero no son un
+   * enlace: llevarla a la reserva prometería un flujo que no termina en nada.
+   */
+  const esComplemento = Boolean(service.es_complemento);
+
+  /*
+   * Dos formas según el ancho. En móvil es una fila corta y toda la tarjeta
+   * es el enlace: el dedo acierta en cualquier parte y no hace falta apuntar
+   * a un botón chico. Desde sm recupera la tarjeta vertical con foto grande,
+   * donde el espacio sobra y la foto vende.
+   */
+  const forma = 'group flex overflow-hidden rounded-2xl border bg-tinta-880 transition-all duration-500 ease-out sm:h-full sm:flex-col';
+  const clases = esComplemento
+    ? `${forma} border-cobre-400/20`
+    : `${forma} border-crema-100/5 hover:border-cobre-400/30 active:scale-[0.99] sm:active:scale-100 sm:hover:-translate-y-2`;
+
+  const interior = (
+    <>
       <div className="relative w-[34%] shrink-0 sm:w-full">
         {/* En móvil la foto llena la columna (sin proporción propia, que
             recalcularía el ancho desde el alto y la desbordaría); desde sm
@@ -48,20 +53,19 @@ function TarjetaServicio({ service, prioritaria }: { service: Service; prioritar
           prioritaria={prioritaria}
         />
         <span className="chip absolute right-2 top-2 hidden rounded-full px-3 py-1 texto--2 uppercase espaciado-medio backdrop-blur-md sm:right-4 sm:top-4 sm:inline-block">
-          {etiquetaCategoria(service.category)}
+          {esComplemento ? 'Complemento' : etiquetaCategoria(service.category)}
         </span>
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col justify-center p-4 sm:justify-start sm:p-6">
         <span className="chip mb-2 w-fit rounded-full px-2.5 py-0.5 texto--2 uppercase espaciado-medio sm:hidden">
-          {etiquetaCategoria(service.category)}
+          {esComplemento ? 'Complemento' : etiquetaCategoria(service.category)}
         </span>
 
         <h3 className="font-display texto-2 text-crema-100 sm:pr-2">{service.name}</h3>
 
         {/* Duración y precio en una sola línea: en la fila de móvil cada
-            renglón extra se paga en altura. Desde sm el precio sube junto al
-            nombre, que es la lectura de catálogo. */}
+            renglón extra se paga en altura. */}
         <p className="mt-1.5 flex items-center gap-2 texto--1 sm:mt-2">
           <span className="flex items-center gap-1.5 texto--2 uppercase espaciado-medio text-nacar-300">
             <Clock3 size={13} strokeWidth={1.5} aria-hidden="true" />
@@ -69,31 +73,59 @@ function TarjetaServicio({ service, prioritaria }: { service: Service; prioritar
           </span>
           <span aria-hidden="true" className="h-3 w-px bg-cobre-400/25" />
           <span className="font-display texto-1 text-cobre-400 sm:texto-2">
+            {esComplemento && '+ '}
             {formatPriceRange(service.price, service.price_max)}
           </span>
         </p>
 
-        {/* La descripción solo desde sm: en la fila alarga la tarjeta sin
-            aportar a la decisión, y el detalle completo está en el agendador. */}
         <p className="mt-4 hidden texto-0 leading-relaxed text-nacar-200/80 sm:block">
           {service.description}
         </p>
 
-        {/* Falso botón: el enlace es la tarjeta entera, así que este es solo
-            el remate visual y no un control anidado. */}
-        <span className="brillo brillo-hover mt-6 hidden w-full items-center justify-center rounded-[var(--radius-suave)] bg-rosa-300 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 ease-out group-hover:bg-rosa-200 sm:flex">
-          Reservar
-        </span>
+        {esComplemento ? (
+          <span className="mt-6 hidden w-full items-center justify-center rounded-[var(--radius-suave)] border border-cobre-400/25 py-3.5 text-center texto--1 leading-relaxed text-nacar-200/85 sm:flex">
+            Se agrega a otro servicio
+          </span>
+        ) : (
+          /* Falso botón: el enlace es la tarjeta entera, así que este es solo
+             el remate visual y no un control anidado. */
+          <span className="brillo brillo-hover mt-6 hidden w-full items-center justify-center rounded-[var(--radius-suave)] bg-rosa-300 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 ease-out group-hover:bg-rosa-200 sm:flex">
+            Reservar
+          </span>
+        )}
       </div>
 
       {/* En móvil el remate es una flecha: dice "esto se toca" sin ocupar
-          una fila completa de botón. */}
-      <span
-        aria-hidden="true"
-        className="flex items-center pr-3 text-nacar-300 transition-transform duration-300 group-active:translate-x-0.5 sm:hidden"
-      >
-        <ChevronRight size={18} strokeWidth={1.5} />
-      </span>
+          una fila completa de botón. Los complementos no se tocan. */}
+      {!esComplemento && (
+        <span
+          aria-hidden="true"
+          className="flex items-center pr-3 text-nacar-300 transition-transform duration-300 group-active:translate-x-0.5 sm:hidden"
+        >
+          <ChevronRight size={18} strokeWidth={1.5} />
+        </span>
+      )}
+    </>
+  );
+
+  if (esComplemento) {
+    return (
+      <div className={clases}>
+        {interior}
+        {/* En móvil no hay flecha ni botón, así que la aclaración va acá o no
+            va en ninguna parte. */}
+        <span className="sr-only">Este servicio se agrega a otro, no se reserva por separado.</span>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to={`/agendar?service=${service.id}`}
+      aria-label={`Reservar ${service.name}`}
+      className={clases}
+    >
+      {interior}
     </Link>
   );
 }
