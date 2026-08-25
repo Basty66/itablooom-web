@@ -190,8 +190,20 @@ const CATALOGO: Entrada[] = [
   },
 ];
 
-/** Abono único para reservar, igual en todos los servicios. */
+/** Abono de reserva. */
 const ABONO = 10000;
+
+/**
+ * Cuánto se pide por adelantado para este servicio.
+ *
+ * Nunca más de lo que vale: los retiros cuestan $5.000 y $7.000, por debajo
+ * del abono, así que ahí no hay abono que valga —se paga el total y no queda
+ * saldo. Con el abono fijo, un retiro de $5.000 habría pedido $10.000 por
+ * adelantado, o sea el doble de su precio.
+ */
+function abonoDe(precio: number): number {
+  return Math.min(ABONO, precio);
+}
 
 async function main() {
   const aplicar = process.argv.includes('--aplicar');
@@ -219,7 +231,7 @@ async function main() {
           UPDATE services SET
             description = ${s.descripcion}, category = ${s.categoria},
             price = ${s.precio}, price_max = ${s.precioMax ?? null},
-            duration_minutes = ${s.minutos}, deposit_amount = ${ABONO},
+            duration_minutes = ${s.minutos}, deposit_amount = ${abonoDe(s.precio)},
             image_url = ${s.imagen}, es_complemento = ${s.complemento ?? false}, active = true
           WHERE id = ${existente.id}`;
       }
@@ -229,7 +241,7 @@ async function main() {
         await sql`
           INSERT INTO services (name, description, duration_minutes, price, price_max, deposit_amount, category, image_url, es_complemento, active)
           VALUES (${s.nombre}, ${s.descripcion}, ${s.minutos}, ${s.precio}, ${s.precioMax ?? null},
-                  ${ABONO}, ${s.categoria}, ${s.imagen}, ${s.complemento ?? false}, true)`;
+                  ${abonoDe(s.precio)}, ${s.categoria}, ${s.imagen}, ${s.complemento ?? false}, true)`;
       }
     }
   }

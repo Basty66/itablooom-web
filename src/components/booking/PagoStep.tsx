@@ -29,8 +29,16 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
    * cambiar el número de hooks entre dos renders y reventaría el paso entero.
    */
   const total = Number(service?.price) || 0;
-  const abono = Number(service?.deposit_amount) || 0;
+  /*
+   * El abono nunca supera lo que vale el servicio. En los retiros el precio
+   * queda por debajo de los $10.000, y ahí no hay abono que valga: se paga el
+   * total y no queda saldo. Sin este tope, un retiro de $5.000 pediría los
+   * $10.000 del abono por adelantado.
+   */
+  const abono = Math.min(Number(service?.deposit_amount) || 0, total);
   const saldo = Math.max(total - abono, 0);
+  /** No hay nada que elegir: el abono cubre el servicio entero. */
+  const pagoUnico = total > 0 && abono >= total;
 
   /*
    * Hay servicios cuyo valor se define en el sillón: en uñas depende del largo
@@ -43,42 +51,60 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
    */
   const valorAbierto = Boolean(service?.price_max && Number(service.price_max) > total);
 
-  // Si venía eligiendo pago total y cambia a un servicio de valor abierto, se
-  // vuelve al abono: si no, quedaría marcada una opción que ya no se muestra.
+  /*
+   * La elección se ajusta sola al servicio, para que nunca quede marcada una
+   * opción que no está en pantalla: los de valor abierto vuelven al abono y
+   * los que se pagan completos quedan en pago total.
+   */
   useEffect(() => {
-    if (valorAbierto && datos.paymentType === 'full') {
+    if (pagoUnico && datos.paymentType !== 'full') {
+      onCambio({ ...datos, paymentType: 'full' });
+    } else if (valorAbierto && datos.paymentType === 'full') {
       onCambio({ ...datos, paymentType: 'deposit' });
     }
-  }, [valorAbierto, datos, onCambio]);
+  }, [pagoUnico, valorAbierto, datos, onCambio]);
 
   if (!service) return null;
 
-  const opciones = [
-    {
-      tipo: 'deposit' as const,
-      icono: Wallet,
-      titulo: 'Reservar con abono',
-      monto: abono,
-      detalle: valorAbierto
-        ? 'Pagas el resto en el local, según el largo y el diseño que elijas.'
-        : saldo > 0
-          ? `Pagas ${formatPrice(saldo)} en el local el día de tu cita.`
-          : 'Confirmas tu hora al instante.',
-      nota: valorAbierto ? null : 'Lo más elegido',
-    },
-    ...(valorAbierto
-      ? []
-      : [
-          {
-            tipo: 'full' as const,
-            icono: CreditCard,
-            titulo: 'Pagar todo ahora',
-            monto: total,
-            detalle: 'Llegas sin nada pendiente: el día de tu cita solo te relajas.',
-            nota: null,
-          },
-        ]),
-  ];
+  /*
+   * Tres formas según el servicio: los que se pagan completos no ofrecen
+   * elección, los de valor abierto solo admiten abono, y el resto deja elegir.
+   */
+  const opciones = pagoUnico
+    ? [
+        {
+          tipo: 'full' as const,
+          icono: CreditCard,
+          titulo: 'Pagar ahora',
+          monto: total,
+          detalle: 'Este servicio se paga completo al reservar: no queda saldo pendiente.',
+          nota: null,
+        },
+      ]
+    : [
+        {
+          tipo: 'deposit' as const,
+          icono: Wallet,
+          titulo: 'Reservar con abono',
+          monto: abono,
+          detalle: valorAbierto
+            ? 'Pagas el resto en el local, según el largo y el diseño que elijas.'
+            : `Pagas ${formatPrice(saldo)} en el local el día de tu cita.`,
+          nota: valorAbierto ? null : 'Lo más elegido',
+        },
+        ...(valorAbierto
+          ? []
+          : [
+              {
+                tipo: 'full' as const,
+                icono: CreditCard,
+                titulo: 'Pagar todo ahora',
+                monto: total,
+                detalle: 'Llegas sin nada pendiente: el día de tu cita solo te relajas.',
+                nota: null,
+              },
+            ]),
+      ];
 
   return (
     <fieldset>
@@ -98,7 +124,7 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
         </p>
       )}
 
-      <div className={`grid gap-4 ${valorAbierto ? '' : 'sm:grid-cols-2'}`}>
+      <div className={`grid gap-4 ${opciones.length > 1 ? 'sm:grid-cols-2' : ''}`}>
         {opciones.map(({ tipo, icono: Icono, titulo, monto, detalle, nota }) => {
           const activo = datos.paymentType === tipo;
           return (

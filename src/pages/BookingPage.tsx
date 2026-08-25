@@ -128,9 +128,15 @@ export default function BookingPage() {
   const pasosListos = listo.datos ? 4 : abierta === 'datos' ? 3 : listo.horario ? 2 : listo.servicio ? 1 : 0;
 
   const total = Number(service?.price) || 0;
-  const abono = Number(service?.deposit_amount) || 0;
-  const aPagarAhora = datos.paymentType === 'full' ? total : abono;
-  const saldo = datos.paymentType === 'full' ? 0 : Math.max(total - abono, 0);
+  /*
+   * El abono nunca supera lo que vale el servicio. En los retiros el precio
+   * queda por debajo de los $10.000, y ahí no hay abono que valga: se paga el
+   * total y no queda saldo.
+   */
+  const abono = Math.min(Number(service?.deposit_amount) || 0, total);
+  const pagoCompleto = datos.paymentType === 'full' || (total > 0 && abono >= total);
+  const aPagarAhora = pagoCompleto ? total : abono;
+  const saldo = pagoCompleto ? 0 : Math.max(total - abono, 0);
   /*
    * En uñas el valor depende del largo y del diseño, así que el servicio trae
    * un rango. El saldo que queda para el local también es un rango: anunciar
@@ -190,7 +196,7 @@ export default function BookingPage() {
   const resumenHorario =
     fecha && hora ? `${format(fecha, "EEE d 'de' MMM", { locale: es })} · ${hora}` : undefined;
   const resumenPago = service
-    ? datos.paymentType === 'full'
+    ? pagoCompleto
       ? `Pago total · ${formatPrice(total)}`
       : `Abono · ${formatPrice(abono)}`
     : undefined;
@@ -386,7 +392,7 @@ export default function BookingPage() {
 
                 <div className="mt-7 flex items-end justify-between gap-4">
                   <span className="texto--2 uppercase espaciado-amplio text-nacar-300">
-                    {datos.paymentType === 'full' ? 'Pagas ahora' : 'Abonas ahora'}
+                    {pagoCompleto ? 'Pagas ahora' : 'Abonas ahora'}
                   </span>
                   <span className="font-display texto-3 text-cobre-400">{formatPrice(aPagarAhora)}</span>
                 </div>
@@ -445,7 +451,7 @@ export default function BookingPage() {
                 className="min-w-0 flex-1 text-left"
               >
                 <span className="flex items-center gap-1 texto--2 uppercase espaciado-medio text-nacar-300">
-                  {datos.paymentType === 'full' ? 'Pagas ahora' : 'Abonas ahora'}
+                  {pagoCompleto ? 'Pagas ahora' : 'Abonas ahora'}
                   <ChevronUp
                     size={13}
                     strokeWidth={1.8}

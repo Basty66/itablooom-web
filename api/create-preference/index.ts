@@ -173,9 +173,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(409).json({ error: 'Este horario ya está reservado' });
     }
 
+    /*
+     * Cuánto se cobra ahora.
+     *
+     * El cálculo va antes de guardar la reserva porque el mismo número entra
+     * en dos lugares: lo que se le cobra a la clienta y lo que queda anotado
+     * como pagado. Estaban resueltos por separado —uno acá y otro en el
+     * INSERT— y nada garantizaba que dijeran lo mismo.
+     *
+     * La clienta elige entre abonar o pagar todo. Antes se cobraba siempre
+     * `service.price`, mientras la web anunciaba una reserva por el depósito:
+     * quien reservaba el curso veía $5.000 y se le cobraban $32.000.
+     *
+     * Y nunca se cobra por adelantado más de lo que vale el servicio: en los
+     * retiros el precio queda por debajo del abono, así que ahí no hay abono
+     * que valga —se paga el total y no queda saldo. Sin este tope, un retiro
+     * de $5.000 cobraría los $10.000 del abono.
+     */
+    const total = Number(service.price) || 0;
+    const deposito = Math.min(Number(service.deposit_amount) || 0, total);
+    const pagaTodo = paymentType === 'full' || deposito >= total;
+    const paymentAmount = pagaTodo ? total : deposito;
+    const paymentLabel = pagaTodo ? service.name : `${service.name} — Abono de reserva`;
+
     const bookingResult = await sql`
       INSERT INTO bookings (service_id, client_name, client_email, client_phone, client_rut, booking_date, booking_time, deposit_amount, total_amount, notes, status)
-      VALUES (${serviceId}, ${clientName}, ${clientEmail}, ${clientPhone}, ${clientRut || null}, ${date}, ${time}, ${paymentType === 'full' ? service.price : service.deposit_amount}, ${service.price}, ${notes || null}, 'pending')
+      VALUES (${serviceId}, ${clientName}, ${clientEmail}, ${clientPhone}, ${clientRut || null}, ${date}, ${time}, ${paymentAmount}, ${total}, ${notes || null}, 'pending')
       RETURNING id
     `;
 
@@ -183,17 +206,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
     const appUrl = process.env.APP_URL || 'https://goddessstudio.cl';
-
-    /*
-     * La clienta elige entre abonar o pagar todo. Antes se cobraba siempre
-     * `service.price`, mientras la web anunciaba una reserva por el depósito:
-     * quien reservaba el curso veía $5.000 y se le cobraban $32.000.
-     */
-    const pagaTodo = paymentType === 'full';
-    const deposito = Number(service.deposit_amount) || 0;
-    const total = Number(service.price) || 0;
-    const paymentAmount = pagaTodo ? total : deposito;
-    const paymentLabel = pagaTodo ? service.name : `${service.name} — Abono de reserva`;
 
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
