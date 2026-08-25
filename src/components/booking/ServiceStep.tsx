@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react';
 import type { Service } from '../../types';
-import { formatPrice, formatDuration } from '../../lib/format';
+import { formatPriceRange, formatDuration } from '../../lib/format';
 import { Skeleton } from '../ui/Skeleton';
 import { etiquetaCategoria } from '../ui/ServiceVisual';
 import { CATEGORIAS_GODDESS } from '../../lib/categorias';
@@ -128,7 +128,7 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
 
             <span className="flex shrink-0 flex-col items-end gap-1.5 pl-2 text-right">
               <span className="block font-display texto-1 tabular-nums text-cobre-400">
-                {formatPrice(service.price)}
+                {formatPriceRange(service.price, service.price_max)}
               </span>
               {/* Palomita para el elegido: en una lista de siete filas, la
                   barra de 2px al canto se pierde de vista. */}

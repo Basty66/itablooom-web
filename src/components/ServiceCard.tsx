@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Service } from '../types';
-import { formatPrice, formatDuration } from '../lib/format';
+import { formatPriceRange, formatDuration } from '../lib/format';
 import ServiceVisual, { etiquetaCategoria } from './ui/ServiceVisual';
 
 interface Props {
@@ -55,7 +55,7 @@ export default function ServiceCard({
           <div>
             {/* El precio es el único dato en cobre de la tarjeta: así destaca
                 sin necesidad de agrandarlo ni ponerlo en negrita. */}
-            <p className="font-display texto-2 text-cobre-400">{formatPrice(service.price)}</p>
+            <p className="font-display texto-2 text-cobre-400">{formatPriceRange(service.price, service.price_max)}</p>
             <p className="mt-0.5 texto--1 uppercase espaciado-medio text-nacar-300">
               {formatDuration(service.duration_minutes)}
             </p>

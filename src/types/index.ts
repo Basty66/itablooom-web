@@ -4,6 +4,11 @@ export interface Service {
   description: string;
   duration_minutes: number;
   price: number;
+  /**
+   * Techo del rango, cuando el valor depende del largo y del diseño. Si viene,
+   * `price` es el piso y el valor exacto se define en el estudio.
+   */
+  price_max?: number | null;
   deposit_amount: number;
   category: 'facial' | 'laser' | 'course';
   image_url?: string;

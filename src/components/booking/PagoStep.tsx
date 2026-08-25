@@ -1,6 +1,7 @@
-import { Check, Wallet, CreditCard, Timer } from 'lucide-react';
+import { useEffect } from 'react';
+import { Check, Wallet, CreditCard, Timer, Info } from 'lucide-react';
 import type { Service } from '../../types';
-import { formatPrice } from '../../lib/format';
+import { formatPrice, formatPriceRange } from '../../lib/format';
 import type { DatosCliente } from './DetailsStep';
 
 interface Props {
@@ -24,33 +25,71 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
   const abono = Number(service.deposit_amount) || 0;
   const saldo = Math.max(total - abono, 0);
 
+  /*
+   * Hay servicios cuyo valor se define en el sillón: en uñas depende del largo
+   * y del diseño, y por eso vienen con un rango.
+   *
+   * Ahí "pagar todo ahora" no puede ofrecerse. El único número que el sistema
+   * conoce es el piso del rango, así que cobraría lo mínimo y la clienta se
+   * iría creyendo que no debe nada; el resto aparecería recién al terminar,
+   * que es exactamente la sorpresa que este flujo existe para evitar.
+   */
+  const valorAbierto = Boolean(service.price_max && Number(service.price_max) > total);
+
+  // Si venía eligiendo pago total y cambia a un servicio de valor abierto, se
+  // vuelve al abono: si no, quedaría marcada una opción que ya no se muestra.
+  useEffect(() => {
+    if (valorAbierto && datos.paymentType === 'full') {
+      onCambio({ ...datos, paymentType: 'deposit' });
+    }
+  }, [valorAbierto, datos, onCambio]);
+
   const opciones = [
     {
       tipo: 'deposit' as const,
       icono: Wallet,
       titulo: 'Reservar con abono',
       monto: abono,
-      detalle:
-        saldo > 0
+      detalle: valorAbierto
+        ? 'Pagas el resto en el local, según el largo y el diseño que elijas.'
+        : saldo > 0
           ? `Pagas ${formatPrice(saldo)} en el local el día de tu cita.`
           : 'Confirmas tu hora al instante.',
-      nota: 'Lo más elegido',
+      nota: valorAbierto ? null : 'Lo más elegido',
     },
-    {
-      tipo: 'full' as const,
-      icono: CreditCard,
-      titulo: 'Pagar todo ahora',
-      monto: total,
-      detalle: 'Llegas sin nada pendiente: el día de tu cita solo te relajas.',
-      nota: null,
-    },
+    ...(valorAbierto
+      ? []
+      : [
+          {
+            tipo: 'full' as const,
+            icono: CreditCard,
+            titulo: 'Pagar todo ahora',
+            monto: total,
+            detalle: 'Llegas sin nada pendiente: el día de tu cita solo te relajas.',
+            nota: null,
+          },
+        ]),
   ];
 
   return (
     <fieldset>
       <legend className="sr-only">¿Cómo prefieres pagar?</legend>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      {valorAbierto && (
+        <p className="mb-4 flex items-start gap-2 rounded-[var(--radius-medio)] border border-cobre-400/25 bg-tinta-880 p-4 texto--1 leading-relaxed text-nacar-200/85">
+          <Info size={15} strokeWidth={1.5} className="mt-0.5 shrink-0 text-cobre-300" aria-hidden="true" />
+          <span>
+            Este servicio va de{' '}
+            <strong className="font-medium text-crema-100">
+              {formatPriceRange(service.price, service.price_max)}
+            </strong>
+            : el valor exacto depende del largo y del diseño, y se define contigo en el estudio. Por
+            eso se reserva con abono y el resto se paga ahí.
+          </span>
+        </p>
+      )}
+
+      <div className={`grid gap-4 ${valorAbierto ? '' : 'sm:grid-cols-2'}`}>
         {opciones.map(({ tipo, icono: Icono, titulo, monto, detalle, nota }) => {
           const activo = datos.paymentType === tipo;
           return (

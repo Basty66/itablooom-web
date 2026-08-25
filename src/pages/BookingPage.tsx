@@ -13,7 +13,7 @@ import ServiceStep from '../components/booking/ServiceStep';
 import DateTimeStep from '../components/booking/DateTimeStep';
 import PagoStep from '../components/booking/PagoStep';
 import DetailsStep, { type DatosCliente } from '../components/booking/DetailsStep';
-import { formatPrice, formatDuration } from '../lib/format';
+import { formatPrice, formatPriceRange, formatDuration } from '../lib/format';
 
 type Paso = 'servicio' | 'horario' | 'pago' | 'datos';
 
@@ -53,6 +53,8 @@ export default function BookingPage() {
     notes: '',
     // Abonar es el default: menos fricción para confirmar la hora.
     paymentType: 'deposit',
+    // Las políticas se aceptan a mano, nunca vienen marcadas de fábrica.
+    aceptaTerminos: false,
   });
 
   useEffect(() => {
@@ -100,11 +102,15 @@ export default function BookingPage() {
     if (fecha && service) cargarSlots();
   }, [fecha, service, cargarSlots]);
 
+  // Los campos y la aceptación se miden aparte: si no, faltando solo la
+  // casilla la barra diría "Completa tus datos" con todo ya escrito.
+  const camposCompletos = Boolean(datos.name && datos.email && datos.phone);
+
   const listo = {
     servicio: service !== null,
     horario: fecha !== null && hora !== '',
     pago: true, // siempre hay una opción marcada por defecto
-    datos: Boolean(datos.name && datos.email && datos.phone),
+    datos: camposCompletos && datos.aceptaTerminos,
   };
   const todoListo = listo.servicio && listo.horario && listo.datos;
 
@@ -119,6 +125,15 @@ export default function BookingPage() {
   const abono = Number(service?.deposit_amount) || 0;
   const aPagarAhora = datos.paymentType === 'full' ? total : abono;
   const saldo = datos.paymentType === 'full' ? 0 : Math.max(total - abono, 0);
+  /*
+   * En uñas el valor depende del largo y del diseño, así que el servicio trae
+   * un rango. El saldo que queda para el local también es un rango: anunciar
+   * solo el piso sería prometer un número que después no se cumple.
+   */
+  const saldoMaximo =
+    service?.price_max && Number(service.price_max) > total
+      ? Math.max(Number(service.price_max) - abono, 0)
+      : null;
 
   /**
    * Qué falta para poder pagar. La barra inferior lo dice explícitamente y
@@ -128,7 +143,8 @@ export default function BookingPage() {
   const pendiente: { texto: string; ir: Paso } | null =
     !listo.servicio ? { texto: 'Elige un servicio', ir: 'servicio' }
     : !listo.horario ? { texto: 'Elige día y hora', ir: 'horario' }
-    : !listo.datos ? { texto: 'Completa tus datos', ir: 'datos' }
+    : !camposCompletos ? { texto: 'Completa tus datos', ir: 'datos' }
+    : !datos.aceptaTerminos ? { texto: 'Acepta las políticas de reserva', ir: 'datos' }
     : null;
 
   async function onSubmit(e: React.FormEvent) {
@@ -163,7 +179,7 @@ export default function BookingPage() {
   }
 
   const resumenServicio = service
-    ? `${service.name} · ${formatDuration(service.duration_minutes)} · ${formatPrice(service.price)}`
+    ? `${service.name} · ${formatDuration(service.duration_minutes)} · ${formatPriceRange(service.price, service.price_max)}`
     : undefined;
   const resumenHorario =
     fecha && hora ? `${format(fecha, "EEE d 'de' MMM", { locale: es })} · ${hora}` : undefined;
@@ -370,7 +386,7 @@ export default function BookingPage() {
                 </div>
                 {saldo > 0 && (
                   <p className="mt-1 text-right texto--1 text-nacar-300">
-                    Saldo en el local {formatPrice(saldo)}
+                    Saldo en el local {formatPriceRange(saldo, saldoMaximo)}
                   </p>
                 )}
 
@@ -408,7 +424,7 @@ export default function BookingPage() {
                   {saldo > 0 && (
                     <div className="linea-cobre flex justify-between gap-4 border-t pt-2">
                       <dt className="text-nacar-300">Saldo en el local</dt>
-                      <dd className="text-crema-100">{formatPrice(saldo)}</dd>
+                      <dd className="text-crema-100">{formatPriceRange(saldo, saldoMaximo)}</dd>
                     </div>
                   )}
                 </dl>

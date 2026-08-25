@@ -8,7 +8,7 @@ import ServiceVisual, { etiquetaCategoria } from '../components/ui/ServiceVisual
 import { Container } from '../components/ui/Section';
 import Revelar from '../components/ui/Revelar';
 import { ServiceCardSkeleton } from '../components/ui/Skeleton';
-import { formatPrice, formatDuration } from '../lib/format';
+import { formatPriceRange, formatDuration } from '../lib/format';
 
 /** El catálogo se recorre por rubro, así que "Todos" no aplica acá. */
 const RUBROS = CATEGORIAS_GODDESS.filter((c) => c.id !== 'all');
@@ -69,7 +69,7 @@ function TarjetaServicio({ service, prioritaria }: { service: Service; prioritar
           </span>
           <span aria-hidden="true" className="h-3 w-px bg-cobre-400/25" />
           <span className="font-display texto-1 text-cobre-400 sm:texto-2">
-            {formatPrice(service.price)}
+            {formatPriceRange(service.price, service.price_max)}
           </span>
         </p>
 

@@ -13,7 +13,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "db:setup": "tsx src/lib/setup-db.ts",
-    "db:fotos": "tsx --env-file=.env scripts/fotos-servicios.ts"
+    "db:fotos": "tsx --env-file=.env scripts/fotos-servicios.ts",
+    "db:catalogo": "tsx --env-file=.env scripts/catalogo.ts"
   },
   "dependencies": {
     "@mercadopago/sdk-react": "^1.0.7",
