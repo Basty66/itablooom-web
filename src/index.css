@@ -386,6 +386,58 @@
   }
 
   /*
+   * Figura recortada del hero: flota apenas, catorce píxeles en siete segundos
+   * de ida y otros siete de vuelta. Al mismo ritmo que la deriva del resto del
+   * sitio; más rápido se vería como un globo.
+   */
+  .flota {
+    animation: flotar 7s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  /*
+   * Destello que recorre la figura cada cierto rato.
+   *
+   * La máscara es la propia imagen, así que la luz solo aparece sobre la
+   * persona y no sobre el rectángulo que la contiene: sin eso se vería una
+   * banda diagonal cruzando el aire alrededor.
+   *
+   * La animación dura nueve segundos pero el barrido ocupa el primer 15%: el
+   * resto es pausa. Un brillo continuo sería un anuncio parpadeante, no un
+   * reflejo.
+   */
+  .destello {
+    background-image: linear-gradient(
+      105deg,
+      transparent 42%,
+      rgba(255, 255, 255, 0.32) 50%,
+      transparent 58%
+    );
+    background-size: 250% 100%;
+    background-repeat: no-repeat;
+    -webkit-mask-image: var(--silueta);
+    mask-image: var(--silueta);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    animation: barrido 9s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flota,
+    .destello {
+      animation: none;
+    }
+    /* Sin barrido el gradiente quedaría plantado encima de la cara. */
+    .destello {
+      display: none;
+    }
+  }
+
+  /*
    * Las entradas escalonadas esperan a que su sección entre en pantalla.
    *
    * Sin esto se gastaban al cargar la página: en una portada de ocho pantallas
@@ -485,6 +537,26 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes flotar {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-14px);
+  }
+}
+
+/* El barrido ocupa el primer 15% del ciclo; el resto la figura está quieta. */
+@keyframes barrido {
+  0% {
+    background-position: 190% 0;
+  }
+  15%,
+  100% {
+    background-position: -90% 0;
   }
 }
 

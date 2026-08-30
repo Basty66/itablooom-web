@@ -23,7 +23,46 @@ export default function Hero() {
      * pero el tope de altura se queda: con el teléfono acostado quedan unos
      * 375px y ahí conviene que la sección deje de estirarse.
      */
-    <section className="luz-vino relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-center [@media(max-height:520px)]:min-h-0">
+    <section className="luz-vino relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-center overflow-hidden [@media(max-height:520px)]:min-h-0">
+      {/*
+        La figura vive fuera del contenedor de texto y solo aparece desde lg.
+
+        En móvil no existe una "columna derecha" donde ponerla: metida ahí
+        abajo empujaría los botones fuera de la pantalla, que es justo lo que
+        costó dejar bien. Y como es decorativa, se oculta a los lectores de
+        pantalla en vez de inventarle una descripción.
+
+        Se apoya sobre el halo de vino, que queda detrás y la recorta contra el
+        negro sin necesidad de marco.
+      */}
+      <div
+        aria-hidden="true"
+        /*
+          En móvil va detrás del texto y muy lavada. No es una decisión
+          estética: la línea del abono le pasa por encima, y el delantal
+          blanco al 22% dejaba ese texto en 3.59:1, bajo el mínimo legible.
+          Al 12% el fondo tras la letra se mantiene lo bastante oscuro.
+        */
+        className="pointer-events-none absolute bottom-0 right-[-8%] h-[40%] select-none opacity-[0.12] sm:right-[-2%] sm:h-[46%] lg:right-[6%] lg:h-[76%] lg:opacity-100 xl:right-[10%]"
+      >
+        <div className="flota relative h-full">
+          <img
+            src="/images/g-profesional.png"
+            alt=""
+            width={196}
+            height={314}
+            decoding="async"
+            className="h-full w-auto object-contain object-bottom"
+          />
+          {/* El destello usa la misma imagen como máscara: la luz recorre a la
+              persona y no el rectángulo que la contiene. */}
+          <span
+            className="destello absolute inset-0"
+            style={{ '--silueta': 'url(/images/g-profesional.png)' } as React.CSSProperties}
+          />
+        </div>
+      </div>
+
       <Container className="relative w-full">
         {/*
           El colchón de abajo no es estético: el indicador de scroll va anclado
@@ -34,7 +73,9 @@ export default function Hero() {
           Se reserva justo en el tramo donde el indicador aparece, que es a
           partir de 600px de alto; por debajo no se muestra y el colchón sobra.
         */}
-        <div className="py-16 md:py-24 [@media(min-height:600px)]:pb-36 [@media(max-height:520px)]:py-8">
+        {/* El tope de ancho desde lg deja libre la columna donde va la figura:
+            sin él, el párrafo y los botones le pasarían por encima. */}
+        <div className="py-16 md:py-24 lg:max-w-[58%] [@media(min-height:600px)]:pb-36 [@media(max-height:520px)]:py-8">
           {/* Línea corta al costado del rótulo: el gesto de apertura del
               diseño, más elegante que una regla debajo. */}
           <div
