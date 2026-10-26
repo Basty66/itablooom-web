@@ -1,6 +1,6 @@
-import { CalendarHeart, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { Container } from '../ui/Section';
-import Button from '../ui/Button';
+import BotonLujo from '../ui/BotonLujo';
 import Revelar from '../ui/Revelar';
 import Magnetico from '../ui/Magnetico';
 import PolvoDorado from '../ui/PolvoDorado';
@@ -38,20 +38,18 @@ export default function Cierre() {
         <Revelar delay={160}>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Magnetico className="w-full sm:w-auto">
-              <Button to="/agendar" size="lg" variant="primary" className="w-full sm:w-auto">
-                <CalendarHeart size={18} strokeWidth={1.5} />
+              <BotonLujo to="/agendar" className="w-full sm:w-auto">
                 Reservar mi hora
-              </Button>
+              </BotonLujo>
             </Magnetico>
-            <Button
+            <BotonLujo
               href={linkWhatsApp('Hola! Quiero consultar por un servicio')}
-              size="lg"
-              variant="outline"
+              variante="vidrio"
+              icono={MessageCircle}
               className="w-full sm:w-auto"
             >
-              <MessageCircle size={18} strokeWidth={1.5} />
               Escríbenos
-            </Button>
+            </BotonLujo>
           </div>
         </Revelar>
       </Container>

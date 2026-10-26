@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Mail, Phone, MapPin, Clock3 } from 'lucide-react';
 import { Container } from './ui/Section';
 import IconoInstagram from './ui/IconoInstagram';
@@ -41,6 +41,7 @@ const REDES = [
  * pantalla. Es la firma de la página: lo último que se ve es la marca.
  */
 export default function Footer() {
+  const { pathname } = useLocation();
   return (
     <footer className="textura-papel relative overflow-hidden bg-tinta-950 text-nacar-200">
       {/* Filo de luz en el borde superior, en vez de una línea plana. */}
@@ -56,12 +57,16 @@ export default function Footer() {
       <Container className="relative pt-16 md:pt-20">
         <div className="flex flex-col items-center text-center">
           <Emblema className="h-20 w-20 md:h-24 md:w-24" titulo="Emblema de Goddess Studio" />
+          {/* No repite el "diosa." del cierre, que queda justo encima. */}
           <p className="mt-6 max-w-[22ch] font-display texto-3 text-crema-100">
-            Sal de aquí sintiéndote <span className="texto-metal pr-1 italic">diosa.</span>
+            Te esperamos en <span className="texto-metal pr-1 italic">Melipilla.</span>
           </p>
-          <div className="mt-8">
-            <BotonLujo to="/agendar">Reservar hora</BotonLujo>
-          </div>
+          {/* En la agenda el botón sobra: ya se está reservando. */}
+          {!pathname.startsWith('/agendar') && (
+            <div className="mt-8">
+              <BotonLujo to="/agendar">Reservar hora</BotonLujo>
+            </div>
+          )}
         </div>
 
         <div className="linea-cobre mt-16 grid gap-10 border-t pt-12 sm:grid-cols-2 md:grid-cols-12">
@@ -108,11 +113,13 @@ export default function Footer() {
                   {/* El relleno vertical lleva el alto táctil a 44px. */}
                   <Link
                     to={item.to}
-                    className="group inline-flex items-center gap-2 py-2.5 texto-0 text-nacar-200/85 transition-colors duration-200 hover:text-crema-100"
+                    className="group inline-flex items-center py-2.5 texto-0 text-nacar-200/85 transition-colors duration-200 hover:text-crema-100"
                   >
+                    {/* La raya aparece al pasar el cursor; sin el `gap` fijo, en
+                        reposo el texto queda alineado con su título. */}
                     <span
                       aria-hidden="true"
-                      className="h-px w-0 bg-cobre-300 transition-all duration-300 ease-out group-hover:w-4"
+                      className="mr-0 h-px w-0 bg-cobre-300 transition-all duration-300 ease-out group-hover:mr-2 group-hover:w-4"
                     />
                     {item.label}
                   </Link>

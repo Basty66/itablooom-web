@@ -315,7 +315,7 @@ export default function Hero() {
   return (
     <section
       ref={escena}
-      className="textura-papel isolate flex flex-col overflow-hidden bg-tinta-900 md:min-h-[calc(100svh-4.5rem)]"
+      className="textura-papel relative isolate flex flex-col overflow-hidden bg-tinta-900 md:min-h-[calc(100svh-4.5rem)]"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <span className="aura aura-vino" />

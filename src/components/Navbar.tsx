@@ -1,7 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Phone, Mail } from 'lucide-react';
+import { Menu, X, Phone, Mail, ArrowUpRight } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import Button from './ui/Button';
 import BotonLujo from './ui/BotonLujo';
 import Emblema from './ui/Emblema';
 import IconoInstagram from './ui/IconoInstagram';
@@ -167,9 +166,12 @@ export default function Navbar() {
             abierto ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
           }`}
         >
-          <p className="texto--2 uppercase espaciado-amplio text-rosa-300">Navegación</p>
+          {/* El laurel del emblema, enorme y tenue, detrás de los enlaces. */}
+          <Emblema sinLetra className="pointer-events-none absolute -right-24 top-10 h-[26rem] w-[26rem] opacity-[0.07]" />
 
-          <nav className="mt-6 flex flex-col">
+          <p className="relative texto--2 uppercase espaciado-amplio text-rosa-300">Navegación</p>
+
+          <nav className="relative mt-6 flex flex-col">
             {LINKS.map((link, i) => {
               const activo = location.pathname === link.path;
               return (
@@ -187,29 +189,34 @@ export default function Navbar() {
                     transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
                   }}
                 >
-                  <span className="texto--2 tabular-nums text-rosa-300">0{i + 1}</span>
+                  <span className="texto-metal w-8 font-display texto-1 italic tabular-nums">0{i + 1}</span>
                   <span
-                    className={`font-display texto-3 transition-colors duration-300 ${
-                      activo ? 'text-cobre-400' : 'text-crema-100'
+                    className={`font-display texto-4 leading-none transition-colors duration-300 ${
+                      activo ? 'texto-metal pr-1 italic' : 'text-crema-100'
                     }`}
                   >
                     {link.label}
                   </span>
-                  {activo && (
-                    <span aria-hidden="true" className="ml-auto self-center h-px w-6 bg-cobre-400" />
-                  )}
+                  <ArrowUpRight
+                    size={20}
+                    strokeWidth={1.4}
+                    aria-hidden="true"
+                    className={`ml-auto self-center transition-all duration-300 ${
+                      activo ? 'text-cobre-200' : 'text-nacar-300/50 group-active:rotate-45'
+                    }`}
+                  />
                 </Link>
               );
             })}
           </nav>
 
-          <Button to="/agendar" size="lg" className="mt-8 w-full">
+          <BotonLujo to="/agendar" className="relative mt-8 w-full justify-between">
             Reservar hora
-          </Button>
+          </BotonLujo>
 
           {/* Contacto al pie del panel: en móvil es lo que más se busca
               después de la navegación. */}
-          <div className="linea-cobre mt-auto border-t pt-6">
+          <div className="linea-cobre relative mt-auto border-t pt-6">
             <p className="texto--2 uppercase espaciado-amplio text-nacar-300">Escríbenos</p>
             <div className="mt-4 flex items-center gap-3">
               {[
@@ -223,8 +230,9 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-crema-100/15 text-nacar-200/85 transition-colors duration-200 hover:border-cobre-400 hover:text-cobre-300"
+                  className="relative flex h-11 w-11 items-center justify-center rounded-full text-nacar-200/85 transition-colors duration-200 hover:text-cobre-100 active:scale-95"
                 >
+                  <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
                   <Icono size={17} strokeWidth={1.5} aria-hidden="true" />
                 </a>
               ))}

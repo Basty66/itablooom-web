@@ -66,7 +66,7 @@ export default function Trazo({ forma = 'baja', className = '' }: Props) {
   }, []);
 
   return (
-    <div aria-hidden="true" className={`flex w-full justify-center py-12 md:py-16 ${className}`}>
+    <div aria-hidden="true" className={`flex w-full justify-center py-2 md:py-16 ${className}`}>
       <svg
         viewBox="0 0 340 60"
         className="h-[60px] w-[min(90%,340px)] overflow-visible"

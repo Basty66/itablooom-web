@@ -519,7 +519,13 @@
   }
 
   /* Grano sutil: rompe el plano del crema y da textura de papel. */
-  .textura-papel {
+  /*
+   * Con :where() la regla no pesa nada: un `absolute` o `fixed` del propio
+   * elemento le gana. Antes la textura imponía `relative` y el panel del
+   * menú del teléfono, que es `absolute inset-0`, dejaba de cubrir la
+   * pantalla y se veía el hero por debajo.
+   */
+  :where(.textura-papel) {
     position: relative;
   }
   .textura-papel::after {

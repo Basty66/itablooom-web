@@ -33,7 +33,7 @@ export default function BotonSubir() {
 
   // Cuando el de WhatsApp está en pantalla, este se apila encima.
   const conWhatsApp = RUTAS_CON_WHATSAPP.includes(pathname);
-  const alto = conWhatsApp ? 'bottom-24 sm:bottom-28' : 'bottom-5 sm:bottom-8';
+  const alto = conWhatsApp ? 'bottom-20 sm:bottom-28' : 'bottom-5 sm:bottom-8';
 
   function subir() {
     const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -45,11 +45,14 @@ export default function BotonSubir() {
       type="button"
       onClick={subir}
       aria-label="Volver arriba"
-      className={`vidrio fixed right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-cobre-400/30 text-cobre-300 transition-all duration-500 ease-out hover:border-cobre-400 hover:text-crema-100 active:scale-95 sm:right-8 sm:h-14 sm:w-14 ${alto} ${
+      /* Más chico que el de WhatsApp y centrado sobre él: es la acción
+         secundaria de las dos. */
+      className={`vidrio fixed right-[1.125rem] z-40 flex h-11 w-11 items-center justify-center rounded-full text-cobre-200 transition-all duration-500 ease-out hover:text-crema-100 active:scale-95 sm:right-[2.125rem] sm:h-12 sm:w-12 ${alto} ${
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
       }`}
     >
-      <ArrowUp size={20} strokeWidth={1.5} aria-hidden="true" />
+      <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
+      <ArrowUp size={18} strokeWidth={1.5} aria-hidden="true" />
     </button>
   );
 }

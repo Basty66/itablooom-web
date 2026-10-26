@@ -35,11 +35,12 @@ export default function BotonWhatsApp() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Consultar por WhatsApp"
-      className={`vidrio fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full border border-rosa-300/30 text-rosa-300 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] transition-all duration-500 ease-out hover:border-rosa-300 hover:text-crema-100 active:scale-95 sm:bottom-8 sm:right-8 ${
+      className={`vidrio fixed bottom-5 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full text-cobre-100 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] transition-all duration-500 ease-out hover:text-crema-100 active:scale-95 sm:bottom-8 sm:right-8 sm:h-14 sm:w-14 ${
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
       }`}
     >
-      <MessageCircle size={22} strokeWidth={1.5} aria-hidden="true" />
+      <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+      <MessageCircle size={20} strokeWidth={1.5} aria-hidden="true" />
     </a>
   );
 }

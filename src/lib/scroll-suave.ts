@@ -9,9 +9,7 @@ let lenis: Lenis | null = null;
  * Desplazamiento con inercia (Lenis) para el sitio público.
  *
  * La rueda y el trackpad dejan de avanzar a saltos de cien píxeles: la
- * página se desliza y se asienta. El `lerp` bajo es lo que la hace sentir
- * lenta y pesada como una revista, y no apurada; más bajo empieza a sentirse
- * como que el scroll llega tarde.
+ * página se desliza y se asienta.
  *
  * En pantallas táctiles queda el desplazamiento nativo: en un iPhone el
  * scroll del sistema ya es el más fluido posible y uno simulado lo empeora.
@@ -25,7 +23,13 @@ export function useScrollSuave(activo: boolean) {
 
     const instancia = new Lenis({
       autoRaf: true,
-      lerp: 0.085,
+      /*
+       * Cada movimiento de la rueda avanza un 15% menos y la página tarda un
+       * poco más en asentarse: se siente más lenta y pesada, como pasar las
+       * hojas de una revista, sin llegar a sentirse atrasada.
+       */
+      lerp: 0.07,
+      wheelMultiplier: 0.85,
       // Zonas con scroll propio usan el nativo.
       prevent: (nodo) => Boolean((nodo as HTMLElement).closest?.('[data-lenis-prevent], textarea, select')),
     });
