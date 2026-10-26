@@ -1,7 +1,7 @@
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import {
   CheckCircle2, CalendarDays, Clock3, Sparkles, XCircle,
-  ArrowLeft, MessageCircle, Loader2, MapPin, CreditCard,
+  MessageCircle, Loader2, MapPin, CreditCard,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -9,7 +9,8 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Booking } from '../types';
 import { getBookingById, checkPaymentStatus } from '../lib/api';
 import { formatPrice } from '../lib/format';
-import Button from '../components/ui/Button';
+import BotonLujo from '../components/ui/BotonLujo';
+import Emblema from '../components/ui/Emblema';
 import { Container } from '../components/ui/Section';
 import { linkWhatsApp, CIUDAD } from '../lib/contacto';
 
@@ -37,16 +38,26 @@ function Estado({
   tono?: 'exito' | 'error';
 }) {
   const Icono = icono;
+  /*
+   * El ícono dentro del laurel del emblema: en metal lleno si salió bien,
+   * solo con el canto si no. El mismo gesto que el resto del sitio, para
+   * que el cierre de la compra no se sienta como otra página.
+   */
   return (
     <div className="text-center">
-      <span
-        className={`anim-velo mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border ${
-          tono === 'exito'
-            ? 'border-rosa-300/40 bg-rosa-300/10 text-rosa-300'
-            : 'border-cobre-400/40 bg-tinta-850 text-cobre-300'
-        }`}
-      >
-        <Icono size={32} strokeWidth={1.3} aria-hidden="true" />
+      <span className="anim-velo relative mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full">
+        <Emblema sinLetra className="absolute -inset-7 opacity-70" />
+        {tono === 'exito' ? (
+          <span aria-hidden="true" className="boton-metal absolute inset-0 rounded-full" />
+        ) : (
+          <span aria-hidden="true" className="pointer-events-none canto-metal activo absolute inset-0 rounded-full" />
+        )}
+        <Icono
+          size={34}
+          strokeWidth={1.4}
+          aria-hidden="true"
+          className={`relative ${tono === 'exito' ? 'text-vino-900' : 'text-cobre-100'}`}
+        />
       </span>
       <h1 className="texto-4 text-crema-100">{titulo}</h1>
       <p className="mx-auto mt-3 max-w-md text-nacar-200/80">{texto}</p>
@@ -60,18 +71,17 @@ function Acciones({ bookingId, email }: { bookingId?: string; email?: string }) 
     : '/reagendar';
 
   return (
-    <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-      <Button to="/" variant="outline" size="md">
-        <ArrowLeft size={17} strokeWidth={1.5} />
-        Volver al inicio
-      </Button>
-      <Button to={rescheduleUrl} variant="ghost" size="md">
+    <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+      <BotonLujo to="/">Volver al inicio</BotonLujo>
+      <BotonLujo href={WHATSAPP} variante="vidrio" icono={MessageCircle}>
+        Escríbenos
+      </BotonLujo>
+      <Link
+        to={rescheduleUrl}
+        className="py-3 texto--1 uppercase espaciado-medio text-nacar-300 transition-colors hover:text-crema-100"
+      >
         Reagendar cita
-      </Button>
-      <Button href={WHATSAPP} variant="secondary" size="md">
-        <MessageCircle size={17} strokeWidth={1.5} />
-        Escríbenos por WhatsApp
-      </Button>
+      </Link>
     </div>
   );
 }
@@ -125,7 +135,7 @@ export default function ConfirmationPage() {
 
   if (status === 'failure') {
     return (
-      <div className="flex min-h-screen items-center bg-tinta-900 py-16">
+      <div className="luz-vino flex min-h-screen items-center py-16">
         <Container className="max-w-xl">
           <Estado
             icono={XCircle}
@@ -133,10 +143,11 @@ export default function ConfirmationPage() {
             titulo="El pago no se completó"
             texto="No se realizó ningún cobro y el horario quedó disponible otra vez. Puedes intentarlo nuevamente cuando quieras."
           />
-          <div className="mt-8 flex justify-center">
-            <Button to="/agendar" size="md">
-              Intentar nuevamente
-            </Button>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <BotonLujo to="/agendar">Intentar de nuevo</BotonLujo>
+            <BotonLujo href={WHATSAPP} variante="vidrio" icono={MessageCircle}>
+              Escríbenos
+            </BotonLujo>
           </div>
         </Container>
       </div>
@@ -145,7 +156,7 @@ export default function ConfirmationPage() {
 
   if (!booking) {
     return (
-      <div className="flex min-h-screen items-center bg-tinta-900 py-16">
+      <div className="luz-vino flex min-h-screen items-center py-16">
         <Container className="max-w-xl">
           <Estado
             icono={CheckCircle2}

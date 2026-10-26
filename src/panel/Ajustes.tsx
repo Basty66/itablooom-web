@@ -25,6 +25,14 @@ import {
 } from './avisos';
 import { alCambiarInstalacion, type EventoInstalar } from './instalacion';
 
+/** Lo que puede salir mal al activar los avisos, dicho en español. */
+function mensajeAvisos(e: unknown): string {
+  const nombre = (e as { name?: string })?.name;
+  if (nombre === 'NotAllowedError') return 'El teléfono no permitió los avisos. Revisa los permisos de la app.';
+  if (nombre === 'AbortError') return 'El servicio de avisos no respondió. Intenta de nuevo en un rato.';
+  return 'No se pudieron activar los avisos. Intenta de nuevo.';
+}
+
 /** Tarjeta de ajuste: ícono en anillo de metal, título, texto y acciones. */
 function Tarjeta({
   icono: Icono,
@@ -111,9 +119,24 @@ export default function Ajustes({ onSalir }: { onSalir: () => void }) {
       if (estaHuella) await quitarHuella();
       else await activarHuella();
       setLlaves((await panelApi.llaves()).llaves);
-      setMensajeH(estaHuella ? `${nombreHuella()} desactivado en este teléfono.` : `Listo: ya puedes entrar con ${nombreHuella()}.`);
+      setMensajeH(estaHuella ? `${tituloHuella()}: desactivado en este teléfono.` : `Listo: ya puedes entrar con ${nombreHuella()}.`);
     } catch (e) {
       setMensajeH(mensajeHuella(e));
+    } finally {
+      setOcupadoHuella(false);
+    }
+  }
+
+  /* Para un teléfono perdido o cambiado: su llave se quita desde acá. */
+  async function quitarDeOtro(id: string) {
+    setOcupadoHuella(true);
+    setMensajeH('');
+    try {
+      await panelApi.acceso('quitar-llave', { id });
+      setLlaves((await panelApi.llaves()).llaves);
+      setMensajeH('Aparato quitado: ya no puede entrar con su biometría.');
+    } catch (e) {
+      setMensajeH(e instanceof Error ? e.message : 'No se pudo quitar.');
     } finally {
       setOcupadoHuella(false);
     }
@@ -135,7 +158,7 @@ export default function Ajustes({ onSalir }: { onSalir: () => void }) {
         }
       }
     } catch (e) {
-      setMensajeA(e instanceof Error ? e.message : 'No se pudo cambiar.');
+      setMensajeA(mensajeAvisos(e));
     } finally {
       setOcupadoAvisos(false);
     }
@@ -190,11 +213,22 @@ export default function Ajustes({ onSalir }: { onSalir: () => void }) {
           {mensajeH && <p className="mt-3 texto--1 text-cobre-200">{mensajeH}</p>}
           {llaves && llaves.length > 0 && (
             <ul className="linea-cobre mt-5 space-y-2 border-t pt-4 texto--1 text-nacar-300">
-              {llaves.map((l, i) => (
-                <li key={i} className="flex items-center gap-2">
+              {llaves.map((l) => (
+                <li key={l.id} className="flex items-center gap-2">
                   <Smartphone size={14} strokeWidth={1.5} aria-hidden="true" />
                   {l.aparato ?? 'Aparato'}
-                  {l.esta && <span className="text-cobre-200">· este</span>}
+                  {l.esta ? (
+                    <span className="text-cobre-200">· este</span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => quitarDeOtro(l.id)}
+                      disabled={ocupadoHuella}
+                      className="ml-auto rounded-full px-3 py-1.5 texto--2 uppercase espaciado-medio text-nacar-300 transition-colors hover:text-crema-100 disabled:opacity-50"
+                    >
+                      Quitar
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

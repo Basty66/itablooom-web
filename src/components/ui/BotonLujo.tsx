@@ -7,6 +7,8 @@ interface Props {
   to?: string;
   /** Enlace externo: abre en otra pestaña. */
   href?: string;
+  /** Sin destino: es un botón que hace algo (recargar, por ejemplo). */
+  onClick?: () => void;
   /** `metal` es la acción principal; `vidrio`, la que la acompaña. */
   variante?: 'metal' | 'vidrio';
   tamano?: 'sm' | 'lg';
@@ -32,6 +34,7 @@ export default function BotonLujo({
   variante = 'metal',
   tamano = 'lg',
   icono: Icono,
+  onClick,
   className = '',
 }: Props) {
   const metal = variante === 'metal';
@@ -85,6 +88,13 @@ export default function BotonLujo({
     </>
   );
 
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={clases}>
+        {contenido}
+      </button>
+    );
+  }
   if (href) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={clases}>

@@ -29,6 +29,7 @@ type Sql = NeonQueryFunction<false, false>;
  *   POST { accion: 'opciones-entrada' }   → desafío para entrar
  *   POST { accion: 'entrar', respuesta }  → abre la sesión
  *   POST { accion: 'quitar' }             → desactiva en este teléfono
+ *   POST { accion: 'quitar-llave', id }   → quita la de otro aparato (uno perdido)
  *
  * La biometría nunca sale del teléfono: la cara o la huella desbloquean una
  * llave privada guardada en el propio aparato, que firma un desafío. Acá
@@ -126,8 +127,10 @@ export default async function acceso(req: VercelRequest, res: VercelResponse, sq
       const llaves = (await sql`
         SELECT id, aparato, creado_en, ultimo_uso FROM admin_llaves ORDER BY creado_en
       `) as { id: string; aparato: string | null; creado_en: string; ultimo_uso: string | null }[];
+      /* El id de la llave no es secreto —es un identificador público de
+         WebAuthn— y hace falta para quitar la de un teléfono perdido. */
       return res.status(200).json({
-        llaves: llaves.map(({ id, ...resto }) => ({ ...resto, esta: id === deEsteAparato })),
+        llaves: llaves.map((l) => ({ ...l, esta: l.id === deEsteAparato })),
       });
     }
 
@@ -237,6 +240,15 @@ export default async function acceso(req: VercelRequest, res: VercelResponse, sq
         if (await exigirSesion(req, res)) return;
         if (deEsteAparato) await sql`DELETE FROM admin_llaves WHERE id = ${deEsteAparato}`;
         agregarCookie(res, cookieSegura(COOKIE_HUELLA, '', 0));
+        return res.status(200).json({ ok: true });
+      }
+
+      case 'quitar-llave': {
+        if (await exigirSesion(req, res)) return;
+        const id = String(cuerpo.id ?? '');
+        if (!id) return res.status(400).json({ error: 'Falta el aparato.' });
+        await sql`DELETE FROM admin_llaves WHERE id = ${id}`;
+        if (id === deEsteAparato) agregarCookie(res, cookieSegura(COOKIE_HUELLA, '', 0));
         return res.status(200).json({ ok: true });
       }
 

@@ -40,6 +40,7 @@ export interface EstadoSesion {
 }
 
 export interface LlaveActivada {
+  id: string;
   aparato: string | null;
   creado_en: string;
   ultimo_uso: string | null;

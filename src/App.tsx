@@ -4,6 +4,10 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BotonWhatsApp from './components/ui/BotonWhatsApp';
 import BotonSubir from './components/ui/BotonSubir';
+import BotonLujo from './components/ui/BotonLujo';
+import PantallaEstado from './components/PantallaEstado';
+import { linkWhatsApp } from './lib/contacto';
+import { Sparkles, RefreshCw, MessageCircle } from 'lucide-react';
 import { useScrollSuave, desplazarA } from './lib/scroll-suave';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
@@ -20,21 +24,41 @@ function ScrollToTop() {
   return null;
 }
 
+/**
+ * Página que no existe. Con humor de la casa y tres salidas a la vista: una
+ * dirección rota no tiene por qué ser el final de la visita.
+ */
 function NotFound() {
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-      <p className="texto-5 font-display text-crema-100">404</p>
-      <p className="mt-3 texto-1 text-nacar-200/80">Esta página no existe</p>
-      <Link
-        to="/"
-        className="brillo brillo-hover mt-8 inline-flex items-center rounded-[var(--radius-suave)] bg-rosa-300 px-7 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 hover:bg-rosa-200 active:scale-[0.98]"
-      >
-        Volver al inicio
-      </Link>
-    </div>
+    <PantallaEstado
+      codigo="404"
+      rotulo="Página no encontrada"
+      titulo="Esta página se fue a hacer las"
+      acento="uñas."
+      texto="La dirección no existe o cambió. Tu próxima cita, en cambio, sí te está esperando."
+      extra={
+        <>
+          <Link to="/agendar" className="py-2 transition-colors hover:text-crema-100">
+            Agendar hora
+          </Link>
+          <a href={linkWhatsApp('Hola! Llegué a una página que no existe')} target="_blank" rel="noopener noreferrer" className="py-2 transition-colors hover:text-crema-100">
+            WhatsApp
+          </a>
+        </>
+      }
+    >
+      <BotonLujo to="/">Volver al inicio</BotonLujo>
+      <BotonLujo to="/servicios" variante="vidrio" icono={Sparkles}>
+        Ver servicios
+      </BotonLujo>
+    </PantallaEstado>
   );
 }
 
+/**
+ * Si algo de la página se cae, se muestra esto en vez de una pantalla en
+ * blanco. El error es del sitio, no de la clienta, y el mensaje lo dice.
+ */
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
 
@@ -45,16 +69,18 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-          <p className="texto-3 font-display text-crema-100">Algo salió mal</p>
-          <p className="mt-3 texto-0 text-nacar-200/80">Intenta recargar la página.</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="brillo brillo-hover mt-8 inline-flex items-center rounded-[var(--radius-suave)] bg-rosa-300 px-7 py-3.5 texto--1 font-medium uppercase espaciado-medio text-vino-900 transition-all duration-300 hover:bg-rosa-200 active:scale-[0.98]"
-          >
-            Recargar
-          </button>
-        </div>
+        <PantallaEstado
+          icono={RefreshCw}
+          rotulo="Algo no cargó bien"
+          titulo="Fue un error"
+          acento="nuestro."
+          texto="No es nada que hayas hecho tú. Recarga la página; si se repite, escríbenos y te agendamos por WhatsApp."
+        >
+          <BotonLujo onClick={() => window.location.reload()}>Recargar</BotonLujo>
+          <BotonLujo href={linkWhatsApp('Hola! La página me dio un error')} variante="vidrio" icono={MessageCircle}>
+            Escríbenos
+          </BotonLujo>
+        </PantallaEstado>
       );
     }
     return this.props.children;
