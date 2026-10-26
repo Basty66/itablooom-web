@@ -1,17 +1,24 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { verificarPassword, crearToken, cookieSesion, cookieCierre, haySesion } from '../../_shared/auth.js';
+import type { NeonQueryFunction } from '@neondatabase/serverless';
+import { verificarPassword, crearToken, cookieSesion, cookieCierre, haySesion } from '../auth.js';
+import { hayHuellaEnEsteAparato } from './acceso.js';
+
+type Sql = NeonQueryFunction<false, false>;
 
 /**
- * GET    -> ¿hay sesión activa?
+ * GET    -> ¿hay sesión activa? ¿y Face ID en este teléfono?
  * POST   -> iniciar sesión con la contraseña
  * DELETE -> cerrar sesión
  *
  * La contraseña nunca vuelve al cliente y el token viaja solo en una cookie
  * HttpOnly, así que el JavaScript de la página jamás lo ve.
  */
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function sesion(req: VercelRequest, res: VercelResponse, sql: Sql) {
   if (req.method === 'GET') {
-    return res.status(200).json({ activa: await haySesion(req) });
+    /* `huella` le dice a la pantalla de acceso si ofrecer Face ID primero:
+       solo en el teléfono donde se activó. */
+    const [activa, huella] = await Promise.all([haySesion(req), hayHuellaEnEsteAparato(sql, req)]);
+    return res.status(200).json({ activa, huella });
   }
 
   if (req.method === 'POST') {

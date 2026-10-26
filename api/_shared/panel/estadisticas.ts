@@ -1,12 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { neon } from '@neondatabase/serverless';
-import { exigirSesion } from '../../_shared/auth.js';
+import type { NeonQueryFunction } from '@neondatabase/serverless';
+import { exigirSesion } from '../auth.js';
 
-const sql = neon(process.env.DATABASE_URL!);
+type Sql = NeonQueryFunction<false, false>;
 
 const CATEGORIAS_GASTO = ['materiales', 'arriendo', 'servicios', 'publicidad', 'otros'] as const;
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function estadisticas(req: VercelRequest, res: VercelResponse, sql: Sql) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (await exigirSesion(req, res)) return;
 

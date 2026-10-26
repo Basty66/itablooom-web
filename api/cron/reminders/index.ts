@@ -1,6 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
 import { Resend } from 'resend';
+import { avisarSinDemorar } from '../../_shared/avisos.js';
+import { RUTA_PANEL } from '../../_shared/ruta.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -25,6 +27,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!isVercelCron && !hasValidToken) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
+
+  // El resumen va antes que los correos: no depende de Resend.
+  await resumenDelDia();
 
   if (!resend) {
     console.error('RESEND_API_KEY no configurado, no se pueden enviar recordatorios');
@@ -111,7 +116,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         <tr><td style="background-color:#14100e;padding:32px 32px 28px;text-align:center;">
           <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e9b4b9;font-weight:500;">Goddess Studio</p>
-          <h1 style="margin:0;font-size:20px;font-weight:600;color:#faf6ef;">Tu cita es mañana</h1>
+          <h1 style="margin:0;font-size:20px;font-weight:600;color:#faf6ef;">Cita mañana</h1>
         </td></tr>
 
         <tr><td style="padding:28px 32px;text-align:center;">
@@ -179,5 +184,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error) {
     console.error('Cron reminders error:', error);
     return res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+/**
+ * Resumen de la mañana al teléfono de Ignacia: cuántas citas tiene hoy y a
+ * qué hora, para empezar el día sin abrir el panel. El día se cuenta en hora
+ * de Chile, no en la del servidor, que corre en UTC. Si no hay citas no
+ * avisa: un "hoy no tienes nada" cada mañana termina enseñando a ignorar
+ * los avisos.
+ */
+async function resumenDelDia(): Promise<void> {
+  try {
+    const citas = (await sql`
+      SELECT b.booking_time, b.client_name, s.name AS servicio
+      FROM bookings b
+      JOIN services s ON s.id = b.service_id
+      WHERE b.status = 'confirmed'
+        AND b.booking_date = (now() AT TIME ZONE 'America/Santiago')::date
+      ORDER BY b.booking_time
+    `) as { booking_time: string | null; client_name: string; servicio: string }[];
+    if (citas.length === 0) return;
+
+    const lista = citas
+      .slice(0, 4)
+      .map((c) => `${String(c.booking_time ?? '').slice(0, 5)} ${c.servicio}`)
+      .join(' · ');
+    await avisarSinDemorar(sql, {
+      titulo: citas.length === 1 ? 'Hoy tienes 1 cita' : `Hoy tienes ${citas.length} citas`,
+      cuerpo: citas.length > 4 ? `${lista} y ${citas.length - 4} más` : lista,
+      url: `${RUTA_PANEL}/?fecha=hoy`,
+      tag: 'resumen-del-dia',
+    });
+  } catch (error) {
+    console.error('No se pudo enviar el resumen del día:', error);
   }
 }

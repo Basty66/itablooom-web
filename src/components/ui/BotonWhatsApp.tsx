@@ -4,7 +4,7 @@ import { MessageCircle } from 'lucide-react';
 import { linkWhatsApp } from '../../lib/contacto';
 
 /** Rutas donde estorbaría: el agendador ya tiene su barra fija abajo. */
-const RUTAS_OCULTAS = ['/agendar', '/admin', '/reagendar'];
+const RUTAS_OCULTAS = ['/agendar', '/reagendar'];
 
 /**
  * Acceso directo a WhatsApp, flotando sobre el contenido.

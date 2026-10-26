@@ -1,6 +1,6 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone, Mail, ArrowUpRight } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import BotonLujo from './ui/BotonLujo';
 import Emblema from './ui/Emblema';
 import IconoInstagram from './ui/IconoInstagram';
@@ -12,38 +12,11 @@ const LINKS = [
   { path: '/agendar', label: 'Agendar' },
 ];
 
-/** Toques seguidos sobre la marca para entrar al panel, y ventana para darlos. */
-const TOQUES_PANEL = 3;
-const VENTANA_TOQUES_MS = 1200;
 
 export default function Navbar() {
   const [abierto, setAbierto] = useState(false);
   const [conScroll, setConScroll] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
-
-  /*
-   * Atajo al panel: tres toques sobre la marca.
-   *
-   * Ignacia entra desde su teléfono varias veces al día y escribir la ruta a
-   * mano es incómodo. No es una medida de seguridad —la ruta sigue siendo
-   * pública y protegida por contraseña—, solo evita el tipeo. La ventana de
-   * tiempo hace que tres toques sueltos a lo largo de la visita no cuenten.
-   */
-  const toques = useRef<number[]>([]);
-  function contarToque(e: React.MouseEvent) {
-    const ahora = Date.now();
-    toques.current = [...toques.current, ahora].filter((t) => ahora - t < VENTANA_TOQUES_MS);
-    if (toques.current.length >= TOQUES_PANEL) {
-      toques.current = [];
-      /*
-       * Cortar la navegación del enlace: sin esto el Link seguía su curso a la
-       * portada justo después, deshaciendo el salto al panel.
-       */
-      e.preventDefault();
-      navigate('/admin');
-    }
-  }
 
   useEffect(() => {
     const alScrollear = () => setConScroll(window.scrollY > 16);
@@ -88,7 +61,7 @@ export default function Navbar() {
           {/* La marca completa en serif, con "Studio" en itálica rosa: en el
               boceto es una sola palabra compuesta, no un logo con bajada en
               versalitas. */}
-          <Link to="/" onClick={contarToque} className="group flex items-center gap-2.5">
+          <Link to="/" className="group flex items-center gap-2.5">
             {/* El emblema gira apenas al pasar el cursor, como una moneda que
                 se ladea a la luz. */}
             <Emblema className="h-9 w-9 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-[10deg] md:h-10 md:w-10" />

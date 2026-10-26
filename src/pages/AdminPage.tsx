@@ -1,21 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useCallback, type ReactNode } from 'react';
 import {
-  CalendarDays, Search, LogOut, Loader2, Inbox, AlertCircle, TrendingUp,
-  Users, Star, DollarSign, LayoutDashboard, Wallet, CalendarClock, Sparkles, ExternalLink,
+  CalendarDays, Search, LogOut, Inbox, AlertCircle, TrendingUp,
+  Users, Star, DollarSign, LayoutDashboard, Wallet, CalendarClock, Sparkles, ExternalLink, Settings2,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Booking } from '../types';
-import { getBookingsByDate, adminSesionActiva, adminSalir, getAdminStats, saldoPendiente, type AdminStats } from '../lib/api';
+import { getBookingsByDate, getAdminStats, saldoPendiente, type AdminStats } from '../lib/api';
 import { formatPrice } from '../lib/format';
 import { Skeleton } from '../components/ui/Skeleton';
-import LoginGate from '../components/admin/LoginGate';
 import Bloqueos from '../components/admin/Bloqueos';
 import Galeria from '../components/admin/Galeria';
 import Finanzas from '../components/admin/Finanzas';
 import Gastos from '../components/admin/Gastos';
 import CitaFila from '../components/admin/CitaFila';
+import Emblema from '../components/ui/Emblema';
 
 /** Parsea booking_date sin importar si viene como string ISO o Date. */
 function parseBookingDate(raw: string | Date | null | undefined): Date | null {
@@ -36,6 +35,7 @@ const SECCIONES = [
   { id: 'resumen', label: 'Resumen', icono: LayoutDashboard },
   { id: 'agenda', label: 'Agenda', icono: CalendarClock },
   { id: 'finanzas', label: 'Finanzas', icono: Wallet },
+  { id: 'ajustes', label: 'Ajustes', icono: Settings2 },
 ] as const;
 
 type Seccion = (typeof SECCIONES)[number]['id'];
@@ -127,20 +127,35 @@ function TarjetaMetrica({
   );
 }
 
-export default function AdminPage() {
-  const [autenticado, setAutenticado] = useState<boolean | null>(null);
-  const [seccion, setSeccion] = useState<Seccion>('resumen');
-  const [fecha, setFecha] = useState(format(new Date(), 'yyyy-MM-dd'));
+/**
+ * Día que pide la URL: los avisos abren el panel con `?fecha=2026-10-27`
+ * (una reserva nueva) o `?fecha=hoy` (el resumen de la mañana).
+ */
+function fechaDeLaUrl(): string | null {
+  const pedida = new URLSearchParams(window.location.search).get('fecha');
+  if (!pedida) return null;
+  if (pedida === 'hoy') return format(new Date(), 'yyyy-MM-dd');
+  return /^\d{4}-\d{2}-\d{2}$/.test(pedida) ? pedida : null;
+}
+
+interface Props {
+  /** La sesión venció o la cerró ella: vuelve a la pantalla de acceso. */
+  onSalir: () => void;
+  /** La API respondió 401 en medio del uso. */
+  onSesionVencida: () => void;
+  /** Contenido de la sección Ajustes: Face ID, avisos e instalación. */
+  ajustes: ReactNode;
+}
+
+export default function AdminPage({ onSalir, onSesionVencida, ajustes }: Props) {
+  const [seccion, setSeccion] = useState<Seccion>(() => (fechaDeLaUrl() ? 'agenda' : 'resumen'));
+  const [fecha, setFecha] = useState(() => fechaDeLaUrl() ?? format(new Date(), 'yyyy-MM-dd'));
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [cargando, setCargando] = useState(true);
   const [busqueda, setBusqueda] = useState('');
   const [error, setError] = useState('');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [cargandoStats, setCargandoStats] = useState(true);
-
-  useEffect(() => {
-    adminSesionActiva().then(setAutenticado);
-  }, []);
 
   const cargar = useCallback(async () => {
     setCargando(true);
@@ -149,12 +164,12 @@ export default function AdminPage() {
       setBookings(await getBookingsByDate(fecha));
     } catch (e: any) {
       setBookings([]);
-      if (String(e?.message).includes('401')) setAutenticado(false);
+      if (String(e?.message).includes('401')) onSesionVencida();
       else setError('No pudimos cargar la agenda. Reintenta en unos segundos.');
     } finally {
       setCargando(false);
     }
-  }, [fecha]);
+  }, [fecha, onSesionVencida]);
 
   const cargarStats = useCallback(async () => {
     setCargandoStats(true);
@@ -164,32 +179,11 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    if (autenticado) {
-      cargar();
-      cargarStats();
-    }
-  }, [autenticado, cargar, cargarStats]);
+    cargar();
+    cargarStats();
+  }, [cargar, cargarStats]);
 
-  async function salir() {
-    try {
-      await adminSalir();
-    } finally {
-      setAutenticado(false);
-      setBookings([]);
-      setStats(null);
-    }
-  }
-
-  if (autenticado === null) {
-    return (
-      <div className="flex min-h-[70vh] items-center justify-center bg-tinta-900">
-        <Loader2 size={30} strokeWidth={1.3} className="animate-spin text-cobre-500" aria-hidden="true" />
-        <span className="sr-only">Verificando sesión…</span>
-      </div>
-    );
-  }
-
-  if (!autenticado) return <LoginGate onEntrar={() => setAutenticado(true)} />;
+  const salir = onSalir;
 
   const visibles = bookings.filter((b) => {
     const q = busqueda.toLowerCase();
@@ -237,15 +231,15 @@ export default function AdminPage() {
         {/* La marca va igual que en el resto del sitio —crema y rosa— y no en
             un cobre propio del panel, que hacía parecer otra aplicación. */}
         <div className="mb-10 px-7">
-          <div className="flex items-baseline gap-2">
-            <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
-              Goddess
-            </span>
-            <span className="texto--1 uppercase tracking-[0.25em] text-rosa-300">Studio</span>
+          <div className="flex items-center gap-3">
+            <Emblema className="h-11 w-11 shrink-0" />
+            <div>
+              <p className="font-display texto-2 leading-none text-crema-100">
+                Goddess <span className="texto-metal pr-0.5 italic">Studio</span>
+              </p>
+              <p className="mt-1.5 texto--2 uppercase espaciado-amplio text-nacar-300">Mi estudio</p>
+            </div>
           </div>
-          <p className="mt-1.5 texto--2 uppercase espaciado-amplio text-nacar-300">
-            Panel del estudio
-          </p>
         </div>
 
         <nav aria-label="Secciones del panel" className="flex flex-1 flex-col gap-1">
@@ -259,7 +253,7 @@ export default function AdminPage() {
                 aria-current={activa ? 'page' : undefined}
                 className={`flex items-center gap-4 border-l-2 px-7 py-4 texto--1 uppercase espaciado-medio transition-all duration-300 ${
                   activa
-                    ? 'border-rosa-300 bg-rosa-300/10 text-rosa-300'
+                    ? 'border-cobre-300 bg-cobre-400/10 text-cobre-100'
                     : 'border-transparent text-nacar-200/80 hover:bg-tinta-880 hover:text-crema-100'
                 }`}
               >
@@ -271,13 +265,13 @@ export default function AdminPage() {
 
           {/* Volver al sitio sin cerrar la sesión: desde el panel no había
               forma de ir al público más que escribiendo la dirección. */}
-          <Link
-            to="/"
+          <a
+            href="/"
             className="mt-auto flex items-center gap-4 border-l-2 border-transparent px-7 py-4 texto--1 uppercase espaciado-medio text-nacar-200/80 transition-colors duration-300 hover:bg-tinta-880 hover:text-crema-100"
           >
             <ExternalLink size={18} strokeWidth={1.5} aria-hidden="true" />
             Ver el sitio
-          </Link>
+          </a>
 
           <button
             type="button"
@@ -299,32 +293,44 @@ export default function AdminPage() {
         */}
         <header className="vidrio sticky top-0 z-30 border-b">
           <div className="flex items-center justify-between gap-3 px-5 pb-3 pt-4 sm:px-6 lg:hidden">
-            <div className="flex items-baseline gap-2">
-              <span className="font-display texto-1 font-medium tracking-tight text-crema-100">
-                Goddess
-              </span>
-              <span className="texto--2 uppercase tracking-[0.25em] text-rosa-300">Studio</span>
+            <div className="flex items-center gap-2.5">
+              <Emblema className="h-9 w-9 shrink-0" />
+              <div>
+                <p className="font-display texto-1 leading-none text-crema-100">
+                  Goddess <span className="texto-metal pr-0.5 italic">Studio</span>
+                </p>
+                <p className="mt-1 texto--2 uppercase espaciado-amplio text-nacar-300">
+                  {SECCIONES.find((x) => x.id === seccion)?.label}
+                </p>
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <Link
-                to="/"
-                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-suave)] border border-cobre-400/40 text-nacar-200/85 transition-all duration-200 hover:border-cobre-400 hover:text-crema-100 active:scale-95"
+              <a
+                href="/"
+                className="relative flex h-10 w-10 items-center justify-center rounded-full text-nacar-200/85 transition-all duration-200 hover:text-crema-100 active:scale-95"
                 aria-label="Ver el sitio"
               >
+                <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
                 <ExternalLink size={15} strokeWidth={1.5} aria-hidden="true" />
-              </Link>
+              </a>
               <button
                 onClick={salir}
-                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-suave)] border border-cobre-400/40 text-nacar-200/85 transition-all duration-200 hover:border-cobre-400 hover:text-crema-100 active:scale-95"
+                className="relative flex h-10 w-10 items-center justify-center rounded-full text-nacar-200/85 transition-all duration-200 hover:text-crema-100 active:scale-95"
                 aria-label="Cerrar sesión"
               >
+                <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
                 <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
               </button>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 px-5 pb-4 sm:px-6 lg:py-4">
+          {/* Buscar y elegir día no tienen sentido en Ajustes. */}
+          <div
+            className={`flex-wrap items-center justify-between gap-3 px-5 pb-4 sm:px-6 lg:py-4 ${
+              seccion === 'ajustes' ? 'hidden lg:invisible lg:flex' : 'flex'
+            }`}
+          >
             <div className="flex w-full flex-1 items-center gap-3 lg:w-auto lg:justify-end">
               <label className="relative min-w-0 flex-1 lg:flex-none">
                 <span className="sr-only">Buscar clienta</span>
@@ -363,30 +369,11 @@ export default function AdminPage() {
           </div>
 
           {/* Pestañas equivalentes a la barra lateral, solo en móvil. */}
-          <nav aria-label="Secciones del panel" className="sin-barra flex gap-2 overflow-x-auto px-5 pb-3 sm:px-6 lg:hidden">
-            {SECCIONES.map(({ id, label, icono: Icono }) => {
-              const activa = seccion === id;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setSeccion(id)}
-                  aria-current={activa ? 'page' : undefined}
-                  className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 texto--2 uppercase espaciado-medio transition-colors duration-300 ${
-                    activa ? 'bg-rosa-300/15 text-rosa-300' : 'text-nacar-300 hover:text-crema-100'
-                  }`}
-                >
-                  <Icono size={14} strokeWidth={1.5} aria-hidden="true" />
-                  {label}
-                </button>
-              );
-            })}
-          </nav>
         </header>
 
         {/* Tope de ancho: sin él, en un monitor grande las tarjetas de
             métrica y la agenda se estiran hasta perder el ritmo de lectura. */}
-        <main className="mx-auto max-w-[1400px] px-5 py-8 sm:px-6 md:py-10">
+        <main className="mx-auto max-w-[1400px] px-5 pb-32 pt-8 sm:px-6 md:pt-10 lg:pb-10">
           {seccion === 'resumen' && (
             <>
               <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -529,7 +516,7 @@ export default function AdminPage() {
           {seccion === 'agenda' && (
             <>
               <div className="mb-8">
-                <h1 className="font-display texto-4 capitalize text-crema-100">
+                <h1 className="font-display texto-4 text-crema-100 first-letter:uppercase">
                   {format(parseBookingDate(fecha) || new Date(), "EEEE d 'de' MMMM", { locale: es })}
                 </h1>
                 <p className="mt-1 texto-0 text-nacar-200/80">
@@ -584,8 +571,45 @@ export default function AdminPage() {
               <Galeria />
             </>
           )}
+
+          {seccion === 'ajustes' && ajustes}
         </main>
       </div>
+
+      {/*
+        En el teléfono, las secciones van en una barra fija abajo, al alcance
+        del pulgar, como en cualquier app. Antes eran pestañas arriba, bajo el
+        encabezado: con el teléfono en una mano había que estirar el dedo
+        hasta el borde opuesto para cambiar de sección.
+      */}
+      <nav
+        aria-label="Secciones del panel"
+        className="vidrio fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 lg:hidden"
+      >
+        {SECCIONES.map(({ id, label, icono: Icono }) => {
+          const activa = seccion === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setSeccion(id)}
+              aria-current={activa ? 'page' : undefined}
+              className={`flex flex-col items-center gap-1 rounded-2xl py-2 texto--2 uppercase espaciado-medio transition-colors duration-300 active:scale-95 ${
+                activa ? 'text-cobre-100' : 'text-nacar-300 hover:text-crema-100'
+              }`}
+            >
+              <span
+                className={`flex h-8 w-12 items-center justify-center rounded-full transition-all duration-500 ${
+                  activa ? 'boton-metal text-vino-900' : ''
+                }`}
+              >
+                <Icono size={18} strokeWidth={1.6} aria-hidden="true" />
+              </span>
+              {label}
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }

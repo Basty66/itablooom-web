@@ -2,6 +2,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
 import { createCalendarEvent } from '../../calendar/_lib.js';
 import { Resend } from 'resend';
+import { avisarSinDemorar } from '../../_shared/avisos.js';
+import { RUTA_PANEL } from '../../_shared/ruta.js';
 
 const sql = neon(process.env.DATABASE_URL!);
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -151,6 +153,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             dateStr = String(raw).split('T')[0];
           }
           const timeStr = booking.booking_time ? booking.booking_time.slice(0, 5) : '10:00';
+
+          /*
+           * Aviso al teléfono de Ignacia, antes del calendario y los correos:
+           * si alguno de esos falla, el aviso igual llega. Tocarlo abre la
+           * agenda del panel en el día de la cita.
+           */
+          const dia = new Date(`${dateStr}T12:00:00`).toLocaleDateString('es-CL', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'short',
+          });
+          await avisarSinDemorar(sql, {
+            titulo: `Nueva reserva · ${booking.service_name}`,
+            cuerpo:
+              `${booking.client_name} · ${dia} a las ${timeStr}` +
+              (conflicto.length > 0 ? '. Ojo: choca con otra reserva confirmada.' : ''),
+            url: `${RUTA_PANEL}/?fecha=${dateStr}`,
+            tag: `reserva-${bookingId}`,
+          });
 
           const eventId = await createCalendarEvent({
             summary: `${booking.service_name} - ${booking.client_name}`,

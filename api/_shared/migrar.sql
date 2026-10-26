@@ -26,3 +26,38 @@ CREATE INDEX IF NOT EXISTS idx_bookings_fecha ON bookings (booking_date);
 
 -- El webhook busca por payment_id en cada notificación de Mercado Pago.
 CREATE INDEX IF NOT EXISTS idx_bookings_payment ON bookings (payment_id);
+
+-- Panel instalable: Face ID y avisos push.
+--
+-- Solo CREATE TABLE IF NOT EXISTS: idempotente, no toca tablas existentes.
+-- El servidor también las crea solo la primera vez que el panel las usa
+-- (api/_shared/panel/tablas.ts); acá quedan documentadas.
+
+-- Llaves de Face ID / huella (WebAuthn). Se guarda solo la llave pública:
+-- la biometría nunca sale del teléfono.
+CREATE TABLE IF NOT EXISTS admin_llaves (
+  id TEXT PRIMARY KEY,
+  llave_publica TEXT NOT NULL,
+  contador BIGINT NOT NULL DEFAULT 0,
+  transportes TEXT[],
+  aparato VARCHAR(40),
+  creado_en TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ultimo_uso TIMESTAMPTZ
+);
+
+-- Desafíos de un solo uso para cada ceremonia de Face ID; viven 5 minutos.
+CREATE TABLE IF NOT EXISTS admin_desafios (
+  id TEXT PRIMARY KEY,
+  desafio TEXT NOT NULL,
+  vence_en TIMESTAMPTZ NOT NULL
+);
+
+-- Suscripciones push de los aparatos de Ignacia (teléfono, computador).
+CREATE TABLE IF NOT EXISTS admin_suscripciones (
+  endpoint TEXT PRIMARY KEY,
+  p256dh TEXT NOT NULL,
+  auth TEXT NOT NULL,
+  aparato VARCHAR(40),
+  creado_en TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ultimo_envio TIMESTAMPTZ
+);

@@ -15,6 +15,44 @@
     }
   ],
   "rewrites": [
-    { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
+    {
+      "source": "/estudio-jq70xl/",
+      "destination": "/estudio-jq70xl.html"
+    },
+    {
+      "source": "/estudio-jq70xl/:ruta((?!sw\\.js$|app\\.webmanifest$|insignia-96\\.png$).*)",
+      "destination": "/estudio-jq70xl.html"
+    },
+    {
+      "source": "/((?!api/|assets/).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/estudio-jq70xl",
+      "destination": "/estudio-jq70xl/",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/estudio-jq70xl/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/estudio-jq70xl(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
   ]
 }

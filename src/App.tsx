@@ -9,7 +9,6 @@ import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import BookingPage from './pages/BookingPage';
 import ConfirmationPage from './pages/ConfirmationPage';
-import AdminPage from './pages/AdminPage';
 import ReschedulePage from './pages/ReschedulePage';
 
 /** Sin esto, al navegar entre páginas el scroll se queda donde estaba. */
@@ -64,14 +63,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
 
 function Layout() {
   const { pathname } = useLocation();
-  /*
-   * El panel trae su propia barra lateral, su propia cabecera y su propio
-   * ancho: la cáscara pública se le montaba encima. La barra superior quedaba
-   * flotando sobre las métricas y el pie del sitio aparecía dentro del panel,
-   * con el contenido pasando por debajo de la barra lateral.
-   */
-  const esPanel = pathname.startsWith('/admin');
-  useScrollSuave(!esPanel);
+  useScrollSuave(true);
 
   return (
     <div className="flex min-h-screen flex-col bg-tinta-900">
@@ -82,7 +74,7 @@ function Layout() {
         Saltar al contenido
       </a>
 
-      {!esPanel && <Navbar />}
+      <Navbar />
 
       {/*
         La clave por ruta remonta el contenido en cada navegación, que es lo
@@ -100,13 +92,12 @@ function Layout() {
           <Route path="/servicios" element={<ServicesPage />} />
           <Route path="/agendar" element={<BookingPage />} />
           <Route path="/confirmacion" element={<ConfirmationPage />} />
-          <Route path="/admin" element={<AdminPage />} />
           <Route path="/reagendar" element={<ReschedulePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
-      {!esPanel && <Footer />}
+      <Footer />
 
       <BotonWhatsApp />
       <BotonSubir />

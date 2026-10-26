@@ -136,3 +136,33 @@ export async function exigirSesion(req: VercelRequest, res: VercelResponse): Pro
   res.status(401).json({ error: 'No autorizado' });
   return true;
 }
+
+/** Valor de una cookie de la petición, o null si no viene. */
+export function leerCookie(req: VercelRequest, nombre: string): string | null {
+  const encontrada = (req.headers.cookie || '')
+    .split(';')
+    .map((c) => c.trim())
+    .find((c) => c.startsWith(`${nombre}=`));
+  if (!encontrada) return null;
+  const valor = decodeURIComponent(encontrada.slice(nombre.length + 1));
+  return valor || null;
+}
+
+/**
+ * Cookie con los mismos resguardos que la de sesión. Con `segundos` en 0 la
+ * borra.
+ */
+export function cookieSegura(nombre: string, valor: string, segundos: number): string {
+  return `${nombre}=${encodeURIComponent(valor)}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${segundos}`;
+}
+
+/**
+ * Agrega una cookie a la respuesta sin pisar las que ya se pusieron: el
+ * acceso con Face ID borra la del desafío y abre la de sesión en la misma
+ * respuesta, y un segundo `setHeader` borraba la primera.
+ */
+export function agregarCookie(res: VercelResponse, cookie: string): void {
+  const previas = res.getHeader('Set-Cookie');
+  const lista = previas === undefined ? [] : Array.isArray(previas) ? previas.map(String) : [String(previas)];
+  res.setHeader('Set-Cookie', [...lista, cookie]);
+}

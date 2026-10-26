@@ -42,12 +42,6 @@
   ],
   "shortcuts": [
     {
-      "name": "Panel del estudio",
-      "short_name": "Panel",
-      "description": "Ver la agenda del día y cobrar saldos",
-      "url": "/admin"
-    },
-    {
       "name": "Reservar una hora",
       "short_name": "Reservar",
       "description": "Agendar un servicio",
