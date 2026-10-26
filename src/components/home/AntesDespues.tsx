@@ -193,7 +193,7 @@ export default function AntesDespues() {
                     <img src={t.despues_url} alt="" loading="lazy" className="h-full w-full object-cover" />
                     <span
                       aria-hidden="true"
-                      className={`canto-metal absolute inset-0 rounded-[inherit] ${activo ? 'activo' : ''}`}
+                      className={`pointer-events-none canto-metal absolute inset-0 rounded-[inherit] ${activo ? 'activo' : ''}`}
                     />
                   </button>
                 );

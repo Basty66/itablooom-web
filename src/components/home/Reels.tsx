@@ -179,7 +179,7 @@ export default function Reels() {
           rel="noopener noreferrer"
           className="vidrio group relative inline-flex items-center gap-2.5 rounded-full border px-5 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-transform duration-300 hover:-translate-y-0.5"
         >
-          <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit]" />
+          <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-[inherit]" />
           <IconoInstagram />
           @{INSTAGRAM_USUARIO}
           <ArrowUpRight

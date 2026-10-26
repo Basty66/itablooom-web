@@ -406,7 +406,7 @@ export default function Hero() {
             {CONFIANZA.map(({ icono: Icono, texto }) => (
               <li key={texto} className="flex flex-col items-start gap-2.5 sm:flex-row sm:items-center sm:gap-3">
                 <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
-                  <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+                  <span aria-hidden="true" className="pointer-events-none canto-metal activo absolute inset-0 rounded-full" />
                   <Icono size={16} strokeWidth={1.5} className="text-cobre-200" aria-hidden="true" />
                 </span>
                 <span className="texto--1 leading-snug text-nacar-200/85">{texto}</span>

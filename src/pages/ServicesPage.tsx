@@ -81,7 +81,7 @@ function TarjetaServicio({
   const interior = (
     <>
       {/* Canto de metal de la fila móvil; se enciende al tocarla. */}
-      <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit] sm:hidden" />
+      <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-[inherit] sm:hidden" />
 
       <Inclinable className="canto-metal arco-4-5 w-[6.5rem] shrink-0 rounded-[1.1rem] sm:arco-forma sm:w-full">
         <ServiceVisual
@@ -378,9 +378,9 @@ export default function ServicesPage() {
                     className="anim-entrada relative rounded-[1.4rem] bg-tinta-880/80 p-6"
                     style={{ animationDelay: `${i * 90}ms` }}
                   >
-                    <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit]" />
+                    <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-[inherit]" />
                     <span className="relative flex h-10 w-10 items-center justify-center rounded-full">
-                      <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+                      <span aria-hidden="true" className="pointer-events-none canto-metal activo absolute inset-0 rounded-full" />
                       <Icono size={17} strokeWidth={1.5} className="text-cobre-200" aria-hidden="true" />
                     </span>
                     <h3 className="mt-4 font-display texto-2 text-crema-100">{politica.titulo}</h3>

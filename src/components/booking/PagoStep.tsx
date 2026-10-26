@@ -145,7 +145,7 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
                 activo ? 'bg-cobre-400/10' : 'bg-tinta-870 hover:bg-tinta-860'
               }`}
             >
-              <span aria-hidden="true" className={`canto-metal absolute inset-0 rounded-[inherit] ${activo ? 'activo' : ''}`} />
+              <span aria-hidden="true" className={`pointer-events-none canto-metal absolute inset-0 rounded-[inherit] ${activo ? 'activo' : ''}`} />
               <span className="flex items-start justify-between gap-3">
                 <Icono
                   size={20}

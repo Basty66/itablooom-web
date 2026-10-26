@@ -51,7 +51,7 @@ export default function BotonSubir() {
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
       }`}
     >
-      <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
+      <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-full" />
       <ArrowUp size={18} strokeWidth={1.5} aria-hidden="true" />
     </button>
   );

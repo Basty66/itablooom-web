@@ -83,7 +83,7 @@ export default function SobreMi() {
           {/* El nombre en una tarjeta de vidrio que flota sobre el pie del
               retrato: se lee como una firma, no como un pie de foto. */}
           <figcaption className="vidrio absolute -bottom-7 left-1/2 w-max -translate-x-1/2 rounded-2xl border px-6 py-3.5 text-center">
-            <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit]" />
+            <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-[inherit]" />
             <p className="font-display texto-2 text-crema-100">{NOMBRE}</p>
             <p className="mt-1 texto--2 uppercase espaciado-amplio text-cobre-300">
               Uñas · Pestañas · Cejas
@@ -121,9 +121,9 @@ export default function SobreMi() {
                 className="anim-entrada relative rounded-[1.4rem] bg-tinta-880/70 p-5"
                 style={{ animationDelay: `${i * 90}ms` }}
               >
-                <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit]" />
+                <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-[inherit]" />
                 <span className="relative flex h-10 w-10 items-center justify-center rounded-full">
-                  <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+                  <span aria-hidden="true" className="pointer-events-none canto-metal activo absolute inset-0 rounded-full" />
                   <Icono size={17} strokeWidth={1.5} className="text-cobre-200" aria-hidden="true" />
                 </span>
                 <h3 className="mt-4 font-display texto-1 text-crema-100">{titulo}</h3>

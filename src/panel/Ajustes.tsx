@@ -39,11 +39,11 @@ function Tarjeta({
 }) {
   return (
     <section className="relative rounded-[1.6rem] bg-tinta-870 p-6">
-      <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit]" />
+      <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-[inherit]" />
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-4">
           <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
-            <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+            <span aria-hidden="true" className="pointer-events-none canto-metal activo absolute inset-0 rounded-full" />
             <Icono size={19} strokeWidth={1.5} className="text-cobre-200" aria-hidden="true" />
           </span>
           <h2 className="font-display texto-2 text-crema-100">{titulo}</h2>

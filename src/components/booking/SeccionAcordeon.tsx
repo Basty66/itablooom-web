@@ -66,7 +66,7 @@ export default function SeccionAcordeon({
     >
       {/* Canto de metal: encendido en la sección en curso, apenas insinuado
           en las demás. */}
-      <span aria-hidden="true" className={`canto-metal absolute inset-0 rounded-[inherit] ${abierta ? 'activo' : ''}`} />
+      <span aria-hidden="true" className={`pointer-events-none canto-metal absolute inset-0 rounded-[inherit] ${abierta ? 'activo' : ''}`} />
       <h2>
         <button
           type="button"

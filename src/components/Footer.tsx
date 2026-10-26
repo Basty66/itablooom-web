@@ -82,7 +82,7 @@ export default function Footer() {
                   aria-label={label}
                   className="group relative flex h-11 w-11 items-center justify-center rounded-full text-nacar-200/85 transition-transform duration-300 ease-out hover:-translate-y-0.5 hover:text-cobre-100 active:scale-95"
                 >
-                  <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
+                  <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-full" />
                   {icono}
                 </a>
               ))}

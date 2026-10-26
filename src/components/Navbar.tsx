@@ -205,7 +205,7 @@ export default function Navbar() {
                   aria-label={label}
                   className="relative flex h-11 w-11 items-center justify-center rounded-full text-nacar-200/85 transition-colors duration-200 hover:text-cobre-100 active:scale-95"
                 >
-                  <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
+                  <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-full" />
                   <Icono size={17} strokeWidth={1.5} aria-hidden="true" />
                 </a>
               ))}

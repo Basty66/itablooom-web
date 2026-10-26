@@ -39,7 +39,7 @@ export default function BotonWhatsApp() {
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
       }`}
     >
-      <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+      <span aria-hidden="true" className="pointer-events-none canto-metal activo absolute inset-0 rounded-full" />
       <MessageCircle size={20} strokeWidth={1.5} aria-hidden="true" />
     </a>
   );

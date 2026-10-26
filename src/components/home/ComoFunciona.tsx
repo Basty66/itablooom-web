@@ -63,7 +63,7 @@ export default function ComoFunciona() {
             style={{ animationDelay: `${200 + i * 140}ms` }}
           >
             <span className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-tinta-900 transition-transform duration-500 ease-out group-hover:scale-110">
-              <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+              <span aria-hidden="true" className="pointer-events-none canto-metal activo absolute inset-0 rounded-full" />
               <Icono size={18} strokeWidth={1.4} className="text-cobre-200" aria-hidden="true" />
             </span>
 

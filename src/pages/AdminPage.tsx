@@ -311,7 +311,7 @@ export default function AdminPage({ onSalir, onSesionVencida, ajustes }: Props) 
                 className="relative flex h-10 w-10 items-center justify-center rounded-full text-nacar-200/85 transition-all duration-200 hover:text-crema-100 active:scale-95"
                 aria-label="Ver el sitio"
               >
-                <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
+                <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-full" />
                 <ExternalLink size={15} strokeWidth={1.5} aria-hidden="true" />
               </a>
               <button
@@ -319,7 +319,7 @@ export default function AdminPage({ onSalir, onSesionVencida, ajustes }: Props) 
                 className="relative flex h-10 w-10 items-center justify-center rounded-full text-nacar-200/85 transition-all duration-200 hover:text-crema-100 active:scale-95"
                 aria-label="Cerrar sesión"
               >
-                <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-full" />
+                <span aria-hidden="true" className="pointer-events-none canto-metal absolute inset-0 rounded-full" />
                 <LogOut size={15} strokeWidth={1.5} aria-hidden="true" />
               </button>
             </div>
