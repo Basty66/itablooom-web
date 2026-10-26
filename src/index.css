@@ -133,6 +133,19 @@
     --paso-4: clamp(2.1rem, 2.6vw + 1.4rem, 3.2rem);
     /* display-lg: 48px en móvil, 86px desde el ancho de diseño. */
     --paso-5: clamp(3rem, 5.2vw + 1.6rem, 5.4rem);
+
+    /*
+     * Metales. Un metal no es un color sino un reflejo: bandas claras y
+     * oscuras con un quiebre marcado al medio, que es la línea de horizonte
+     * que el ojo lee como superficie pulida. Salen de la misma familia del
+     * cobre y el rosa, así que brillan sin traer un color nuevo a la paleta.
+     */
+    --metal-champan: linear-gradient(180deg, #fffdfb 0%, #f7ece4 32%, #dcc3b4 49%, #a88a7b 52%, #eadbd1 70%, #fffaf6 100%);
+    --metal-oro-rosa: linear-gradient(180deg, #fff0ea 0%, #f4cdbf 28%, #d99c8a 48%, #a15f50 52%, #e4ad9b 68%, #fce6dc 86%, #cf917d 100%);
+    /* Para superficies con texto encima: solo las bandas claras, así el
+       vino mantiene más de 4.5:1 en cualquier punto del botón. */
+    --metal-boton: linear-gradient(115deg, #d99c8c 0%, #f3cbbd 22%, #fbe6dc 38%, #e3afae 55%, #f6d5c8 72%, #d4917f 100%);
+    --metal-anillo: conic-gradient(#7a4434, #f6dccf 12%, #c68f76 24%, #fff3ec 36%, #9a5b4f 50%, #e9b9a8 64%, #fbe8de 78%, #8a5540 90%, #7a4434);
   }
 
   html {
@@ -274,6 +287,28 @@
       var(--color-tinta-900) 60%);
   }
 
+  /*
+   * Tonos de sección. Todas viven sobre el mismo negro cálido, pero cada una
+   * con su luz: vino, cacao o ciruela. Sin esto la página era un solo plano
+   * oscuro de punta a punta y las secciones no se distinguían al bajar.
+   */
+  .tono-vino {
+    background-color: var(--color-tinta-900);
+    background-image:
+      radial-gradient(ellipse 70% 60% at 85% 20%, color-mix(in oklab, var(--color-vino-900) 42%, transparent), transparent 70%),
+      radial-gradient(ellipse 60% 50% at 10% 90%, color-mix(in oklab, var(--color-vino-700) 22%, transparent), transparent 70%);
+  }
+  .tono-cacao {
+    background-color: #17110f;
+    background-image: radial-gradient(ellipse 80% 55% at 50% 0%, color-mix(in oklab, var(--color-cobre-500) 16%, transparent), transparent 70%);
+  }
+  .tono-ciruela {
+    background-color: var(--color-tinta-900);
+    background-image:
+      radial-gradient(ellipse 65% 70% at 15% 40%, color-mix(in oklab, #5a1e3a 50%, transparent), transparent 70%),
+      radial-gradient(ellipse 50% 50% at 95% 100%, color-mix(in oklab, var(--color-vino-900) 25%, transparent), transparent 70%);
+  }
+
   /* Superficie elevada, para tarjetas y bloques sobre el fondo. */
   .superficie { background-color: var(--color-tinta-850); }
 
@@ -348,18 +383,23 @@
      enfocar sube la opacidad en vez de cambiar de color, para no romper la
      paleta con un azul de sistema. */
   .campo {
-    background-color: var(--color-tinta-850);
-    border: 0;
-    border-bottom: 1px solid color-mix(in oklab, var(--color-cobre-400) 30%, transparent);
-    border-radius: var(--radius-suave) var(--radius-suave) 0 0;
+    background-color: var(--color-tinta-870);
+    border: 1px solid color-mix(in oklab, var(--color-cobre-400) 20%, transparent);
+    border-radius: 0.9rem;
     color: var(--color-crema-100);
-    transition: border-color 0.3s var(--ease-suave), background-color 0.3s var(--ease-suave);
+    transition:
+      border-color 0.3s var(--ease-suave),
+      background-color 0.3s var(--ease-suave),
+      box-shadow 0.3s var(--ease-suave);
   }
   .campo::placeholder { color: color-mix(in oklab, var(--color-nacar-300) 85%, transparent); }
+  /* Al enfocar, el canto pasa a cobre y aparece un halo: se ve dónde se
+     está escribiendo sin traer un azul de sistema a la paleta. */
   .campo:focus {
     outline: none;
-    border-bottom-color: var(--color-cobre-400);
-    background-color: color-mix(in oklab, var(--color-tinta-850) 70%, var(--color-tinta-900));
+    border-color: var(--color-cobre-300);
+    background-color: var(--color-tinta-860);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-cobre-400) 16%, transparent);
   }
 
   .texto--2 { font-size: var(--paso--2); }
@@ -449,7 +489,9 @@
    * pausarla equivale a mantener el elemento oculto hasta que le toque.
    */
   .revelador:not(.revelado) .anim-entrada,
-  .revelador:not(.revelado) .anim-velo {
+  .revelador:not(.revelado) .anim-velo,
+  .revelador:not(.revelado) .palabra,
+  .revelador:not(.revelado) .filete-entrada {
     animation-play-state: paused;
   }
 
@@ -486,8 +528,535 @@
     inset: 0;
     pointer-events: none;
     opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    /*
+     * Ruido ya rasterizado en un PNG de 96px que se repite. Antes era un
+     * filtro SVG de turbulencia, y el navegador lo volvía a calcular cada
+     * vez que algo se movía debajo: medido con la CPU de un teléfono
+     * modesto, costaba 8 ms por cuadro solo en el hero. En su propia capa
+     * (`will-change`) ni siquiera se repinta: solo se compone encima.
+     */
+    background-image: url("/images/grano.png");
+    background-size: 96px;
+    will-change: transform;
   }
+}
+
+/*
+ * Hero.
+ *
+ * Todo el movimiento de la portada vive acá y es CSS puro: ninguna librería
+ * de animación entra al bundle. El JS solo escribe dos variables (--px y
+ * --py, de -1 a 1) con la posición del puntero, y cada capa decide cuánto
+ * se mueve con su propia profundidad (--prof).
+ */
+@layer utilities {
+  /*
+   * Fondo vivo: tres manchas de luz que derivan lentísimo. Son gradientes
+   * radiales, no `filter: blur()`: se ven igual de difusos y mover un
+   * gradiente cuesta una composición, no un desenfoque por cuadro.
+   */
+  .aura {
+    position: absolute;
+    border-radius: 9999px;
+    will-change: transform;
+    translate: calc(var(--px, 0) * -28px) calc(var(--py, 0) * -18px);
+  }
+  .aura-vino {
+    width: 75vmax;
+    height: 75vmax;
+    right: -28vmax;
+    top: -30vmax;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--color-vino-900) 62%, transparent), transparent);
+    animation: aura-a 26s ease-in-out infinite alternate;
+  }
+  .aura-rosa {
+    width: 50vmax;
+    height: 50vmax;
+    left: -22vmax;
+    bottom: -26vmax;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--color-rosa-400) 16%, transparent), transparent);
+    animation: aura-b 32s ease-in-out infinite alternate;
+  }
+  .aura-cobre {
+    width: 38vmax;
+    height: 38vmax;
+    left: 38%;
+    top: 22%;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--color-cobre-400) 11%, transparent), transparent);
+    animation: aura-c 22s ease-in-out infinite alternate;
+  }
+
+  /*
+   * Letra por letra: sube, se endereza y pasa de desenfocada a nítida. El
+   * retraso sale del índice de cada letra, así el nombre se "escribe".
+   */
+  .letra {
+    display: inline-block;
+    animation: letra 1.1s var(--ease-suave) both;
+    animation-delay: calc(var(--i) * 55ms + 120ms);
+  }
+
+  /*
+   * Lámina metálica sobre el titular: una copia exacta de la palabra encima
+   * de las letras animadas, pintada con el metal y recortada a la forma del
+   * texto. Se enciende cuando las letras terminan de llegar y desde ahí un
+   * reflejo la recorre cada siete segundos; continuo sería un letrero.
+   *
+   * La caja se agranda hacia afuera y el padding la compensa: con el
+   * interlineado tan cerrado, las astas y la cola itálica de la "o" se
+   * salen del renglón, y fuera de la caja el fondo no se pinta.
+   */
+  .metal-capa {
+    top: -0.2em;
+    bottom: -0.2em;
+    left: 0;
+    right: -0.25em;
+    padding-top: 0.2em;
+    background-image:
+      linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.95) 50%, transparent 58%),
+      var(--metal);
+    background-size: 250% 100%, 100% 100%;
+    background-position: 200% 0, 0 0;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation:
+      aparecer 0.9s var(--ease-suave) var(--encendido, 1.5s) both,
+      barrido-metal 7s ease-in-out var(--reflejo, 2.6s) infinite;
+  }
+  .metal-champan { --metal: var(--metal-champan); }
+  .metal-oro-rosa { --metal: var(--metal-oro-rosa); }
+
+  /* Metal con reflejo, para titulares que no se arman letra por letra. */
+  .metal-vivo {
+    background-image:
+      linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.95) 50%, transparent 58%),
+      var(--metal);
+    background-size: 250% 100%, 100% 100%;
+    background-position: 200% 0, 0 0;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: barrido-metal 7s ease-in-out 1.2s infinite;
+  }
+
+  /*
+   * Fondo del cierre: el vino sube desde abajo como una luz de escenario y
+   * se apaga en el negro antes del pie.
+   */
+  .fondo-cierre {
+    background-color: var(--color-tinta-900);
+    background-image:
+      radial-gradient(ellipse 90% 70% at 50% 110%, color-mix(in oklab, var(--color-vino-700) 85%, transparent), transparent 70%),
+      radial-gradient(ellipse 60% 50% at 50% 100%, color-mix(in oklab, var(--color-rosa-400) 22%, transparent), transparent 70%);
+  }
+
+  /* Texto chico en metal, sin animación: para la cinta y los rótulos. */
+  .texto-metal {
+    background-image: var(--metal-oro-rosa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /*
+   * Canto metálico con una luz que lo recorre: lo que gira es el ángulo de
+   * inicio del gradiente cónico.
+   *
+   * Antes giraba un cuadrado grande recortado por el arco, que es trabajo
+   * de GPU, pero Chrome recorta en rectángulo a un hijo animado dentro de
+   * `overflow` + `border-radius` y quedaba una costura recta por fuera del
+   * arco. Animar el ángulo repinta el canto en cada cuadro, pero son tres
+   * piezas chicas y no queda nada que se pueda escapar.
+   */
+  .marco-metal {
+    position: absolute;
+    inset: 0;
+    background-image: conic-gradient(from var(--giro), #7a4434, #f6dccf 12%, #c68f76 24%, #fff3ec 36%, #9a5b4f 50%, #e9b9a8 64%, #fbe8de 78%, #8a5540 90%, #7a4434);
+  }
+  /* El giro, solo con mouse: en el teléfono cada cuadro de giro era un
+     repintado que el scroll pagaba. Quieto, el canto sigue siendo metal. */
+  @media (hover: hover) and (pointer: fine) {
+    .marco-metal {
+      animation: girar-metal 9s linear infinite;
+    }
+  }
+
+  /*
+   * Botón en oro rosa: el gradiente mide el doble del botón y va y viene,
+   * así la luz se mueve sobre el metal aunque nadie lo toque. El filo claro
+   * arriba y el oscuro abajo son los que le dan volumen de pieza fundida.
+   */
+  .boton-metal {
+    background-image: var(--metal-boton);
+    background-size: 220% 100%;
+    /*
+     * La luz se corre al pasar el cursor, no sola. Animada sin pausa era un
+     * repintado por cuadro de cada botón a la vista: en el catálogo, trece a
+     * la vez, y medido costaba 6 ms por cuadro en un teléfono modesto.
+     */
+    transition: background-position 0.9s var(--ease-suave), box-shadow 0.5s var(--ease-suave);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 0 rgba(122, 38, 56, 0.28),
+      0 10px 30px -14px rgba(217, 156, 140, 0.6);
+  }
+  .boton-metal:hover {
+    background-position: 100% 50%;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      inset 0 -1px 0 rgba(122, 38, 56, 0.28),
+      0 16px 44px -12px rgba(246, 213, 200, 0.75);
+  }
+
+  /*
+   * Láminas del escaparate de rubros. Cada foto o video es una lámina
+   * apilada: la que entra sube como telón por encima de la que sale, que se
+   * queda quieta debajo hasta quedar tapada. Así nunca hay un cuadro vacío
+   * entre una y otra.
+   */
+  .lamina {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .lamina.saliente {
+    opacity: 1;
+    z-index: 1;
+  }
+  .lamina.activa {
+    opacity: 1;
+    z-index: 2;
+    animation: telon 1.15s var(--ease-suave) both;
+  }
+  .lamina.activa > * {
+    animation: asentar 1.7s var(--ease-suave) both;
+  }
+
+  /*
+   * Palabra que rueda en el rótulo. Las tres comparten la misma celda de la
+   * grilla, así el ancho es el de la más larga y el renglón no salta.
+   */
+  .rodante {
+    grid-area: 1 / 1;
+    transition: transform 0.75s var(--ease-suave), opacity 0.75s var(--ease-suave);
+  }
+  .rodante.espera { transform: translateY(105%); opacity: 0; }
+  .rodante.sale { transform: translateY(-105%); opacity: 0; }
+  .rodante.entra { transform: none; opacity: 1; }
+
+  /* Barra de avance del escaparate: su fin es el que pasa al rubro siguiente. */
+  .avance {
+    transform-origin: left;
+    animation: filete var(--duracion, 6.5s) linear both;
+  }
+
+  /*
+   * Luz de estudio. Un foco tibio que sigue al puntero y un haz diagonal
+   * que se mece: los dos son capas que solo se trasladan, nunca se repintan.
+   */
+  .foco-puntero {
+    position: absolute;
+    width: 52vmax;
+    height: 52vmax;
+    left: calc(50% - 26vmax);
+    top: calc(50% - 26vmax);
+    border-radius: 9999px;
+    background: radial-gradient(closest-side, rgba(246, 220, 207, 0.09), transparent);
+    translate: calc(var(--px, 0) * 40vw) calc(var(--py, 0) * 38vh);
+    will-change: translate;
+  }
+  .haz-luz {
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    width: 22vmax;
+    height: 160%;
+    background: linear-gradient(90deg, transparent, rgba(246, 220, 207, 0.06) 45%, rgba(255, 243, 236, 0.09) 50%, rgba(246, 220, 207, 0.06) 55%, transparent);
+    animation: haz 16s ease-in-out infinite alternate;
+  }
+  /* Resplandor rosado detrás de la escena: la despega del fondo. */
+  .halo-escena {
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--color-rosa-400) 26%, transparent), transparent);
+    animation: latir 7s ease-in-out infinite alternate;
+  }
+
+  /* Halo de los destellos: sin él, sobre el negro se leían como recortes. */
+  .chispa-halo {
+    /* Halo como gradiente detrás y no como `drop-shadow`: un filtro sobre
+       algo que anima se recalcula en cada cuadro. */
+    background: radial-gradient(closest-side, rgba(246, 220, 207, 0.35), transparent);
+    border-radius: 9999px;
+  }
+
+  /*
+   * Títulos de sección: entran palabra por palabra, con el mismo gesto de
+   * las letras del hero. Esperan a que su sección aparezca (ver
+   * `.revelador` más abajo).
+   */
+  .palabra {
+    display: inline-block;
+    animation: letra 0.95s var(--ease-suave) both;
+    animation-delay: calc(var(--i) * 70ms + 80ms);
+  }
+
+  /*
+   * Tarjeta que se inclina hacia el puntero, con un reflejo que lo sigue.
+   * Las variables las escribe <Inclinable>; sin mouse quedan en cero y la
+   * tarjeta se ve plana, como debe.
+   */
+  .inclinable {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.6s var(--ease-suave);
+  }
+  .inclinable:hover {
+    transition-duration: 0.15s;
+  }
+  .inclinable-reflejo {
+    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 240, 232, 0.2), transparent 55%);
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-suave);
+  }
+  .inclinable:hover .inclinable-reflejo {
+    opacity: 1;
+  }
+
+  /*
+   * Canto metálico que aparece al pasar el cursor. Es un borde hecho con
+   * máscara: el gradiente pinta la caja entera y la máscara deja visible
+   * solo el anillo de 1px, así sigue cualquier radio sin cálculos.
+   */
+  .canto-metal::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #f6dccf, #8a5540 30%, #fff3ec 50%, #a9705a 70%, #f2c9b8);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    opacity: 0.35;
+    transition: opacity 0.5s var(--ease-suave);
+    pointer-events: none;
+    /* Sobre las fotos: es un filo de 1px y no tapa nada. */
+    z-index: 2;
+  }
+  .group:hover .canto-metal::before,
+  .canto-metal.activo::before {
+    opacity: 1;
+  }
+
+  /*
+   * Palabras que se encienden con el scroll, para el manifiesto. Arrancan
+   * apagadas y cada una tiene su tramo del recorrido; donde el navegador no
+   * soporta líneas de tiempo de scroll, se ven todas encendidas.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .manifiesto {
+        view-timeline-name: --manifiesto;
+      }
+      .encender {
+        animation: encender linear both;
+        animation-timeline: --manifiesto;
+      }
+      /* La línea de tiempo vertical del proceso se dibuja al bajar. */
+      .linea-proceso {
+        animation: crecer-y linear both;
+        animation-timeline: view();
+        animation-range: entry 40% cover 55%;
+      }
+    }
+  }
+
+  /* El filete corto junto al rótulo se traza al cargar. */
+  .filete-entrada {
+    transform-origin: left;
+    animation: filete 1s var(--ease-suave) 0.1s both;
+  }
+
+  /* En una caja 4:5 el semicírculo pide 40% de alto. */
+  .arco-4-5 { --arco-v: 40%; }
+
+  /* Capa con profundidad: se desplaza con el puntero en proporción a --prof. */
+  .capa {
+    transform: translate3d(
+      calc(var(--px, 0) * var(--prof, 1) * 14px),
+      calc(var(--py, 0) * var(--prof, 1) * 10px),
+      0
+    );
+  }
+
+  /* El arco se abre de abajo hacia arriba, como un telón que sube. */
+  .arco-entrada {
+    animation: telon 1.5s var(--ease-suave) both;
+  }
+
+  /*
+   * La foto entra acercada y se asienta mientras el telón sube; después
+   * queda respirando con la deriva lenta del sitio. Son dos propiedades
+   * distintas (`scale` y `transform`), así que no se pisan.
+   */
+  .arco-foto {
+    animation:
+      asentar 1.9s var(--ease-suave) both,
+      deriva 28s ease-in-out infinite alternate;
+  }
+
+  /* Velo inferior y canto rosado: separan la foto del fondo sin sombra. */
+  .arco-velo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(to top, rgba(20, 15, 14, 0.5), transparent 45%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-rosa-200) 16%, transparent);
+  }
+
+  .aparecer-tarde {
+    animation: aparecer 1.2s var(--ease-suave) both;
+  }
+
+  /* Sello circular: gira sin pausa, a una vuelta cada veinticuatro segundos. */
+  .sello-giro {
+    animation: giro 24s linear infinite;
+    will-change: transform;
+  }
+
+  /*
+   * Motas del polvo dorado. Solo animan `transform` y `opacity`, así el
+   * navegador las mueve en la GPU sin tocar el hilo principal.
+   */
+  .mota {
+    position: absolute;
+    border-radius: 9999px;
+    background: radial-gradient(circle, #fff3ec 0%, rgba(246, 220, 207, 0.7) 45%, transparent 72%);
+    animation: subir var(--dur) linear var(--retraso) infinite;
+    will-change: transform, opacity;
+  }
+  .mota-grande {
+    box-shadow: 0 0 8px 2px rgba(246, 220, 207, 0.35);
+  }
+  /* Destello en cruz de las motas grandes: dos rayas finas que titilan. */
+  .mota-grande::after {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    background:
+      linear-gradient(90deg, transparent, rgba(255, 243, 236, 0.9), transparent) center / 100% 1px no-repeat,
+      linear-gradient(0deg, transparent, rgba(255, 243, 236, 0.9), transparent) center / 1px 100% no-repeat;
+    animation: destellar 3.6s ease-in-out infinite alternate;
+  }
+  .sello:hover .sello-giro {
+    animation-duration: 8s;
+  }
+
+  /* Destellos de cuatro puntas: titilan a destiempo entre sí. */
+  .chispa {
+    animation: titilar 3.2s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+  }
+
+  /*
+   * Cinta infinita de servicios. El contenido va duplicado y la pista se
+   * corre exactamente la mitad: cuando la segunda copia ocupa el lugar de la
+   * primera, el ciclo vuelve a empezar sin salto visible.
+   */
+  .cinta {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .cinta-pista {
+    animation: cinta 48s linear infinite;
+  }
+  .cinta:hover .cinta-pista {
+    animation-play-state: paused;
+  }
+
+  /*
+   * Firma del pie: el nombre gigante, tenue y desvaneciéndose hacia abajo,
+   * como un sello estampado. Se corta en el borde de la página a propósito.
+   */
+  .firma-pie {
+    opacity: 0.45;
+    margin-bottom: -0.06em;
+    -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 95%);
+    mask-image: linear-gradient(to bottom, #000 30%, transparent 95%);
+  }
+
+  /*
+   * Parallax de scroll, sin JS: cada capa sube a su velocidad mientras la
+   * página baja la primera pantalla, y el texto se disuelve. Donde el
+   * navegador no conoce `animation-timeline` todo queda quieto y en su
+   * lugar, que es la versión correcta de la página, no una rota.
+   *
+   * El `animation-timeline` va después del shorthand `animation` a propósito:
+   * el shorthand lo resetea.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      .capa {
+        animation: capa-scroll linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 100vh;
+      }
+      .heroe-texto {
+        animation: disolver linear both;
+        animation-timeline: scroll(root);
+        animation-range: 10vh 90vh;
+      }
+      /*
+       * Carrusel de reels en el teléfono: la tarjeta del centro a tamaño
+       * completo y las de los costados achicadas y apagadas, según cuánto
+       * se alejan del centro al deslizar. Corre en la GPU, ligado al scroll
+       * horizontal del carrusel.
+       */
+      .carrusel-foco {
+        animation: reel-foco linear both;
+        animation-timeline: view(inline);
+      }
+      @media (min-width: 1024px) {
+        .carrusel-foco {
+          animation: none;
+        }
+        /* En escritorio, parallax: cada reel sube a su velocidad. */
+        .parallax-suave {
+          animation: reel-sube linear both;
+          animation-timeline: view();
+          animation-range: entry 0% exit 100%;
+        }
+      }
+      /* La firma del pie sube desde el borde mientras el pie entra. */
+      .firma-pie {
+        animation: firma-sube linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 100%;
+      }
+    }
+  }
+}
+
+/*
+ * Arco: medio punto arriba, canto suave abajo. El radio vertical de 37.5%
+ * es el que da un semicírculo exacto en una caja 3:4 (la mitad del ancho
+ * medida contra el alto); otras proporciones lo ajustan con --arco-v.
+ *
+ * Va como @utility y no dentro de una capa: así acepta variantes, y una
+ * tarjeta puede ser redondeada en el teléfono y arco desde sm.
+ */
+@utility arco-forma {
+  border-radius: 50% 50% var(--radius-foto) var(--radius-foto) / var(--arco-v, 37.5%) var(--arco-v, 37.5%) var(--radius-foto) var(--radius-foto);
+}
+
+/* Transiciones de vista: los cambios de filtro reacomodan las tarjetas
+   deslizándolas a su nuevo lugar en vez de saltar. */
+::view-transition-group(*) {
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Aura & Gold: 120px entre secciones en escritorio, 80px en móvil. */
@@ -568,6 +1137,226 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes letra {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.45em, 0) rotate(6deg);
+    filter: blur(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* El reflejo cruza en el primer 18% del ciclo; el resto, el metal reposa. */
+@keyframes barrido-metal {
+  0% {
+    background-position: 190% 0, 0 0;
+  }
+  18%,
+  100% {
+    background-position: -90% 0, 0 0;
+  }
+}
+
+/* Solo opacidad: con desenfoque serían decenas de filtros durante el
+   scroll, y en un teléfono modesto eso se nota en los cuadros. */
+/* Registrada para que el navegador sepa interpolarla como ángulo. */
+@property --giro {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes girar-metal {
+  to {
+    --giro: 360deg;
+  }
+}
+
+@keyframes haz {
+  from {
+    transform: translateX(-12vw) rotate(14deg);
+  }
+  to {
+    transform: translateX(10vw) rotate(24deg);
+  }
+}
+
+@keyframes latir {
+  from {
+    transform: scale(0.88);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Sube un tramo, aparece y se apaga antes de volver: el salto de regreso
+   ocurre con la mota invisible. */
+@keyframes reel-foco {
+  0%, 100% {
+    transform: scale(0.86);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes reel-sube {
+  from {
+    transform: translateY(calc(var(--vel, 1) * 60px));
+  }
+  to {
+    transform: translateY(calc(var(--vel, 1) * -60px));
+  }
+}
+
+@keyframes firma-sube {
+  from {
+    transform: translateY(45%);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 0.45;
+  }
+}
+
+@keyframes subir {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(14px, -42vh, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes destellar {
+  from {
+    transform: scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(45deg);
+    opacity: 1;
+  }
+}
+
+@keyframes encender {
+  from {
+    opacity: 0.14;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes crecer-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes filete {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes telon {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes asentar {
+  from {
+    scale: 1.3;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+@keyframes giro {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes titilar {
+  from {
+    opacity: 0.25;
+    transform: scale(0.55) rotate(0deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+@keyframes cinta {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes aura-a {
+  to {
+    transform: translate3d(-6vmax, 5vmax, 0) scale(1.12);
+  }
+}
+
+@keyframes aura-b {
+  to {
+    transform: translate3d(8vmax, -6vmax, 0) scale(1.2);
+  }
+}
+
+@keyframes aura-c {
+  to {
+    transform: translate3d(-10vmax, 6vmax, 0) scale(0.85);
+  }
+}
+
+/* Usa `translate` y no `transform`: el transform de la capa es del puntero. */
+@keyframes capa-scroll {
+  to {
+    translate: 0 calc(var(--prof, 1) * -70px);
+  }
+}
+
+@keyframes disolver {
+  to {
+    opacity: 0.1;
+    translate: 0 -56px;
   }
 }
 

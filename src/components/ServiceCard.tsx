@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import type { Service } from '../types';
 import { formatPriceRange, formatDurationRange } from '../lib/format';
 import ServiceVisual, { etiquetaCategoria } from './ui/ServiceVisual';
+import Inclinable from './ui/Inclinable';
 
 interface Props {
   service: Service;
@@ -13,11 +15,15 @@ interface Props {
 }
 
 /**
- * Tarjeta de servicio, compartida entre el home y el catálogo.
+ * Tarjeta de servicio de la portada.
  *
- * Sin caja: la tarjeta con borde, radio y sombra competía con la foto. Acá la
- * imagen apoya directo sobre el fondo y una línea fina separa el pie, que es
- * el único recurso de división del sistema.
+ * Sin caja: la foto apoya directo sobre el fondo y una línea fina separa el
+ * pie. La foto va en arco, como las del hero, con canto de metal que se
+ * enciende al pasar el cursor y una inclinación que sigue al mouse.
+ *
+ * La inclinación vive en un nodo propio y no en el <article>: la entrada de
+ * este deja su `transform` fijado por la animación y le ganaría a cualquier
+ * otro.
  */
 export default function ServiceCard({
   service,
@@ -27,50 +33,58 @@ export default function ServiceCard({
 }: Props) {
   return (
     <article
-      className={`anim-entrada group flex flex-col transition-transform duration-500 ease-out hover:-translate-y-1 ${className}`}
+      className={`anim-entrada group flex flex-col ${className}`}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <ServiceVisual
-        categoria={service.category}
-        imagen={service.image_url}
-        nombre={service.name}
-        prioritaria={prioritaria}
-      />
-
-      <div className="flex flex-1 flex-col pt-5">
-        {/* La categoría va en píldora, no en versalitas sueltas: es el
-            distintivo del sistema para clasificar y se lee de un vistazo. */}
-        <span className="chip w-fit rounded-full px-3 py-1 texto--2 font-medium uppercase espaciado-medio">
+      <Inclinable className="arco-forma arco-4-5 canto-metal">
+        <ServiceVisual
+          categoria={service.category}
+          imagen={service.image_url}
+          nombre={service.name}
+          prioritaria={prioritaria}
+          forma="arco-forma arco-4-5 aspect-[4/5]"
+        />
+        {/* La categoría flota sobre la foto, en vidrio: libera el pie para
+            el nombre y el precio. */}
+        <span className="vidrio absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border px-3.5 py-1 texto--2 font-medium uppercase espaciado-medio text-nacar-100">
           {etiquetaCategoria(service.category)}
         </span>
+      </Inclinable>
 
-        <h3 className="mt-3 font-display texto-2 text-crema-100">{service.name}</h3>
+      <div className="flex flex-1 flex-col pt-6 text-center">
+        <h3 className="font-display texto-3 text-crema-100">{service.name}</h3>
 
-        <p className="mb-5 mt-2 line-clamp-2 texto-0 leading-relaxed text-nacar-200/75">
+        <p className="mx-auto mb-5 mt-2 line-clamp-2 max-w-[34ch] texto-0 leading-relaxed text-nacar-200/75">
           {service.description}
         </p>
 
         {/* mt-auto alinea el pie de todas las tarjetas aunque el texto varíe. */}
-        <div className="linea-cobre mt-auto flex items-baseline justify-between gap-4 border-t pt-4">
+        <div className="linea-cobre mt-auto flex items-center justify-between gap-4 border-t pt-4 text-left">
           <div>
-            {/* El precio es el único dato en cobre de la tarjeta: así destaca
+            {/* El precio es el único dato en metal de la tarjeta: así destaca
                 sin necesidad de agrandarlo ni ponerlo en negrita. */}
-            <p className="font-display texto-2 text-cobre-400">{formatPriceRange(service.price, service.price_max)}</p>
-            <p className="mt-0.5 texto--1 uppercase espaciado-medio text-nacar-300">
+            <p className="texto-metal w-fit whitespace-nowrap pr-1 font-display texto-2">
+              {formatPriceRange(service.price, service.price_max)}
+            </p>
+            <p className="mt-0.5 whitespace-nowrap texto--1 uppercase espaciado-medio text-nacar-300">
               {formatDurationRange(service.duration_minutes, service.duration_max_minutes)}
             </p>
           </div>
 
+          {/* En el carrusel del teléfono la tarjeta mide unos 300px y el
+              precio por rango se partía en dos líneas: ahí el botón queda en
+              un círculo con la flecha, y la palabra vuelve desde sm. */}
           <Link
             to={`/agendar?service=${service.id}`}
             aria-label={`Reservar ${service.name}`}
-            className="relative -my-3 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-colors duration-300 hover:text-cobre-300"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-full border border-cobre-400/40 texto--1 uppercase espaciado-medio text-crema-100 transition-all duration-300 hover:border-cobre-200 hover:bg-cobre-400/10 group-hover:border-cobre-300/70 sm:h-auto sm:w-auto sm:py-2.5 sm:pl-4 sm:pr-3"
           >
-            Reservar
-            {/* Subrayado que se extiende al pasar el cursor. */}
-            <span
+            <span className="hidden sm:inline">Reservar</span>
+            <ArrowUpRight
+              size={15}
+              strokeWidth={1.5}
               aria-hidden="true"
-              className="absolute -bottom-1 left-0 h-px w-0 bg-cobre-500 transition-all duration-300 ease-out group-hover:w-full"
+              className="transition-transform duration-500 ease-out group-hover:rotate-45"
             />
           </Link>
         </div>

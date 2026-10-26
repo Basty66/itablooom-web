@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useId } from 'react';
 
 /**
  * Filete que se dibuja solo al entrar en pantalla, como una firma a mano.
@@ -19,6 +19,12 @@ const CURVAS = {
   sube: 'M20,16 C 70,52 130,52 170,26 C 210,2 260,10 300,44',
 };
 
+/** Dónde termina cada curva: ahí se enciende el destello al final del trazo. */
+const FINALES = {
+  baja: { x: 300, y: 16 },
+  sube: { x: 300, y: 44 },
+};
+
 interface Props {
   /** Cuál de las dos curvas usar. */
   forma?: keyof typeof CURVAS;
@@ -29,6 +35,10 @@ export default function Trazo({ forma = 'baja', className = '' }: Props) {
   const ref = useRef<SVGPathElement>(null);
   const [dibujado, setDibujado] = useState(false);
   const [largo, setLargo] = useState(420);
+  // Un id por instancia: con dos trazos en la página, un id fijo haría que
+  // ambos tomaran el gradiente del primero.
+  const gradiente = useId();
+  const fin = FINALES[forma];
 
   useEffect(() => {
     const el = ref.current;
@@ -62,16 +72,37 @@ export default function Trazo({ forma = 'baja', className = '' }: Props) {
         className="h-[60px] w-[min(90%,340px)] overflow-visible"
         fill="none"
       >
+        <defs>
+          <linearGradient id={gradiente} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#8a5540" stopOpacity="0" />
+            <stop offset="0.25" stopColor="#c68f76" />
+            <stop offset="0.55" stopColor="#fff3ec" />
+            <stop offset="0.8" stopColor="#d6a992" />
+            <stop offset="1" stopColor="#f6dccf" />
+          </linearGradient>
+        </defs>
         <path
           ref={ref}
           d={CURVAS[forma]}
-          stroke="var(--color-cobre-400)"
-          strokeWidth={2}
+          stroke={`url(#${gradiente})`}
+          strokeWidth={1.6}
           strokeLinecap="round"
           style={{
             strokeDasharray: largo,
             strokeDashoffset: dibujado ? 0 : largo,
             transition: 'stroke-dashoffset 1.3s cubic-bezier(0.22, 0.61, 0.36, 1)',
+          }}
+        />
+        {/* Destello de cuatro puntas donde termina la línea: aparece justo
+            cuando la pluma llega, como el brillo al levantarla del papel. */}
+        <path
+          d="M0 -9C.6 -3 3 -.6 9 0 3 .6 .6 3 0 9-.6 3-3 .6-9 0-3-.6-.6-3 0-9Z"
+          fill="#fff3ec"
+          style={{
+            opacity: dibujado ? 1 : 0,
+            transform: `translate(${fin.x}px, ${fin.y}px) scale(${dibujado ? 1 : 0.2}) rotate(${dibujado ? 0 : -90}deg)`,
+            transition: 'opacity 0.6s ease-out 1.1s, transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 1.1s',
+            filter: 'drop-shadow(0 0 5px rgba(246, 220, 207, 0.8))',
           }}
         />
       </svg>

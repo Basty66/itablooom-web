@@ -1,5 +1,6 @@
 import { useRef, useEffect, type ReactNode } from 'react';
 import { Check, Pencil, Lock } from 'lucide-react';
+import { desplazarA } from '../../lib/scroll-suave';
 
 interface Props {
   numero: string;
@@ -53,20 +54,19 @@ export default function SeccionAcordeon({
     const el = ref.current;
     if (!el) return;
     const destino = el.getBoundingClientRect().top + window.scrollY - 88;
-    window.scrollTo({ top: Math.max(destino, 0), behavior: 'smooth' });
+    desplazarA(Math.max(destino, 0));
   }, [abierta]);
 
   return (
     <section
       ref={ref}
-      className={`overflow-hidden rounded-2xl border transition-colors duration-500 ${
-        abierta
-          ? 'border-crema-100/10 bg-tinta-880'
-          : bloqueada
-            ? 'border-crema-100/5 bg-tinta-880/40'
-            : 'border-crema-100/8 bg-tinta-880/70'
+      className={`relative overflow-hidden rounded-[1.6rem] transition-colors duration-500 ${
+        abierta ? 'bg-tinta-880' : bloqueada ? 'bg-tinta-880/35' : 'bg-tinta-880/70'
       }`}
     >
+      {/* Canto de metal: encendido en la sección en curso, apenas insinuado
+          en las demás. */}
+      <span aria-hidden="true" className={`canto-metal absolute inset-0 rounded-[inherit] ${abierta ? 'activo' : ''}`} />
       <h2>
         <button
           type="button"
@@ -81,11 +81,11 @@ export default function SeccionAcordeon({
               se puede, y el número cuando es la sección en curso. */}
           <span
             aria-hidden="true"
-            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full texto--1 tabular-nums transition-colors duration-300 ${
+            className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full texto--1 tabular-nums transition-colors duration-300 ${
               completa && !abierta
-                ? 'bg-rosa-300 text-vino-900'
+                ? 'boton-metal text-vino-900'
                 : abierta
-                  ? 'border border-rosa-300 text-rosa-300'
+                  ? 'canto-metal activo text-cobre-100'
                   : 'border border-crema-100/15 text-nacar-300'
             }`}
           >
@@ -107,7 +107,7 @@ export default function SeccionAcordeon({
               {titulo}
             </span>
             {!abierta && resumen && (
-              <span className="mt-0.5 block truncate texto--1 text-rosa-300">{resumen}</span>
+              <span className="mt-0.5 block truncate texto--1 text-cobre-200">{resumen}</span>
             )}
           </span>
 

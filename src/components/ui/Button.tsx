@@ -16,9 +16,13 @@ const VARIANTES: Record<Variant, string> = {
    * porque el rosa claro parecía necesitar texto oscuro "de advertencia";
    * el vino resuelve eso y además contrasta casi el doble.
    */
+  /*
+   * El mismo rosa, ahora como metal: oro rosa con la luz desplazándose. Solo
+   * usa las bandas claras del metal, así el vino conserva el contraste.
+   */
   primary:
-    'brillo bg-rosa-300 text-vino-900 sombra-sutil ' +
-    'brillo-hover hover:bg-rosa-200 hover:sombra-hover hover:-translate-y-0.5',
+    'brillo boton-metal text-vino-900 ' +
+    'brillo-hover hover:-translate-y-0.5',
   /* Secundario del sistema: fantasma con canto y letra de cobre. */
   secondary:
     'border border-cobre-400/55 text-cobre-300 ' +

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BotonWhatsApp from './components/ui/BotonWhatsApp';
 import BotonSubir from './components/ui/BotonSubir';
+import { useScrollSuave, desplazarA } from './lib/scroll-suave';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import BookingPage from './pages/BookingPage';
@@ -15,7 +16,7 @@ import ReschedulePage from './pages/ReschedulePage';
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    desplazarA(0, { inmediato: true });
   }, [pathname]);
   return null;
 }
@@ -70,6 +71,7 @@ function Layout() {
    * con el contenido pasando por debajo de la barra lateral.
    */
   const esPanel = pathname.startsWith('/admin');
+  useScrollSuave(!esPanel);
 
   return (
     <div className="flex min-h-screen flex-col bg-tinta-900">

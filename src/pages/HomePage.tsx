@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { CalendarHeart, ArrowRight } from 'lucide-react';
+import { useState, useEffect, type CSSProperties } from 'react';
+import { BookOpen } from 'lucide-react';
 import type { Service } from '../types';
 import { getServices } from '../lib/api';
 import Hero from '../components/home/Hero';
 import ComoFunciona from '../components/home/ComoFunciona';
-import VideoBienvenida from '../components/home/VideoBienvenida';
+import Manifiesto from '../components/home/Manifiesto';
 import Reels from '../components/home/Reels';
 import AntesDespues from '../components/home/AntesDespues';
 import Testimonio from '../components/home/Testimonio';
 import SobreMi from '../components/home/SobreMi';
 import Faq from '../components/home/Faq';
+import Cierre from '../components/home/Cierre';
 import ServiceCard from '../components/ServiceCard';
-import Button from '../components/ui/Button';
-import { Section, SectionHeading, Container } from '../components/ui/Section';
-import Revelar from '../components/ui/Revelar';
+import BotonLujo from '../components/ui/BotonLujo';
+import { Section, SectionHeading } from '../components/ui/Section';
 import Trazo from '../components/ui/Trazo';
 import { ServiceCardSkeleton } from '../components/ui/Skeleton';
 
@@ -39,7 +38,8 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <VideoBienvenida />
+      {/* De la promesa del hero a lo que se siente estar ahí. */}
+      <Manifiesto />
       <ComoFunciona />
 
       {/* Cierra el bloque de "cómo es venir" y abre el de resultados. */}
@@ -49,10 +49,11 @@ export default function HomePage() {
           que la clienta vea los precios, y ahí es donde más pesan. */}
       <AntesDespues />
 
-      <Section className="bg-tinta-900">
+      <Section className="tono-cacao">
         <SectionHeading
           eyebrow="Especialidades"
           title="Nuestros servicios"
+          destacar="servicios"
           subtitle="Cada servicio muestra su duración y valor. Elige y reserva al instante."
         />
 
@@ -63,7 +64,13 @@ export default function HomePage() {
           Los márgenes negativos permiten que el carrusel sangre hasta el borde
           sin romper el ancho del contenedor.
         */}
-        <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-4 sin-barra overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+        {/*
+          En el teléfono, carrusel con foco: la tarjeta del centro a tamaño
+          completo y las vecinas achicadas mientras se desliza. Desde sm vuelve
+          a ser grilla, y en escritorio la del medio va más arriba y sube a
+          otra velocidad con el scroll: la fila deja de ser un bloque parejo.
+        */}
+        <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-4 sin-barra overflow-x-auto px-[11%] pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-x-8 sm:gap-y-14 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 lg:gap-x-10 lg:pt-16">
           {cargando
             ? Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} className="w-[78%] shrink-0 snap-center sm:w-auto">
@@ -71,32 +78,22 @@ export default function HomePage() {
                 </div>
               ))
             : services.map((service, i) => (
-                <ServiceCard
-                  className="w-[78%] shrink-0 snap-center sm:w-auto"
+                <div
                   key={service.id}
-                  service={service}
-                  delay={i * 90}
-                  prioritaria={i === 0}
-                />
+                  className={`carrusel-foco w-[78%] shrink-0 snap-center sm:w-auto ${i === 1 ? 'lg:-mt-16' : ''}`}
+                >
+                  <div className="parallax-suave" style={{ '--vel': i === 1 ? 0.8 : -0.3 } as CSSProperties}>
+                    <ServiceCard service={service} delay={i * 90} prioritaria={i === 0} />
+                  </div>
+                </div>
               ))}
         </div>
 
-        {/* Enlace con flecha en vez de botón: el CTA fuerte de la sección son
-            las tarjetas, y otro bloque sólido acá les restaba peso. */}
         {!cargando && services.length > 0 && (
-          <div className="mt-14 text-center">
-            <Link
-              to="/servicios"
-              className="group -my-3 inline-flex items-center gap-3 py-3 texto--1 font-medium uppercase espaciado-amplio text-cobre-300 transition-colors duration-300 hover:text-cobre-200"
-            >
-              Ver menú completo
-              <ArrowRight
-                size={16}
-                strokeWidth={1.5}
-                aria-hidden="true"
-                className="transition-transform duration-300 ease-out group-hover:translate-x-1"
-              />
-            </Link>
+          <div className="mt-14 flex justify-center">
+            <BotonLujo to="/servicios" variante="vidrio" icono={BookOpen}>
+              Ver la carta completa
+            </BotonLujo>
           </div>
         )}
       </Section>
@@ -116,37 +113,7 @@ export default function HomePage() {
       <Testimonio />
 
       {/* Cierre: última oportunidad de conversión antes del footer. */}
-      {/* Único bloque claro del sitio: corta el negro y hace que el cierre resalte. */}
-      <section className="bg-crema-100 py-20 md:py-28">
-        <Container className="relative text-center">
-          {/* Era la única sección que no se revelaba al llegar: al ser la
-              última, aparecía ya puesta y el cierre perdía el gesto. */}
-          <Revelar>
-            <p className="texto--1 font-medium uppercase espaciado-amplio text-vino-900">
-              Reserva tu hora
-            </p>
-            <h2 className="mt-5 texto-4 text-tinta-880">
-              Sal de aquí sintiéndote
-              <span className="italic text-vino-900"> diosa.</span>
-            </h2>
-            {/* Sin tope de ancho la línea llegaba a 128 caracteres: el ojo
-                pierde el renglón al volver a la izquierda. */}
-            <p className="mx-auto mt-4 max-w-[42ch] texto-1 text-tinta-600">
-              Cuéntanos qué servicio te interesa y te confirmamos la disponibilidad el mismo día.
-            </p>
-          </Revelar>
-          {/* Acá el secundario del sistema (cobre sobre oscuro) no sirve: sobre
-              el crema el cobre se borra. Va el primario, que sí contrasta. */}
-          <Revelar delay={160}>
-            <div className="mt-9 flex justify-center">
-              <Button to="/agendar" size="lg" variant="primary">
-                <CalendarHeart size={18} strokeWidth={1.5} />
-                Reservar mi hora
-              </Button>
-            </div>
-          </Revelar>
-        </Container>
-      </section>
+      <Cierre />
     </>
   );
 }

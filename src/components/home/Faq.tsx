@@ -39,6 +39,7 @@ export default function Faq() {
       <SectionHeading
         eyebrow="Dudas frecuentes"
         title="Preguntas y respuestas"
+        destacar="respuestas"
         subtitle="Lo que más nos preguntan, respondido de una vez."
       />
 
@@ -58,14 +59,22 @@ export default function Faq() {
                   className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-cobre-300"
                 >
                   <span className="font-display texto-1 text-crema-100">{pregunta}</span>
-                  <Plus
-                    size={19}
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                    className={`shrink-0 text-cobre-300 transition-transform duration-300 ease-out ${
-                      activa ? 'rotate-45' : ''
+                  {/* El canto se enciende en la pregunta abierta: marca dónde
+                      está la lectura sin cambiar el color del texto. */}
+                  <span
+                    className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                      activa ? 'canto-metal activo' : 'canto-metal'
                     }`}
-                  />
+                  >
+                    <Plus
+                      size={17}
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                      className={`text-cobre-200 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                        activa ? 'rotate-[135deg]' : ''
+                      }`}
+                    />
+                  </span>
                 </button>
               </h3>
 

@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
-import { Play, ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import { useRef, useState, useEffect, type CSSProperties } from 'react';
+import { Play, ArrowUpRight, Volume2, VolumeX } from 'lucide-react';
 import { Section, SectionHeading } from '../ui/Section';
 import { INSTAGRAM_URL, INSTAGRAM_USUARIO } from '../../lib/contacto';
+import IconoInstagram from '../ui/IconoInstagram';
 
 /**
  * Reels del estudio, en carrusel horizontal con formato vertical 9:16.
@@ -161,13 +162,14 @@ export default function Reels() {
   if (REELS.length === 0) return null;
 
   return (
-    <Section className="velo-vino">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+    <Section className="velo-vino overflow-hidden">
+      <div className="flex flex-wrap items-end justify-between gap-6">
         <SectionHeading
           align="left"
           tono="rosa"
-        eyebrow="Portafolio"
+          eyebrow="Portafolio"
           title="Nuestros trabajos"
+          destacar="trabajos"
           subtitle="Mira cómo queda cada servicio antes de reservar."
         />
 
@@ -175,25 +177,27 @@ export default function Reels() {
           href={INSTAGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
-          /* py-3 con -my-3 lleva el alto táctil a 44px sin correr el enlace
-             de su sitio: el texto queda donde estaba y el dedo acierta. */
-          className="group -my-3 inline-flex items-center gap-2 py-3 texto--1 uppercase espaciado-medio text-rosa-300 transition-colors duration-300 hover:text-crema-100"
+          className="vidrio group relative inline-flex items-center gap-2.5 rounded-full border px-5 py-3 texto--1 uppercase espaciado-medio text-crema-100 transition-transform duration-300 hover:-translate-y-0.5"
         >
+          <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit]" />
+          <IconoInstagram />
           @{INSTAGRAM_USUARIO}
-          <ArrowRight
-            size={14}
+          <ArrowUpRight
+            size={15}
             strokeWidth={1.5}
             aria-hidden="true"
-            className="transition-transform duration-300 group-hover:translate-x-1"
+            className="transition-transform duration-300 group-hover:rotate-45"
           />
         </a>
       </div>
 
       {/*
-        Carrusel con scroll-snap: en móvil se desliza uno a uno y en escritorio
-        se ven todos. Los márgenes negativos permiten que sangre hasta el borde.
+        En el teléfono, carrusel con la tarjeta del centro a tamaño completo y
+        las de los costados achicadas; el relleno lateral deja que la primera
+        y la última también lleguen al centro. Desde lg, galería escalonada:
+        las pares bajan, y cada una sube a su velocidad con el scroll.
       */}
-      <div className="-mx-5 mt-12 flex snap-x snap-mandatory gap-4 sin-barra overflow-x-auto px-5 pb-4 sm:mx-0 sm:px-0">
+      <div className="-mx-5 mt-12 flex snap-x snap-mandatory gap-3 sin-barra overflow-x-auto px-[16%] pb-6 sm:px-[28%] lg:mx-0 lg:mt-16 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-20">
         {REELS.map((reel, i) => {
           const reproduciendo = activo === reel.id;
           const sonando = conSonido && reproduciendo;
@@ -204,15 +208,26 @@ export default function Reels() {
                 tarjetas.current[reel.id] = el;
               }}
               data-reel={reel.id}
-              className="anim-entrada group w-[62%] shrink-0 snap-center sm:w-[42%] lg:w-[23%]"
-              style={{ animationDelay: `${i * 80}ms` }}
+              className={`carrusel-foco group w-[68%] shrink-0 snap-center sm:w-[44%] lg:w-auto ${
+                i % 2 === 1 ? 'lg:mt-20' : ''
+              }`}
             >
+              <div className="parallax-suave" style={{ '--vel': i % 2 === 1 ? 0.9 : -0.5 } as CSSProperties}>
+              <div className="anim-entrada" style={{ animationDelay: `${i * 90}ms` }}>
               {/*
                 Contenedor y no <button>: adentro va el altavoz, y un botón
                 dentro de otro botón es HTML inválido. La capa de reproducción
                 es un botón propio que cubre toda la tarjeta.
+
+                En arco, como las fotos del hero: el semicírculo de una caja
+                9:16 pide un radio vertical de 28,125%.
               */}
-              <div className="relative overflow-hidden rounded-[var(--radius-foto)] bg-tinta-850 transition-shadow duration-500 sombra-sutil hover:sombra-hover">
+              <div
+                className={`canto-metal arco-forma relative overflow-hidden bg-tinta-850 transition-shadow duration-500 sombra-sutil hover:sombra-hover ${
+                  reproduciendo ? 'activo' : ''
+                }`}
+                style={{ '--arco-v': '28.125%' } as CSSProperties}
+              >
                 {/*
                   La tarjeta pausada respira: el mismo acercamiento lentísimo
                   del hero, seis por ciento en veintiocho segundos. Cuatro
@@ -251,34 +266,34 @@ export default function Reels() {
                 <button
                   type="button"
                   onClick={() => reproducir(reel.id)}
-                  aria-label={activo === reel.id ? `Pausar ${reel.titulo}` : `Reproducir ${reel.titulo}`}
+                  aria-label={reproduciendo ? `Pausar ${reel.titulo}` : `Reproducir ${reel.titulo}`}
                   className="absolute inset-0 h-full w-full"
                 />
 
                 <span
                   aria-hidden="true"
-                  className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-tinta-900/70 via-transparent to-transparent transition-opacity duration-500 ${
-                    activo === reel.id ? 'opacity-0' : 'opacity-100'
+                  className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-tinta-900/80 via-tinta-900/5 to-transparent transition-opacity duration-500 ${
+                    reproduciendo ? 'opacity-30' : 'opacity-100'
                   }`}
                 />
 
                 <span
                   aria-hidden="true"
-                  className={`pointer-events-none absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-tinta-900/95 transition-all duration-500 ease-out group-hover:scale-110 ${
-                    activo === reel.id ? 'scale-75 opacity-0' : 'opacity-100'
+                  className={`boton-metal pointer-events-none absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-vino-900 transition-all duration-500 ease-out group-hover:scale-110 ${
+                    reproduciendo ? 'scale-75 opacity-0' : 'opacity-100'
                   }`}
                 >
-                  <Play size={17} strokeWidth={1.5} className="ml-0.5 text-crema-100" />
+                  <Play size={19} strokeWidth={1.5} className="ml-0.5" />
                 </span>
 
-                {/* 44px de lado: el mínimo para que el dedo acierte sin pelear
-                    con la capa de reproducción que tiene debajo. */}
+                {/* El altavoz va abajo: arriba lo cortaría la curva del arco.
+                    44px de lado, el mínimo para que el dedo acierte. */}
                 <button
                   type="button"
                   onClick={() => alternarSonido(reel.id)}
                   aria-pressed={sonando}
                   aria-label={sonando ? `Silenciar ${reel.titulo}` : `Activar sonido de ${reel.titulo}`}
-                  className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full bg-tinta-950/70 text-crema-100 backdrop-blur-sm transition-colors duration-300 hover:bg-tinta-950"
+                  className="vidrio absolute bottom-3 right-3 flex h-11 w-11 items-center justify-center rounded-full border text-crema-100 transition-transform duration-300 hover:scale-105"
                 >
                   {sonando ? (
                     <Volume2 size={16} strokeWidth={1.5} aria-hidden="true" />
@@ -288,12 +303,19 @@ export default function Reels() {
                 </button>
 
                 <span
-                  className={`pointer-events-none absolute inset-x-0 bottom-0 p-4 text-left texto--1 text-crema-100 transition-opacity duration-500 ${
-                    activo === reel.id ? 'opacity-0' : 'opacity-100'
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute bottom-4 left-4 texto-metal font-display text-[2rem] italic leading-none transition-opacity duration-500 ${
+                    reproduciendo ? 'opacity-0' : 'opacity-100'
                   }`}
                 >
-                  {reel.titulo}
+                  0{i + 1}
                 </span>
+              </div>
+
+              {/* El nombre va debajo, fuera del video: adentro competía con
+                  la imagen y con el altavoz. */}
+              <p className="mt-4 text-center font-display texto-1 text-crema-100 lg:text-left">{reel.titulo}</p>
+              </div>
               </div>
             </article>
           );

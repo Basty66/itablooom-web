@@ -20,11 +20,10 @@ interface Props {
 }
 
 /*
- * Campo tonal con una sola línea de cobre abajo (utilidad `.campo`). Antes el
- * foco aplicaba `border-tinta-900`, o sea el color del propio fondo: enfocar
- * hacía desaparecer la línea en vez de destacarla.
+ * Campo en caja redondeada con canto fino de cobre (utilidad `.campo`). Al
+ * enfocar el canto se enciende y aparece un halo, así se ve dónde se escribe.
  */
-const INPUT = 'campo w-full px-3 py-3 texto-0';
+const INPUT = 'campo w-full px-4 py-3.5 texto-0';
 
 function Campo({
   label,
@@ -170,7 +169,7 @@ export default function DetailsStep({ datos, onCambio }: Props) {
             aria-hidden="true"
             className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border transition-all duration-200 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-cobre-300 ${
               datos.aceptaTerminos
-                ? 'border-rosa-300 bg-rosa-300'
+                ? 'boton-metal border-transparent'
                 : 'border-crema-100/25 bg-transparent'
             }`}
           >

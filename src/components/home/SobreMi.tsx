@@ -1,6 +1,7 @@
 import { Sparkles, ShieldCheck, HeartHandshake } from 'lucide-react';
 import { Section, SectionHeading } from '../ui/Section';
-import Button from '../ui/Button';
+import BotonLujo from '../ui/BotonLujo';
+import Emblema from '../ui/Emblema';
 import { CIUDAD } from '../../lib/contacto';
 
 /**
@@ -33,77 +34,106 @@ const PILARES = [
 
 export default function SobreMi() {
   return (
-    <Section id="sobre-mi" className="velo-vino">
-      <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-16">
+    <Section id="sobre-mi" className="tono-ciruela">
+      <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
         {/*
-          Columna de identidad: retrato circular con el nombre debajo. El
-          círculo lee como perfil —quién te va a atender— mientras que el
-          rectángulo leía como foto de catálogo.
+          Retrato en arco con canto de metal, el mismo marco de las fotos del
+          hero, y detrás el laurel del emblema como marca de agua: la persona
+          dentro de la corona de la marca.
         */}
-        <div className="lg:col-span-4">
-          <figure className="mx-auto max-w-[11rem] text-center sm:max-w-[16rem] lg:mx-0 lg:max-w-none">
-            {/* Aro discontinuo de cobre alrededor del retrato: enmarca sin
-                encerrar, y el aire entre línea y foto es parte del gesto.
-                En móvil el retrato baja a 11rem: a 16rem se comía media
-                pantalla antes de que empezara la historia. */}
-            <div className="anillo-retrato relative mx-auto aspect-square w-full max-w-[11rem] rounded-full sm:max-w-[16rem]">
-              <img
-                src="/images/g-ignacia.jpg"
-                alt={`${NOMBRE}, especialista de Goddess Studio`}
-                loading="lazy"
-                decoding="async"
-                width={600}
-                height={600}
-                className="relative h-full w-full rounded-full object-cover object-top"
-              />
-            </div>
+        <figure className="relative mx-auto w-full max-w-[17rem] sm:max-w-[21rem] lg:col-span-5 lg:max-w-none">
+          <Emblema sinLetra className="pointer-events-none absolute -inset-[14%] opacity-[0.16]" />
 
-            <figcaption className="mt-4 sm:mt-6">
-              <p className="font-display texto-2 text-crema-100 sm:texto-3">{NOMBRE}</p>
-              <p className="mt-2 texto--2 uppercase espaciado-amplio text-rosa-300">
-                Especialista en uñas, pestañas y cejas
-              </p>
-            </figcaption>
-          </figure>
-        </div>
+          <div className="arco-forma relative p-[1.5px]">
+            <span aria-hidden="true" className="arco-forma marco-metal" />
+            <img
+              src="/images/g-ignacia.jpg"
+              alt={`${NOMBRE}, especialista de Goddess Studio`}
+              loading="lazy"
+              decoding="async"
+              width={600}
+              height={800}
+              className="arco-forma relative aspect-[3/4] w-full object-cover object-top"
+            />
+          </div>
 
-        <div className="lg:col-span-8">
+          {/* Sello que gira sobre el hombro del retrato. */}
+          <span
+            aria-hidden="true"
+            className="vidrio absolute -right-3 top-[10%] flex aspect-square w-[34%] items-center justify-center rounded-full border sm:-right-6"
+          >
+            <svg viewBox="0 0 120 120" className="sello-giro absolute inset-0 h-full w-full">
+              <defs>
+                <path id="sello-fundadora" d="M16,60 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+              </defs>
+              <text className="fill-cobre-100" style={{ fontSize: 9, letterSpacing: '0.22em' }}>
+                <textPath href="#sello-fundadora" startOffset="25%" textAnchor="middle">
+                  FUNDADORA
+                </textPath>
+              </text>
+              <text className="fill-cobre-100" style={{ fontSize: 9, letterSpacing: '0.22em' }}>
+                <textPath href="#sello-fundadora" startOffset="75%" textAnchor="middle">
+                  GODDESS STUDIO
+                </textPath>
+              </text>
+            </svg>
+            <Emblema className="relative h-[46%] w-[46%]" />
+          </span>
+
+          {/* El nombre en una tarjeta de vidrio que flota sobre el pie del
+              retrato: se lee como una firma, no como un pie de foto. */}
+          <figcaption className="vidrio absolute -bottom-7 left-1/2 w-max -translate-x-1/2 rounded-2xl border px-6 py-3.5 text-center">
+            <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit]" />
+            <p className="font-display texto-2 text-crema-100">{NOMBRE}</p>
+            <p className="mt-1 texto--2 uppercase espaciado-amplio text-cobre-300">
+              Uñas · Pestañas · Cejas
+            </p>
+          </figcaption>
+        </figure>
+
+        <div className="lg:col-span-7">
           <SectionHeading
             align="left"
             tono="rosa"
             eyebrow="Fundadora & artista"
             title="Mi historia"
+            destacar="historia"
             subtitle={`Llevo más de cinco años dedicada a las uñas, pestañas y cejas. Empecé atendiendo a amigas en mi casa y hoy tengo mi propio espacio en ${CIUDAD}, donde recibo a cada clienta con hora reservada.`}
           />
 
-          <p className="mt-3 max-w-[58ch] texto--1 leading-relaxed text-nacar-200/80 sm:mt-4 sm:texto-0">
-            Me gusta que salgas sintiéndote regia, pero también que el resultado te dure. Por eso
-            trabajo con productos de calidad y me tomo el tiempo de explicarte cómo cuidar tu
-            trabajo en casa.
-          </p>
+          {/* Su frase, en grande: es lo que una clienta recuerda de ella. */}
+          <blockquote className="relative mt-9 border-l border-cobre-400/40 pl-6">
+            <p className="font-display text-[clamp(1.5rem,2.6vw,2.2rem)] italic leading-snug">
+              <span className="texto-metal pr-1">
+                “Me gusta que salgas sintiéndote regia, pero también que el resultado te dure.”
+              </span>
+            </p>
+            <p className="mt-4 max-w-[52ch] texto-0 leading-relaxed text-nacar-200/80">
+              Por eso trabajo con productos de calidad y me tomo el tiempo de explicarte cómo cuidar
+              tu trabajo en casa.
+            </p>
+          </blockquote>
 
-          <ul className="mt-5 space-y-3 sm:mt-8 sm:space-y-4">
+          <ul className="mt-10 grid gap-3 sm:grid-cols-3 sm:gap-4">
             {PILARES.map(({ icono: Icono, titulo, texto }, i) => (
               <li
                 key={titulo}
-                className="anim-entrada flex items-start gap-3 sm:gap-4"
-                style={{ animationDelay: `${i * 80}ms` }}
+                className="anim-entrada relative rounded-[1.4rem] bg-tinta-880/70 p-5"
+                style={{ animationDelay: `${i * 90}ms` }}
               >
-                <span className="linea-rosa flex h-10 w-10 shrink-0 items-center justify-center rounded-full border">
-                  <Icono size={17} strokeWidth={1.5} className="text-rosa-300" aria-hidden="true" />
+                <span aria-hidden="true" className="canto-metal absolute inset-0 rounded-[inherit]" />
+                <span className="relative flex h-10 w-10 items-center justify-center rounded-full">
+                  <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+                  <Icono size={17} strokeWidth={1.5} className="text-cobre-200" aria-hidden="true" />
                 </span>
-                <div>
-                  <h3 className="texto-0 font-medium text-crema-100">{titulo}</h3>
-                  <p className="mt-0.5 texto--1 text-nacar-200/80">{texto}</p>
-                </div>
+                <h3 className="mt-4 font-display texto-1 text-crema-100">{titulo}</h3>
+                <p className="mt-1.5 texto--1 leading-relaxed text-nacar-200/80">{texto}</p>
               </li>
             ))}
           </ul>
 
-          <div className="mt-6 sm:mt-9">
-            <Button to="/agendar" size="md" variant="primary">
-              Reservar mi hora
-            </Button>
+          <div className="mt-10">
+            <BotonLujo to="/agendar">Reservar con Ignacia</BotonLujo>
           </div>
         </div>
       </div>

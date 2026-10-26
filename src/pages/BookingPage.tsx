@@ -203,7 +203,7 @@ export default function BookingPage() {
   const resumenDatos = listo.datos ? `${datos.name} · ${datos.phone}` : undefined;
 
   return (
-    <div className="min-h-screen bg-tinta-900 py-8 md:py-14">
+    <div className="luz-vino min-h-screen py-8 md:py-14">
       <Container>
         {/*
           El titular decía "¿Cuándo te esperamos?" durante los cuatro pasos,
@@ -214,14 +214,14 @@ export default function BookingPage() {
         <header className="mb-8">
           <p className="texto--1 uppercase espaciado-amplio text-rosa-300">Agenda tu visita</p>
           <h1 className="mt-4 texto-5 text-crema-100">
-            Reserva tu <span className="italic text-cobre-400">hora</span>
+            Reserva tu <span className="texto-metal pr-[0.08em] italic">hora</span>
           </h1>
 
           {/* Progreso: cuánto falta para terminar. Sin esto la clienta no
               sabía si quedaba un paso o cinco. */}
           <div className="mt-7 flex items-center gap-4">
             <div
-              className="h-px flex-1 overflow-hidden bg-crema-100/10"
+              className="h-[3px] flex-1 overflow-hidden rounded-full bg-crema-100/10"
               role="progressbar"
               aria-valuenow={pasosListos}
               aria-valuemin={0}
@@ -229,7 +229,7 @@ export default function BookingPage() {
               aria-label="Avance de la reserva"
             >
               <div
-                className="h-full bg-rosa-300 transition-all duration-700 ease-out"
+                className="boton-metal h-full rounded-full transition-all duration-700 ease-out"
                 style={{ width: `${(pasosListos / 4) * 100}%` }}
               />
             </div>
@@ -347,7 +347,7 @@ export default function BookingPage() {
                 <dl className="mt-7 space-y-5">
                   <div className="flex items-start gap-4">
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-cobre-400/20 bg-tinta-860">
-                      <Sparkles size={15} strokeWidth={1.5} className="text-rosa-300" aria-hidden="true" />
+                      <Sparkles size={15} strokeWidth={1.5} className="text-cobre-200" aria-hidden="true" />
                     </span>
                     <div className="min-w-0">
                       <dt className="sr-only">Servicio</dt>
@@ -364,7 +364,7 @@ export default function BookingPage() {
 
                   <div className="flex items-start gap-4">
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-cobre-400/20 bg-tinta-860">
-                      <UserRound size={15} strokeWidth={1.5} className="text-rosa-300" aria-hidden="true" />
+                      <UserRound size={15} strokeWidth={1.5} className="text-cobre-200" aria-hidden="true" />
                     </span>
                     <div>
                       <dt className="texto--2 uppercase espaciado-medio text-nacar-300">Con</dt>
@@ -378,7 +378,7 @@ export default function BookingPage() {
                 {fecha && hora ? (
                   <div className="rounded-[var(--radius-suave)] border border-rosa-300/20 bg-tinta-860/60 p-4">
                     <p className="texto--2 uppercase espaciado-amplio text-rosa-300">Horario elegido</p>
-                    <p className="mt-1.5 texto-1 capitalize text-crema-100">
+                    <p className="mt-1.5 texto-1 text-crema-100 first-letter:uppercase">
                       {format(fecha, "EEEE d 'de' MMMM", { locale: es })}
                     </p>
                     <p className="flex items-center gap-1.5 texto-0 text-nacar-200/80">
@@ -394,7 +394,7 @@ export default function BookingPage() {
                   <span className="texto--2 uppercase espaciado-amplio text-nacar-300">
                     {pagoCompleto ? 'Pagas ahora' : 'Abonas ahora'}
                   </span>
-                  <span className="font-display texto-3 text-cobre-400">{formatPrice(aPagarAhora)}</span>
+                  <span className="texto-metal pr-0.5 font-display texto-3">{formatPrice(aPagarAhora)}</span>
                 </div>
                 {saldo > 0 && (
                   <p className="mt-1 text-right texto--1 text-nacar-300">
@@ -459,7 +459,7 @@ export default function BookingPage() {
                     className={`transition-transform duration-300 ${resumenAbierto ? '' : 'rotate-180'}`}
                   />
                 </span>
-                <span className="block font-display texto-2 text-cobre-400">
+                <span className="texto-metal block w-fit pr-0.5 font-display texto-2">
                   {formatPrice(aPagarAhora)}
                 </span>
               </button>
@@ -497,10 +497,10 @@ function BotonPagar({
     <button
       type="submit"
       disabled={procesando}
-      className={`brillo brillo-hover flex items-center justify-center gap-2 rounded-[var(--radius-suave)] px-6 py-3.5 texto--1 font-medium uppercase espaciado-medio transition-all duration-300 ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 ${
+      className={`brillo brillo-hover relative flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3.5 texto--1 font-medium uppercase espaciado-medio transition-all duration-300 ease-out active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 ${
         todoListo
-          ? 'bg-rosa-300 text-vino-900 hover:bg-rosa-200'
-          : 'border border-cobre-400/45 text-cobre-300 hover:bg-cobre-400/10'
+          ? 'boton-metal text-vino-900'
+          : 'border border-cobre-400/45 text-cobre-200 hover:bg-cobre-400/10'
       } ${className}`}
     >
       {procesando ? (

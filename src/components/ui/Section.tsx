@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Fragment, type CSSProperties, type ReactNode } from 'react';
 import Revelar from './Revelar';
 
 /**
@@ -35,6 +35,11 @@ interface HeadingProps {
   /** Línea corta sobre el título; ubica la sección sin robarle jerarquía. */
   eyebrow?: string;
   title: string;
+  /**
+   * Palabras del título que van en itálica de oro rosa. Una sola por título:
+   * es el acento, y dos ya compiten entre sí.
+   */
+  destacar?: string;
   subtitle?: string;
   as?: 'h1' | 'h2';
   align?: 'left' | 'center';
@@ -45,12 +50,14 @@ interface HeadingProps {
 export function SectionHeading({
   eyebrow,
   title,
+  destacar,
   subtitle,
   as: Tag = 'h2',
   align = 'center',
   tono = 'rosa',
 }: HeadingProps) {
   const centrado = align === 'center';
+  const acentos = new Set(destacar?.split(' ') ?? []);
   return (
     <div className={`max-w-2xl ${centrado ? 'mx-auto text-center' : 'text-left'}`}>
       {eyebrow && (
@@ -63,16 +70,35 @@ export function SectionHeading({
         </p>
       )}
 
-      {/* Regla fina bajo el rótulo: el separador del sistema, en vez de peso. */}
+      {/* Filete de metal bajo el rótulo: el separador del sistema, que se
+          traza cuando la sección aparece. */}
       {eyebrow && (
         <div
           aria-hidden="true"
-          className={`${tono === 'cobre' ? 'linea-cobre' : 'linea-rosa'} mb-6 mt-4 w-10 border-t ${centrado ? 'mx-auto' : ''}`}
+          className={`filete-entrada mb-6 mt-4 h-px w-10 bg-gradient-to-r from-cobre-600 via-cobre-100 to-cobre-400 ${
+            centrado ? 'mx-auto' : ''
+          }`}
+          /* Centrado crece desde el medio; a la izquierda, desde su borde. */
+          style={centrado ? { transformOrigin: 'center' } : undefined}
         />
       )}
 
+      {/*
+        Palabra por palabra. Los espacios quedan como texto entre las cajas,
+        así el título se sigue leyendo y cortando de renglón como una frase.
+      */}
       <Tag className={`${Tag === 'h1' ? 'texto-5' : 'texto-4'} text-crema-100`}>
-        {title}
+        {title.split(' ').map((palabra, i) => (
+          <Fragment key={i}>
+            {i > 0 && ' '}
+            <span
+              className={`palabra ${acentos.has(palabra) ? 'texto-metal pr-[0.08em] italic' : ''}`}
+              style={{ '--i': i } as CSSProperties}
+            >
+              {palabra}
+            </span>
+          </Fragment>
+        ))}
       </Tag>
 
       {subtitle && <p className="mt-4 texto-1 leading-relaxed text-nacar-200/80">{subtitle}</p>}

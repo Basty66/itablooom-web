@@ -75,7 +75,7 @@ export default function ServiceVisual({
             width={800}
             height={450}
             onError={() => setFallo(true)}
-            className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+            className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.07]"
           />
           {/* Velo mínimo: unifica fotos de temperaturas distintas sin ensuciar. */}
           <div aria-hidden="true" className="absolute inset-0 bg-tinta-900/5" />

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
+import { desplazarA } from '../../lib/scroll-suave';
 
 /** Rutas sin botón: el agendador ya tiene su barra fija ocupando ese rincón. */
 const RUTAS_OCULTAS = ['/agendar'];
@@ -36,7 +37,7 @@ export default function BotonSubir() {
 
   function subir() {
     const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.scrollTo({ top: 0, behavior: suave ? 'smooth' : 'auto' });
+    desplazarA(0, { inmediato: !suave });
   }
 
   return (

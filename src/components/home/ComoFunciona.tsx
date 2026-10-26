@@ -14,8 +14,10 @@ const PASOS = [
   },
   {
     icono: CreditCard,
-    titulo: 'Paga online',
-    texto: 'Pagas el total con Mercado Pago. Débito, crédito o Webpay.',
+    titulo: 'Asegura tu hora',
+    /* Antes decía "pagas el total", y el sitio entero habla de reservar con
+       abono: la clienta podía elegir cualquiera de los dos. */
+    texto: 'Con un abono o pagando el total, por Mercado Pago: débito, crédito o Webpay.',
   },
   {
     icono: BellRing,
@@ -24,48 +26,56 @@ const PASOS = [
   },
 ];
 
+/**
+ * Los cuatro pasos como una línea de tiempo con canto de metal.
+ *
+ * En móvil la línea es vertical y crece a medida que se baja; antes eran
+ * dos columnas con letra de 12px, que se entendían de un vistazo pero no se
+ * leían. En escritorio la línea es horizontal y se traza al aparecer.
+ */
 export default function ComoFunciona() {
   return (
     <Section id="como-funciona" className="bg-tinta-900">
       <SectionHeading
         eyebrow="Proceso simple"
         title="Cómo reservar"
+        destacar="reservar"
         subtitle="Cuatro pasos, menos de un minuto. Sin ida y vuelta por mensajes."
       />
 
-      {/*
-        Dos columnas en móvil: los cuatro pasos apilados ocupaban 1,3 pantallas
-        para explicar algo que se entiende de un vistazo. Cada celda queda con
-        el texto justo y desde md vuelven a una fila de cuatro.
-      */}
-      <ol className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:mt-16 sm:gap-6 md:grid-cols-4">
+      <ol className="relative mx-auto mt-14 grid max-w-md gap-11 md:mt-20 md:max-w-none md:grid-cols-4 md:gap-8">
+        {/* Vertical en móvil: pasa por el centro de los círculos. */}
+        <span
+          aria-hidden="true"
+          className="linea-proceso absolute bottom-6 left-[1.375rem] top-6 w-px origin-top bg-gradient-to-b from-cobre-100 via-cobre-400 to-cobre-600/0 md:hidden"
+        />
+        {/* Horizontal desde md, a la altura de los círculos. */}
+        <span
+          aria-hidden="true"
+          className="filete-entrada absolute left-6 right-0 top-[1.375rem] hidden h-px bg-gradient-to-r from-cobre-100 via-cobre-400 to-cobre-600/0 md:block"
+          style={{ animationDuration: '1.8s', animationDelay: '300ms' }}
+        />
+
         {PASOS.map(({ icono: Icono, titulo, texto }, i) => (
           <li
             key={titulo}
-            className="anim-entrada group relative min-w-0"
-            style={{ animationDelay: `${i * 90}ms` }}
+            className="anim-entrada group relative flex gap-5 md:flex-col md:gap-0"
+            style={{ animationDelay: `${200 + i * 140}ms` }}
           >
-            {/* El número va de marca de agua detrás del contenido: ordena la
-                secuencia sin competir con el título, que es lo que se lee. */}
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-2 right-0 select-none font-display text-[3.5rem] leading-none text-crema-100/10 sm:right-2 sm:text-[6.5rem]"
-            >
-              0{i + 1}
+            <span className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-tinta-900 transition-transform duration-500 ease-out group-hover:scale-110">
+              <span aria-hidden="true" className="canto-metal activo absolute inset-0 rounded-full" />
+              <Icono size={18} strokeWidth={1.4} className="text-cobre-200" aria-hidden="true" />
             </span>
 
-            <Icono
-              size={20}
-              strokeWidth={1.3}
-              className="relative text-rosa-300 transition-transform duration-500 ease-out group-hover:-translate-y-0.5 sm:size-[22px]"
-              aria-hidden="true"
-            />
-
-            <div className="relative mt-4 min-w-0 sm:mt-5">
-              <h3 className="font-display texto-1 text-crema-100 sm:texto-2">{titulo}</h3>
-              <p className="mt-1.5 texto--1 leading-relaxed text-nacar-200/80 sm:mt-2 sm:texto-0">
-                {texto}
-              </p>
+            <div className="min-w-0 md:mt-7">
+              <span
+                aria-hidden="true"
+                className="texto-metal block font-display text-[2.4rem] italic leading-none md:text-[3.2rem]"
+              >
+                0{i + 1}
+              </span>
+              <h3 className="mt-2 font-display texto-2 text-crema-100">{titulo}</h3>
+              <p className="mt-2 max-w-[34ch] texto-0 leading-relaxed text-nacar-200/80">{texto}</p>
             </div>
           </li>
         ))}

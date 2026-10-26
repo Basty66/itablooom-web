@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Check } from 'lucide-react';
 import type { Service } from '../../types';
 import { formatPriceRange, formatDurationRange } from '../../lib/format';
 import { Skeleton } from '../ui/Skeleton';
 import { etiquetaCategoria } from '../ui/ServiceVisual';
 import { CATEGORIAS_GODDESS } from '../../lib/categorias';
+import { ICONOS_RUBRO } from '../../lib/iconos-rubro';
+import SelectorSegmentado from '../ui/SelectorSegmentado';
 
 interface Props {
   services: Service[];
@@ -22,6 +25,14 @@ interface Props {
  * un relleno de color.
  */
 export default function ServiceStep({ services, seleccionado, onSeleccionar, cargando }: Props) {
+  /*
+   * Rubro a la vista. Antes se listaban los trece servicios de corrido y en
+   * el teléfono eso era casi tres pantallas para llegar a cejas. Arranca en
+   * el rubro del servicio ya elegido —el que viene desde el catálogo— o en
+   * el primero.
+   */
+  const [rubroElegido, setRubroElegido] = useState<string | null>(null);
+
   if (cargando) {
     return (
       <div className="divide-y divide-cobre-400/25 border-y border-cobre-400/25">
@@ -70,85 +81,129 @@ export default function ServiceStep({ services, seleccionado, onSeleccionar, car
 
   let indice = -1;
 
+  const rubroVisible =
+    rubroElegido ?? (seleccionado ? etiquetaCategoria(seleccionado.category) : gruposOrdenados[0][0]);
+  const idDeRubro = (label: string) => CATEGORIAS_GODDESS.find((c) => c.label === label)?.id ?? 'all';
+
   return (
-    <div role="radiogroup" aria-label="Servicios disponibles" className="flex flex-col gap-7">
-      {gruposOrdenados.map(([rubro, lista]) => (
-        <div key={rubro}>
-          <p className="mb-1 texto--2 uppercase espaciado-amplio text-rosa-300">{rubro}</p>
-          <div className="divide-y divide-cobre-400/25 border-y border-cobre-400/25">
-      {lista.map((service) => {
-        const activo = seleccionado?.id === service.id;
-        const i = ++indice;
+    <div className="flex flex-col gap-5">
+      {gruposOrdenados.length > 1 && (
+        <SelectorSegmentado
+          etiqueta="Rubro"
+          className="self-start"
+          activa={rubroVisible}
+          onCambio={setRubroElegido}
+          opciones={gruposOrdenados.map(([rubro, lista]) => ({
+            id: rubro,
+            label: rubro,
+            total: lista.length,
+            icono: ICONOS_RUBRO[idDeRubro(rubro)],
+          }))}
+        />
+      )}
 
-        return (
-          <button
-            key={service.id}
-            type="button"
-            role="radio"
-            aria-checked={activo}
-            onClick={() => onSeleccionar(service)}
-            style={{ animationDelay: `${i * 60}ms` }}
-            className={`anim-entrada group relative flex w-full items-center gap-4 py-5 pl-4 pr-1 text-left transition-colors duration-300 sm:gap-5 ${
-              activo ? 'bg-rosa-300/8' : 'hover:bg-tinta-850'
-            }`}
-          >
-            {/*
-              Barra de selección al canto. Era `bg-tinta-900`, es decir el
-              color del propio fondo: marcaba la fila con una barra invisible
-              y no había forma de saber cuál estaba elegida.
-            */}
-            <span
-              aria-hidden="true"
-              className={`absolute left-0 top-0 h-full w-0.5 transition-colors duration-300 ${
-                activo ? 'bg-rosa-300' : 'bg-transparent'
+      <div role="radiogroup" aria-label="Servicios disponibles" className="flex flex-col gap-7">
+        {gruposOrdenados
+          .filter(([rubro]) => rubro === rubroVisible)
+          .map(([rubro, lista]) => (
+          <div key={rubro}>
+            <div className="divide-y divide-cobre-400/25 border-y border-cobre-400/25">
+        {lista.map((service) => {
+          const activo = seleccionado?.id === service.id;
+          const i = ++indice;
+
+          return (
+            <button
+              key={service.id}
+              type="button"
+              role="radio"
+              aria-checked={activo}
+              onClick={() => onSeleccionar(service)}
+              style={{ animationDelay: `${i * 60}ms` }}
+              className={`anim-entrada group relative flex w-full items-center gap-4 py-5 pl-4 pr-1 text-left transition-colors duration-300 sm:gap-5 ${
+                activo ? 'bg-rosa-300/8' : 'hover:bg-tinta-850'
               }`}
-            />
+            >
+              {/*
+                Barra de selección al canto. Era `bg-tinta-900`, es decir el
+                color del propio fondo: marcaba la fila con una barra invisible
+                y no había forma de saber cuál estaba elegida.
+              */}
+              <span
+                aria-hidden="true"
+                className={`absolute left-0 top-0 h-full w-0.5 transition-opacity duration-300 bg-gradient-to-b from-cobre-100 via-cobre-300 to-cobre-500 ${
+                  activo ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
 
-            <span className="h-24 w-24 shrink-0 overflow-hidden rounded-[var(--radius-medio)] bg-tinta-850 sm:h-28 sm:w-28">
-              {service.image_url && (
-                <img
-                  src={service.image_url}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
-                />
-              )}
-            </span>
-
-            <span className="flex min-w-0 flex-1 flex-col">
-              <span className="font-display texto-1 leading-tight text-crema-100">
-                {service.name}
+              <span className="h-20 w-20 shrink-0 overflow-hidden rounded-[var(--radius-medio)] bg-tinta-850 sm:h-28 sm:w-28">
+                {service.image_url && (
+                  <img
+                    src={service.image_url}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                  />
+                )}
               </span>
 
-              <span className="mt-1 texto--1 text-nacar-300">
-                {formatDurationRange(service.duration_minutes, service.duration_max_minutes)}
-              </span>
-            </span>
-
-            <span className="flex shrink-0 flex-col items-end gap-1.5 pl-2 text-right">
-              <span className="block font-display texto-1 tabular-nums text-cobre-400">
-                {formatPriceRange(service.price, service.price_max)}
-              </span>
-              {/* Palomita para el elegido: en una lista de siete filas, la
-                  barra de 2px al canto se pierde de vista. */}
-              {activo ? (
-                <span className="flex items-center gap-1.5 texto--2 uppercase espaciado-medio text-rosa-300">
-                  <Check size={13} strokeWidth={2.5} aria-hidden="true" />
-                  Elegido
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span className="font-display texto-1 leading-tight text-crema-100">
+                  {service.name}
                 </span>
-              ) : (
-                <span className="texto--2 uppercase espaciado-medio text-nacar-300 transition-colors duration-300 group-hover:text-crema-100">
-                  Elegir
+
+                <span className="mt-1 texto--1 text-nacar-300">
+                  {formatDurationRange(service.duration_minutes, service.duration_max_minutes)}
                 </span>
-              )}
-            </span>
-          </button>
-        );
-      })}
+
+                {/*
+                  En el teléfono el precio va acá, bajo la duración. En su
+                  columna de la derecha, un rango como "$25.000 – $35.000" no
+                  se encogía y dejaba al nombre y la duración en una tira de
+                  50px, partidos palabra por palabra.
+                */}
+                <span className="texto-metal mt-1.5 w-fit whitespace-nowrap font-display texto-1 tabular-nums sm:hidden">
+                  {formatPriceRange(service.price, service.price_max)}
+                </span>
+              </span>
+
+              {/* En el teléfono, un círculo de selección en vez de la palabra:
+                  es el indicador que se espera de una lista de opciones y deja
+                  el ancho para el precio. */}
+              <span
+                aria-hidden="true"
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-colors duration-300 sm:hidden ${
+                  activo ? 'boton-metal border-transparent text-vino-900' : 'border-cobre-400/50'
+                }`}
+              >
+                {activo && <Check size={13} strokeWidth={2.5} />}
+              </span>
+
+              <span className="hidden shrink-0 flex-col items-end gap-1.5 pl-2 text-right sm:flex">
+                <span className="texto-metal hidden font-display texto-1 tabular-nums sm:block">
+                  {formatPriceRange(service.price, service.price_max)}
+                </span>
+                {/* Palomita para el elegido: en una lista de siete filas, la
+                    barra de 2px al canto se pierde de vista. */}
+                {activo ? (
+                  <span className="flex items-center gap-1.5 texto--2 uppercase espaciado-medio text-cobre-200">
+                    <Check size={13} strokeWidth={2.5} aria-hidden="true" />
+                    Elegido
+                  </span>
+                ) : (
+                  <span className="texto--2 uppercase espaciado-medio text-nacar-300 transition-colors duration-300 group-hover:text-crema-100">
+                    Elegir
+                  </span>
+                )}
+              </span>
+            </button>
+          );
+        })}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

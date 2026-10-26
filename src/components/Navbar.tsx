@@ -2,6 +2,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, Mail } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import Button from './ui/Button';
+import BotonLujo from './ui/BotonLujo';
+import Emblema from './ui/Emblema';
 import IconoInstagram from './ui/IconoInstagram';
 import { linkWhatsApp, EMAIL, INSTAGRAM_URL, WHATSAPP_VISIBLE } from '../lib/contacto';
 
@@ -87,12 +89,15 @@ export default function Navbar() {
           {/* La marca completa en serif, con "Studio" en itálica rosa: en el
               boceto es una sola palabra compuesta, no un logo con bajada en
               versalitas. */}
-          <Link to="/" onClick={contarToque} className="group flex items-baseline gap-2">
-            <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
-              Goddess
-            </span>
-            <span className="font-display texto-2 italic text-rosa-300 transition-colors duration-200 group-hover:text-rosa-200">
-              Studio
+          <Link to="/" onClick={contarToque} className="group flex items-center gap-2.5">
+            {/* El emblema gira apenas al pasar el cursor, como una moneda que
+                se ladea a la luz. */}
+            <Emblema className="h-9 w-9 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-[10deg] md:h-10 md:w-10" />
+            <span className="flex items-baseline gap-2">
+              <span className="font-display texto-2 font-medium tracking-tight text-crema-100">
+                Goddess
+              </span>
+              <span className="texto-metal pr-0.5 font-display texto-2 italic">Studio</span>
             </span>
           </Link>
 
@@ -118,9 +123,9 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <Button to="/agendar" size="sm" variant="primary">
+            <BotonLujo to="/agendar" tamano="sm">
               Reservar hora
-            </Button>
+            </BotonLujo>
           </div>
 
           <button

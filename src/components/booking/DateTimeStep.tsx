@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { format, addDays, startOfDay, isSameDay, isSameMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { CalendarX2, Sun, Moon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarX2, Sun, Moon } from 'lucide-react';
 import type { TimeSlot } from '../../types';
 import { TimeSlotSkeleton } from '../ui/Skeleton';
 
@@ -47,8 +46,6 @@ export default function DateTimeStep({
   const hoy = startOfDay(new Date());
   const dias = proximosDias();
   const semanas = [dias.slice(0, 7), dias.slice(7)];
-  // Solo aplica en móvil: desde sm se ven las dos semanas a la vez.
-  const [semana, setSemana] = useState(0);
 
   const disponibles = slots.filter((s) => s.available);
   const manana = slots.filter((s) => Number(s.time.split(':')[0]) < 13);
@@ -80,7 +77,7 @@ export default function DateTimeStep({
         {/* Tres columnas desde lg: con dos, veinte horarios hacían diez filas
             y la sección se estiraba casi una pantalla completa en escritorio,
             donde el ancho sobraba. */}
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {lista.map((slot) => {
             const activo = hora === slot.time;
             return (
@@ -91,12 +88,12 @@ export default function DateTimeStep({
                 aria-checked={activo}
                 disabled={!slot.available}
                 onClick={() => onHora(slot.time)}
-                className={`flex items-center justify-center rounded-[var(--radius-suave)] border px-4 py-3 texto-0 tabular-nums transition-all duration-300 ease-out ${
+                className={`flex items-center justify-center rounded-full border px-3 py-2.5 texto-0 tabular-nums transition-all duration-300 ease-out active:scale-95 ${
                   !slot.available
-                    ? 'cursor-not-allowed border-cobre-400/5 bg-tinta-880 text-nacar-300/40 line-through decoration-cobre-400/20'
+                    ? 'cursor-not-allowed border-transparent text-nacar-300/35 line-through decoration-cobre-400/25'
                     : activo
-                      ? 'border-rosa-300 bg-rosa-300/10 font-medium text-rosa-300'
-                      : 'border-cobre-400/10 bg-tinta-880 text-nacar-200/85 hover:border-cobre-400/30 hover:bg-tinta-840 hover:text-crema-100'
+                      ? 'boton-metal border-transparent font-medium text-vino-900'
+                      : 'border-cobre-400/20 bg-tinta-870 text-nacar-200/90 hover:border-cobre-300/60 hover:text-crema-100'
                 }`}
               >
                 {slot.time}
@@ -109,35 +106,57 @@ export default function DateTimeStep({
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-2 md:items-start lg:gap-10">
+    /* `grid-cols-1` fija la columna en minmax(0, 1fr): sin eso, la tira de
+       días le imponía su ancho completo y el paso entero se salía de la
+       pantalla por la derecha. */
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-start lg:gap-10">
       {/* Calendario en tarjeta propia: se lee como un objeto, no como una
           franja más del formulario. */}
-      <div className="rounded-2xl border border-crema-100/5 bg-tinta-870 p-5 sm:p-6">
+      <div className="min-w-0 rounded-2xl border border-crema-100/5 bg-tinta-870 p-5 sm:p-6">
         <div className="mb-5 flex items-center justify-between gap-3">
           <h3 className="font-display texto-2 capitalize text-crema-100">{rangoMeses}</h3>
 
-          {/* Navegación entre semanas, solo en móvil: ahí se muestra una sola
-              a la vez para que el calendario no se coma media pantalla. */}
-          <div className="flex gap-2 sm:hidden">
-            {[
-              { dir: -1, Icono: ChevronLeft, label: 'Semana anterior' },
-              { dir: 1, Icono: ChevronRight, label: 'Semana siguiente' },
-            ].map(({ dir, Icono, label }) => (
-              <button
-                key={label}
-                type="button"
-                aria-label={label}
-                disabled={dir < 0 ? semana === 0 : semana === semanas.length - 1}
-                onClick={() => setSemana((s) => Math.min(Math.max(s + dir, 0), semanas.length - 1))}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-cobre-400/25 text-nacar-200/85 transition-colors duration-300 hover:border-rosa-300 hover:text-rosa-300 disabled:opacity-30"
-              >
-                <Icono size={17} strokeWidth={1.5} aria-hidden="true" />
-              </button>
-            ))}
-          </div>
         </div>
 
-        <div className="mb-3 grid grid-cols-7 gap-1 sm:gap-2">
+        {/*
+          En el teléfono, los días van en una tira que se desliza con el dedo,
+          como en las apps de reserva: se ven cinco a la vez, cada uno con su
+          nombre, y no hace falta paginar semana por semana con flechas.
+        */}
+        <div className="-mx-5 flex snap-x gap-2 overflow-x-auto px-5 pb-1 sin-barra sm:hidden">
+          {dias.map((dia) => {
+            const domingo = dia.getDay() === 0;
+            const activo = fecha && isSameDay(dia, fecha);
+            const relativa = etiquetaRelativa(dia, hoy);
+            return (
+              <button
+                key={dia.toISOString()}
+                type="button"
+                disabled={domingo}
+                onClick={() => onFecha(dia)}
+                aria-pressed={!!activo}
+                aria-label={format(dia, "EEEE d 'de' MMMM", { locale: es })}
+                className={`flex w-[3.9rem] shrink-0 snap-start flex-col items-center gap-1 rounded-2xl py-3 transition-all duration-300 ease-out active:scale-95 ${
+                  domingo
+                    ? 'cursor-not-allowed text-nacar-300/45'
+                    : activo
+                      ? 'boton-metal text-vino-900'
+                      : 'border border-cobre-400/15 bg-tinta-860/60 text-nacar-200/90'
+                }`}
+              >
+                <span className="texto--2 uppercase espaciado-medio">
+                  {format(dia, 'EEE', { locale: es }).replace('.', '')}
+                </span>
+                <span className="font-display texto-2 tabular-nums leading-none">{format(dia, 'd')}</span>
+                <span className={`texto--2 ${activo ? 'text-vino-900/70' : 'text-cobre-300'}`}>
+                  {domingo ? 'cerrado' : (relativa ?? '\u00a0')}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mb-3 hidden grid-cols-7 gap-1 sm:grid sm:gap-2">
           {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((d, i) => (
             <span
               key={i}
@@ -149,12 +168,9 @@ export default function DateTimeStep({
           ))}
         </div>
 
-        <div className="space-y-2">
+        <div className="hidden space-y-2 sm:block">
           {semanas.map((sem, si) => (
-            <div
-              key={si}
-              className={`grid-cols-7 gap-1 sm:grid sm:gap-2 ${si === semana ? 'grid' : 'hidden'}`}
-            >
+            <div key={si} className="grid grid-cols-7 gap-2">
               {sem.map((dia) => {
                 const domingo = dia.getDay() === 0;
                 const activo = fecha && isSameDay(dia, fecha);
@@ -175,7 +191,7 @@ export default function DateTimeStep({
                       domingo
                         ? 'cursor-not-allowed text-nacar-300/55'
                         : activo
-                          ? 'bg-rosa-300 font-medium text-vino-900'
+                          ? 'boton-metal font-medium text-vino-900'
                           : 'text-nacar-200/85 hover:bg-tinta-840 hover:text-crema-100'
                     }`}
                   >
@@ -199,7 +215,7 @@ export default function DateTimeStep({
 
         <p className="linea-cobre mt-5 border-t pt-4 texto--1 text-nacar-300">
           {fecha ? (
-            <span className="capitalize text-crema-100/90">
+            <span className="inline-block text-crema-100/90 first-letter:uppercase">
               {format(fecha, "EEEE d 'de' MMMM", { locale: es })}
             </span>
           ) : (

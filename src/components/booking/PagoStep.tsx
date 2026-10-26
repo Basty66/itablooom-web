@@ -135,26 +135,26 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
               aria-checked={activo}
               onClick={() => onCambio({ ...datos, paymentType: tipo })}
               /*
-               * El elegido se marca con borde y relleno rosa más una palomita.
+               * El elegido se marca con canto de metal encendido, un velo
+               * cálido y una palomita de metal.
                * Antes el estado activo usaba `border-tinta-900`, o sea el
                * color del propio fondo: el borde era invisible y no se
                * distinguía cuál de las dos opciones estaba seleccionada.
                */
-              className={`relative rounded-2xl border p-5 text-left transition-all duration-300 ease-out ${
-                activo
-                  ? 'border-rosa-300 bg-rosa-300/10'
-                  : 'border-crema-100/10 bg-tinta-880 hover:border-cobre-400/40 hover:bg-tinta-870'
+              className={`group relative rounded-[1.4rem] p-5 text-left transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] ${
+                activo ? 'bg-cobre-400/10' : 'bg-tinta-870 hover:bg-tinta-860'
               }`}
             >
+              <span aria-hidden="true" className={`canto-metal absolute inset-0 rounded-[inherit] ${activo ? 'activo' : ''}`} />
               <span className="flex items-start justify-between gap-3">
                 <Icono
                   size={20}
                   strokeWidth={1.4}
                   aria-hidden="true"
-                  className={activo ? 'text-rosa-300' : 'text-cobre-400/70'}
+                  className={activo ? 'text-cobre-100' : 'text-cobre-400/70'}
                 />
                 {activo ? (
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-rosa-300">
+                  <span className="boton-metal flex h-6 w-6 items-center justify-center rounded-full">
                     <Check size={14} strokeWidth={2.5} className="text-vino-900" aria-hidden="true" />
                   </span>
                 ) : (
@@ -170,7 +170,7 @@ export default function PagoStep({ datos, onCambio, service }: Props) {
                 {titulo}
               </span>
               <span
-                className={`mt-1 block font-display texto-3 ${activo ? 'text-rosa-300' : 'text-cobre-400'}`}
+                className="texto-metal mt-1 block w-fit pr-0.5 font-display texto-3"
               >
                 {formatPrice(monto)}
               </span>

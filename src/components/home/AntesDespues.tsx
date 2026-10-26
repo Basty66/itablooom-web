@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+import { ChevronsLeftRight } from 'lucide-react';
 import { Section, SectionHeading } from '../ui/Section';
+import BotonLujo from '../ui/BotonLujo';
 import { getGaleria, type TrabajoGaleria } from '../../lib/api';
 
 /**
@@ -10,24 +12,51 @@ import { getGaleria, type TrabajoGaleria } from '../../lib/api';
  * arrastra con el dedo, con el mouse y también con las flechas del teclado,
  * que es lo que un div con eventos de puntero no da gratis.
  */
-function Comparador({ trabajo, indice = 0 }: { trabajo: TrabajoGaleria; indice?: number }) {
+function Comparador({ trabajo }: { trabajo: TrabajoGaleria }) {
   const [pos, setPos] = useState(50);
-  const contenedor = useRef<HTMLDivElement>(null);
+  const caja = useRef<HTMLDivElement>(null);
+  const tocado = useRef(false);
+
+  /*
+   * La primera vez que el comparador aparece, la manija se desliza sola a un
+   * lado y al otro: sin esa pista, mucha gente no descubre que se arrastra y
+   * ve solo una foto partida al medio. Si ya la tocaron, no se mueve sola.
+   */
+  useEffect(() => {
+    const el = caja.current;
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let cuadro = 0;
+    const observador = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        observador.disconnect();
+        const inicio = performance.now();
+        const DURACION = 1800;
+        const paso = (t: number) => {
+          if (tocado.current) return;
+          const p = Math.min((t - inicio) / DURACION, 1);
+          // Una onda que va a 72%, vuelve a 28% y se asienta en 50%.
+          setPos(50 + Math.sin(p * Math.PI * 2) * 22 * (1 - p * 0.25));
+          if (p < 1) cuadro = requestAnimationFrame(paso);
+          else setPos(50);
+        };
+        cuadro = requestAnimationFrame(paso);
+      },
+      { threshold: 0.6 }
+    );
+    observador.observe(el);
+    return () => {
+      observador.disconnect();
+      cancelAnimationFrame(cuadro);
+    };
+  }, []);
 
   return (
-    /* Entran una tras otra, no las seis de golpe. El retraso queda retenido
-       hasta que la sección aparece, como el resto de las entradas del sitio. */
-    <figure
-      className="anim-entrada overflow-hidden rounded-[var(--radius-foto)] border border-crema-100/8 bg-tinta-880"
-      style={{ animationDelay: `${indice * 90}ms` }}
-    >
-      {/*
-        Cuadrado y no retrato: las fotos del estudio suelen venir anotadas
-        —flechas y texto que llegan a los dos bordes—, y un recorte 4:5 les
-        comía las esquinas. Además, apiladas en móvil, seis retratos hacían de
-        esta sección la más larga de la home.
-      */}
-      <div ref={contenedor} className="relative aspect-square select-none">
+    <figure className="anim-entrada relative">
+      <div
+        ref={caja}
+        className="canto-metal activo group relative aspect-[4/5] select-none overflow-hidden rounded-[2rem] bg-tinta-880 sm:aspect-square"
+      >
         {/* El "después" va al fondo y el "antes" se recorta encima: así el
             deslizador descubre el resultado, que es el sentido de la lectura. */}
         <img
@@ -37,10 +66,7 @@ function Comparador({ trabajo, indice = 0 }: { trabajo: TrabajoGaleria; indice?:
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div
-          className="absolute inset-0 overflow-hidden"
-          style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
-        >
+        <div className="absolute inset-0 overflow-hidden" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
           <img
             src={trabajo.antes_url}
             alt={`${trabajo.titulo}, antes`}
@@ -50,26 +76,27 @@ function Comparador({ trabajo, indice = 0 }: { trabajo: TrabajoGaleria; indice?:
           />
         </div>
 
-        {/* Línea y manija, decorativas: quien manda es el input de abajo. */}
+        {/* La línea y la manija son de metal: el único control de la foto
+            tiene que verse como algo que se toma y se arrastra. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 w-px bg-crema-100/80"
+          className="pointer-events-none absolute inset-y-0 w-[2px] -translate-x-1/2 bg-gradient-to-b from-cobre-100/20 via-cobre-100 to-cobre-100/20 shadow-[0_0_16px_rgba(246,220,207,0.55)]"
           style={{ left: `${pos}%` }}
         >
-          <span className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-crema-100/40 bg-tinta-950/70 backdrop-blur-sm">
-            <span className="texto--2 text-crema-100">↔</span>
+          <span className="boton-metal absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-vino-900 transition-transform duration-300 group-hover:scale-110">
+            <ChevronsLeftRight size={20} strokeWidth={1.6} />
           </span>
         </div>
 
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute left-3 top-3 rounded-full bg-tinta-950/70 px-3 py-1 texto--2 uppercase espaciado-medio text-nacar-200 backdrop-blur-sm"
+          className="vidrio pointer-events-none absolute left-4 top-4 rounded-full border px-3.5 py-1.5 texto--2 uppercase espaciado-medio text-nacar-100"
         >
           Antes
         </span>
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute right-3 top-3 rounded-full bg-rosa-300/90 px-3 py-1 texto--2 uppercase espaciado-medio text-vino-900 backdrop-blur-sm"
+          className="boton-metal pointer-events-none absolute right-4 top-4 rounded-full px-3.5 py-1.5 texto--2 font-medium uppercase espaciado-medio text-vino-900"
         >
           Después
         </span>
@@ -85,25 +112,31 @@ function Comparador({ trabajo, indice = 0 }: { trabajo: TrabajoGaleria; indice?:
           min={0}
           max={100}
           value={pos}
-          onChange={(e) => setPos(Number(e.target.value))}
+          onChange={(e) => {
+            tocado.current = true;
+            setPos(Number(e.target.value));
+          }}
+          onPointerDown={() => {
+            tocado.current = true;
+          }}
           aria-label={`Comparar antes y después de ${trabajo.titulo}`}
           className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0 [touch-action:pan-y]"
         />
       </div>
-
-      <figcaption className="flex items-baseline justify-between gap-3 px-4 py-3">
-        <span className="texto-0 text-crema-100">{trabajo.titulo}</span>
-        {trabajo.categoria && (
-          <span className="texto--2 uppercase espaciado-medio text-rosa-300">{trabajo.categoria}</span>
-        )}
-      </figcaption>
     </figure>
   );
 }
 
+/**
+ * Antes y después, como vitrina: un comparador grande y, al lado, de qué se
+ * trata y cómo pedir ese resultado. Con varios trabajos se eligen con
+ * miniaturas en vez de apilarlos en una grilla de comparadores chicos, que
+ * con una sola foto dejaba la fila casi vacía y se leía como algo roto.
+ */
 export default function AntesDespues() {
   const [trabajos, setTrabajos] = useState<TrabajoGaleria[]>([]);
   const [cargado, setCargado] = useState(false);
+  const [elegido, setElegido] = useState(0);
 
   useEffect(() => {
     let vigente = true;
@@ -119,18 +152,66 @@ export default function AntesDespues() {
   // vacío se lee como algo roto.
   if (!cargado || trabajos.length === 0) return null;
 
-  return (
-    <Section id="antes-despues" className="bg-tinta-900">
-      <SectionHeading
-        eyebrow="El resultado"
-        title="Antes y después"
-        subtitle="Desliza sobre cada foto para ver el cambio."
-      />
+  const lista = trabajos.slice(0, 8);
+  const actual = lista[Math.min(elegido, lista.length - 1)];
 
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {trabajos.slice(0, 6).map((t, i) => (
-          <Comparador key={t.id} trabajo={t} indice={i} />
-        ))}
+  return (
+    <Section id="antes-despues" className="bg-tinta-950">
+      <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-5">
+          <SectionHeading
+            align="left"
+            eyebrow="El resultado"
+            title="Antes y después"
+            destacar="después"
+            subtitle="Arrastra la manija sobre la foto y mira el cambio en el mismo punto."
+          />
+
+          <div className="linea-cobre mt-8 border-t pt-6">
+            {actual.categoria && (
+              <p className="texto--2 uppercase espaciado-amplio text-cobre-300">{actual.categoria}</p>
+            )}
+            <p className="mt-1 font-display texto-3 text-crema-100">{actual.titulo}</p>
+          </div>
+
+          {lista.length > 1 && (
+            <div role="tablist" aria-label="Elegir trabajo" className="mt-6 flex flex-wrap gap-3">
+              {lista.map((t, i) => {
+                const activo = t.id === actual.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activo}
+                    aria-label={t.titulo}
+                    onClick={() => setElegido(i)}
+                    className={`relative h-16 w-16 overflow-hidden rounded-2xl transition-all duration-500 ease-out active:scale-95 ${
+                      activo ? 'scale-105' : 'opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={t.despues_url} alt="" loading="lazy" className="h-full w-full object-cover" />
+                    <span
+                      aria-hidden="true"
+                      className={`canto-metal absolute inset-0 rounded-[inherit] ${activo ? 'activo' : ''}`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="mt-9 hidden lg:block">
+            <BotonLujo to="/agendar">Quiero este resultado</BotonLujo>
+          </div>
+        </div>
+
+        <div className="lg:col-span-7">
+          <Comparador key={actual.id} trabajo={actual} />
+          <div className="mt-8 flex justify-center lg:hidden">
+            <BotonLujo to="/agendar">Quiero este resultado</BotonLujo>
+          </div>
+        </div>
       </div>
     </Section>
   );

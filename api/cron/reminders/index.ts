@@ -111,7 +111,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         <tr><td style="background-color:#14100e;padding:32px 32px 28px;text-align:center;">
           <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e9b4b9;font-weight:500;">Goddess Studio</p>
-          <h1 style="margin:0;font-size:20px;font-weight:600;color:#faf6ef;">Cita mañana 📅</h1>
+          <h1 style="margin:0;font-size:20px;font-weight:600;color:#faf6ef;">Tu cita es mañana</h1>
         </td></tr>
 
         <tr><td style="padding:28px 32px;text-align:center;">
